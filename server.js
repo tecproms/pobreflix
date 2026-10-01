@@ -85,6 +85,13 @@ function fetchUpstream(targetUrlStr, options = {}, redirectCount = 0) {
 
     let parsedUrl;
     try {
+      if (typeof targetUrlStr === 'string') {
+        if (targetUrlStr.startsWith('/')) {
+          targetUrlStr = `http://127.0.0.1:${PORT}${targetUrlStr}`;
+        } else if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(targetUrlStr)) {
+          targetUrlStr = targetUrlStr.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, `http://127.0.0.1:${PORT}`);
+        }
+      }
       parsedUrl = new URL(targetUrlStr);
     } catch (err) {
       return reject(new Error(`URL inválida: ${targetUrlStr}`));
@@ -638,13 +645,21 @@ const server = http.createServer(async (req, res) => {
     if (!global.iaStreamCache) global.iaStreamCache = new Map();
 
     try {
-      let chosenFiles = global.iaStreamCache.get(id);
+      let cached = global.iaStreamCache.get(id);
+      let chosenFiles = Array.isArray(cached) ? cached : cached?.files;
+      let serverHost = (!Array.isArray(cached) && cached?.server) || 'archive.org';
+      let serverDir = (!Array.isArray(cached) && cached?.dir) || `/download/${encodeURIComponent(id)}`;
+
       if (!chosenFiles) {
         const metaUrl = `https://archive.org/metadata/${encodeURIComponent(id)}`;
         const { res: mRes } = await fetchUpstream(metaUrl, { timeout: 15000 });
         const mText = await readResponseBody(mRes);
         const mJson = JSON.parse(mText);
         const files = mJson?.files || [];
+        if (mJson?.server && mJson?.dir) {
+          serverHost = mJson.server;
+          serverDir = mJson.dir;
+        }
 
         const isHoriz = (f) => {
           const w = Number(f.width) || 0;
@@ -675,7 +690,7 @@ const server = http.createServer(async (req, res) => {
 
         chosenFiles = iaMp4s.length > 0 ? iaMp4s : origMp4s;
         if (chosenFiles.length > 0) {
-          global.iaStreamCache.set(id, chosenFiles);
+          global.iaStreamCache.set(id, { files: chosenFiles, server: serverHost, dir: serverDir });
         }
       }
 
@@ -691,7 +706,9 @@ const server = http.createServer(async (req, res) => {
           const matchedByNum = chosenFiles.find((f) => epRegex.test(f.name));
           targetFile = matchedByNum || chosenFiles[Math.min(epIdx, chosenFiles.length - 1)];
         }
-        const directUrl = `https://archive.org/download/${encodeURIComponent(id)}/${encodeURIComponent(targetFile.name).replace(/%2F/g, '/')}`;
+        const directUrl = (serverHost && serverDir && serverHost !== 'archive.org')
+          ? `https://${serverHost}${serverDir}/${encodeURIComponent(targetFile.name).replace(/%2F/g, '/')}`
+          : `https://archive.org/download/${encodeURIComponent(id)}/${encodeURIComponent(targetFile.name).replace(/%2F/g, '/')}`;
         res.writeHead(302, {
           Location: directUrl,
           'Cache-Control': 'public, max-age=3600'
@@ -787,13 +804,19 @@ const server = http.createServer(async (req, res) => {
 
   // 4. Endpoint de Proxy de Streams (HLS .m3u8, segmentos .ts, MPEG-TS contínua, logos, etc.)
   if (pathname === '/api/proxy') {
-    const targetUrl = parsedReqUrl.searchParams.get('url');
+    let targetUrl = parsedReqUrl.searchParams.get('url');
     const customReferer = parsedReqUrl.searchParams.get('referer') || '';
     const customUa = parsedReqUrl.searchParams.get('ua') || '';
 
     if (!targetUrl) {
       res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
       return res.end(JSON.stringify({ error: 'Parâmetro "url" é obrigatório.' }));
+    }
+
+    if (targetUrl.startsWith('/')) {
+      targetUrl = `http://127.0.0.1:${PORT}${targetUrl}`;
+    } else if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(targetUrl)) {
+      targetUrl = targetUrl.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, `http://127.0.0.1:${PORT}`);
     }
 
     let upstreamHandle = null;

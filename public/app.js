@@ -154,6 +154,13 @@ function deduplicateHistory(historyItems, allCatalogChannels = []) {
 
   for (const item of historyItems) {
     if (!item) continue;
+    if (item.url && typeof window !== 'undefined' && window.location) {
+      if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(item.url)) {
+        item.url = item.url.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, window.location.origin);
+      } else if (item.url.startsWith('/')) {
+        item.url = `${window.location.origin}${item.url}`;
+      }
+    }
 
     const detected = detectSeriesInfo(item.name, item.group, item.isVod !== false, item.url);
     const isSeries = Boolean(
@@ -294,8 +301,8 @@ function parseM3U(content) {
         if (typeof window !== 'undefined' && window.location) {
           if (streamUrl.startsWith('/')) {
             streamUrl = `${window.location.origin}${streamUrl}`;
-          } else if (/^https?:\/\/(localhost|127\.0\.0\.1):3000/i.test(streamUrl)) {
-            streamUrl = streamUrl.replace(/^https?:\/\/(localhost|127\.0\.0\.1):3000/i, window.location.origin);
+          } else if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(streamUrl)) {
+            streamUrl = streamUrl.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, window.location.origin);
           }
         }
         const item = current || {
@@ -1503,7 +1510,17 @@ function App() {
     async (channel, modeOverride = null) => {
       if (!channel || !videoRef.current) return;
       const video = videoRef.current;
-      let rawUrl = channel.url;
+      let rawUrl = channel.url || '';
+
+      // HIGIENIZAÇÃO DE URL:
+      // Se a URL contiver localhost / 127.0.0.1 ou for relativa (/api/...), normalizar sempre para a origem atual
+      if (rawUrl && typeof window !== 'undefined' && window.location) {
+        if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(rawUrl)) {
+          rawUrl = rawUrl.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, window.location.origin);
+        } else if (rawUrl.startsWith('/')) {
+          rawUrl = `${window.location.origin}${rawUrl}`;
+        }
+      }
 
       destroyPlayers();
       setPlayerState('loading');
@@ -1587,14 +1604,25 @@ function App() {
             }
           }, 900);
         };
-        video.onerror = () => {
+        video.onerror = async () => {
           if (mode === 'direct') {
             startPlayback(channel, 'proxy');
             return;
           }
+          try {
+            const searchTitle = channel.seriesTitle || channel.name || '';
+            const res = await fetch(`/api/resolve-vod?title=${encodeURIComponent(searchTitle)}`);
+            const data = await res.json();
+            if (data && data.url && data.url !== rawUrl && videoRef.current) {
+              videoRef.current.src = data.url;
+              videoRef.current.play().catch(() => {});
+              return;
+            }
+          } catch {}
+
           setPlayerState('error');
           setPlayerErrorDetails(
-            'Este servidor de vídeo MP4 antigo não está respondendo. Escolha outro título do catálogo!'
+            'Este servidor de vídeo sob demanda está instável no momento. Tente novamente ou selecione outro título!'
           );
         };
         return;
@@ -1784,8 +1812,10 @@ function App() {
           episodeNumber: currentChannel.episodeNumber || 1,
           episodeTitle: currentChannel.episodeTitle || `Episódio ${currentChannel.episodeNumber || 1}`,
           logo: activeSeriesGroup?.logo || currentChannel.logo,
-          group: activeSeriesGroup?.group || currentChannel.group || (isSeries ? 'VOD Séries' : 'VOD Filmes'),
-          url: currentChannel.url,
+          url:
+            currentChannel.url && typeof window !== 'undefined' && window.location
+              ? currentChannel.url.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, '')
+              : currentChannel.url,
           quality: currentChannel.quality || 'FHD',
           isVod: true,
           isCloudVod: currentChannel.isCloudVod,

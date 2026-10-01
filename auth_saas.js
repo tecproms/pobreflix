@@ -329,9 +329,16 @@ function ensureDb() {
       changed = true;
     }
 
-    // Garantir que nenhum perfil tenha múltiplos episódios da mesma série no histórico
+    // Garantir que nenhum perfil tenha múltiplos episódios da mesma série no histórico e higienizar URLs de localhost
     (db.users || []).forEach((u) => {
       (u.profiles || []).forEach((p) => {
+        if (Array.isArray(p.favorites)) {
+          p.favorites = p.favorites.map((url) =>
+            typeof url === 'string' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(url)
+              ? url.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, '')
+              : url
+          );
+        }
         if (Array.isArray(p.history) && p.history.length > 0) {
           const before = p.history.length;
           p.history = deduplicateHistory(p.history);
@@ -354,6 +361,9 @@ function deduplicateHistory(items) {
 
   for (const item of items) {
     if (!item) continue;
+    if (item.url && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(item.url)) {
+      item.url = item.url.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, '');
+    }
     const isSeries = Boolean(
       item.isSeriesGroup ||
       item.isSeriesEpisode ||
