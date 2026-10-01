@@ -2629,7 +2629,7 @@ function AdminDashboardModal({
                       <th>Plano & Telas</th>
                       <th>Status & Validade</th>
                       <th>Perfis</th>
-                      <th>Ações Rápidas de Assinatura</th>
+                      <th>Ações Rápidas & Exclusão</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -2748,22 +2748,59 @@ function AdminDashboardModal({
                             >
                               {u.status === 'blocked' ? '🔓 Desbloquear' : '🚫 Bloquear'}
                             </button>
-                            {u.role !== 'admin' && (
+                            {u.role !== 'admin' && u.id !== 'usr_admin_master' ? (
                               <button
                                 type="button"
-                                className="nf-btn nf-btn-dark"
-                                style={{ padding: '5px 9px', fontSize: '11.5px', color: '#ff6b72' }}
+                                className="nf-btn"
+                                style={{
+                                  padding: '5px 12px',
+                                  fontSize: '11.5px',
+                                  fontWeight: 800,
+                                  background: 'linear-gradient(180deg, #e50914, #b20710)',
+                                  color: '#fff',
+                                  border: '1px solid rgba(255,255,255,0.2)',
+                                  borderRadius: '4px',
+                                  cursor: 'pointer',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  boxShadow: '0 2px 6px rgba(229,9,20,0.3)'
+                                }}
+                                title="Excluir permanentemente este cliente"
                                 onClick={() => {
-                                  if (window.confirm(`Excluir a conta de ${u.name}?`)) {
+                                  if (
+                                    window.confirm(
+                                      `⚠️ EXCLUIR CLIENTE?\n\nTem certeza que deseja excluir permanentemente o cliente:\n"${u.name}" (${u.email})?\n\n• O acesso será revogado imediatamente.\n• Todas as telas ativas serão desconectadas.\n• O histórico de perfis será apagado.`
+                                    )
+                                  ) {
                                     handleAdminUserAction(
                                       { userId: u.id, action: 'delete' },
-                                      `Conta ${u.email} excluída.`
+                                      `🗑️ Cliente ${u.name} (${u.email}) foi excluído com sucesso.`
                                     );
                                   }
                                 }}
                               >
-                                🗑️
+                                🗑️ Excluir Cliente
                               </button>
+                            ) : (
+                              <span
+                                style={{
+                                  fontSize: '11px',
+                                  fontWeight: 700,
+                                  color: '#aaa',
+                                  padding: '5px 10px',
+                                  background: 'rgba(255,255,255,0.06)',
+                                  border: '1px solid rgba(255,255,255,0.15)',
+                                  borderRadius: '4px',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '5px',
+                                  userSelect: 'none'
+                                }}
+                                title="A conta Master Admin é protegida contra exclusão acidental"
+                              >
+                                🛡️ Master (Protegido)
+                              </span>
                             )}
                           </div>
                         </td>

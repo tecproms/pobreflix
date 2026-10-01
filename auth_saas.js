@@ -1088,8 +1088,14 @@ async function handleSaasRequest(req, res, pathname, parsedReqUrl) {
       if (!target) return sendJson(res, 404, { ok: false, error: 'Cliente não encontrado.' });
 
       if (action === 'delete') {
-        if (target.id === 'usr_admin_master') {
+        if (target.id === 'usr_admin_master' || target.role === 'admin') {
           return sendJson(res, 400, { ok: false, error: 'Não é permitido excluir o Admin Master.' });
+        }
+        for (const [key, sess] of activeScreensMap.entries()) {
+          if (sess.userId === target.id) {
+            activeScreensMap.delete(key);
+            kickedDevicesMap.set(key, 'Sua conta foi excluída pelo Administrador.');
+          }
         }
         db.users = db.users.filter((u) => u.id !== target.id);
         saveDb(db);
