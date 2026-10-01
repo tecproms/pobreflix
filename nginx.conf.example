@@ -6,7 +6,7 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name seu-dominio.com.br www.seu-dominio.com.br;
+    server_name filmes.techproms.com.br;
 
     # Limite de tamanho de upload para Banners de Anúncio enviados pelo Painel Master
     client_max_body_size 50M;
@@ -34,5 +34,5 @@ server {
 
 # ====================================================================
 # APÓS APONTAR O DOMÍNIO, INSTALE SSL (HTTPS) GRÁTIS COM 1 COMANDO:
-# sudo certbot --nginx -d seu-dominio.com.br -d www.seu-dominio.com.br
+# sudo certbot --nginx -d filmes.techproms.com.br
 # ====================================================================

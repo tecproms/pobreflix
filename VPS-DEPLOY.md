@@ -85,44 +85,38 @@ Se você prefere containers isolados e portabilidade total:
 
 ---
 
-## 🔒 Como Configurar Domínio + HTTPS (SSL Grátis com Nginx)
+## 🔒 Como Configurar o Domínio `filmes.techproms.com.br` + HTTPS (SSL Grátis)
 
-Para seus clientes acessarem por um domínio bonito como `https://pobreflix.com.br` (com o cadeado verde):
+Para colocar seu domínio no ar com o cadeado verde (HTTPS/SSL):
 
-1. **Aponte seu Domínio**:
-   - Vá no seu provedor de domínio (ex: Registro.br, Cloudflare, GoDaddy) e crie um **Registro tipo A**:
-     - Nome: `@` (ou subdomínio como `app`)
-     - Destino: `IP_DA_SUA_VPS`
+1. **Aponte o Subdomínio no DNS (no Cloudflare, Registro.br ou cPanel)**:
+   - Crie uma entrada de **Registro tipo A**:
+     - **Tipo**: `A`
+     - **Nome**: `filmes`
+     - **Destino/IP**: `IP_DA_SUA_VPS`
+     - **Proxy**: Somente DNS (DNS Only) caso use Cloudflare para permitir emissão de SSL direto no Certbot.
 
-2. **Instale o Nginx e Certbot na VPS**:
+2. **Ativação Automática com 1 Comando na VPS**:
+   Após clonar e rodar o `./deploy.sh`, basta rodar:
+   ```bash
+   chmod +x setup-ssl.sh
+   ./setup-ssl.sh
+   ```
+   *Este script instala o Nginx, ativa o proxy reverso e gera o certificado SSL grátis para `filmes.techproms.com.br` automaticamente.*
+
+3. **Ou Configuração Manual**:
    ```bash
    sudo apt update
    sudo apt install -y nginx certbot python3-certbot-nginx
-   ```
-
-3. **Copie a configuração do Nginx**:
-   ```bash
    sudo cp nginx.conf.example /etc/nginx/sites-available/pobreflix
-   ```
-
-4. **Edite com o seu domínio real**:
-   ```bash
-   sudo nano /etc/nginx/sites-available/pobreflix
-   ```
-   *Substitua `seu-dominio.com.br` pelo seu domínio real.*
-
-5. **Ative o site no Nginx e teste**:
-   ```bash
-   sudo ln -s /etc/nginx/sites-available/pobreflix /etc/nginx/sites-enabled/
+   sudo ln -sf /etc/nginx/sites-available/pobreflix /etc/nginx/sites-enabled/
    sudo rm -f /etc/nginx/sites-enabled/default
    sudo nginx -t
    sudo systemctl reload nginx
+   sudo certbot --nginx -d filmes.techproms.com.br
    ```
 
-6. **Gere o Certificado SSL (HTTPS) Gratuito**:
-   ```bash
-   sudo certbot --nginx -d seu-dominio.com.br -d www.seu-dominio.com.br
-   ```
+Acesse: **https://filmes.techproms.com.br**!
 
 Pronto! Agora o seu PobreFlix estará acessível em `https://seu-dominio.com.br` com alta performance, proteção contra quedas e streaming ultra-rápido!
 
