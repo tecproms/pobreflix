@@ -361,23 +361,182 @@ function parseM3U(content) {
  * Agrupa múltiplos episódios (S01E01, T01|EP01...) em um único Card de Série
  * E mescla o catálogo VIP de Blockbusters (window.POBREFLIX_BLOCKBUSTERS)
  */
+/**
+ * Dicionário de Metadados e Gêneros Corretos para Séries Populares do Catálogo
+ */
+const SERIES_KNOWN_METADATA = {
+  'bridgerton': {
+    name: 'Bridgerton (Dublado)',
+    group: 'VOD Séries: Drama, Romance & Época (Dublado)'
+  },
+  'cangaco novo': {
+    name: 'Cangaço Novo (Dublado)',
+    group: 'VOD Séries: Drama, Ação & Crime (Dublado)'
+  },
+  'cangaço novo': {
+    name: 'Cangaço Novo (Dublado)',
+    group: 'VOD Séries: Drama, Ação & Crime (Dublado)'
+  },
+  'castelo ra tim bum': {
+    name: 'Castelo Rá Tim Bum (Dublado)',
+    group: 'VOD Séries: Desenhos & Animações (Dublado)'
+  },
+  'castelo rá tim bum': {
+    name: 'Castelo Rá Tim Bum (Dublado)',
+    group: 'VOD Séries: Desenhos & Animações (Dublado)'
+  },
+  'chapolin colorado': {
+    name: 'Chapolin Colorado (Dublado)',
+    group: 'VOD Séries: Comédias & Sitcoms (Dublado)'
+  },
+  'chapolin e os colorados': {
+    name: 'Chapolin e os Colorados (Dublado)',
+    group: 'VOD Séries: Comédias & Sitcoms (Dublado)'
+  },
+  'chaves': {
+    name: 'Chaves (Dublado)',
+    group: 'VOD Séries: Comédias & Sitcoms (Dublado)'
+  },
+  'chaves em desenho animado': {
+    name: 'Chaves em Desenho Animado (Dublado)',
+    group: 'VOD Séries: Desenhos & Animações (Dublado)'
+  },
+  'coracao de ferro': {
+    name: 'Coração de Ferro (Dublado)',
+    group: 'VOD Séries: Drama, Ação & Crime (Dublado)'
+  },
+  'coração de ferro': {
+    name: 'Coração de Ferro (Dublado)',
+    group: 'VOD Séries: Drama, Ação & Crime (Dublado)'
+  },
+  'dope thief': {
+    name: 'Dope Thief (Dublado)',
+    group: 'VOD Séries: Drama, Ação & Crime (Dublado)'
+  },
+  'homem aranha: a serie animada': {
+    name: 'Homem Aranha: A Série Animada (Dublado)',
+    group: 'VOD Séries: Desenhos & Animações (Dublado)'
+  },
+  'homem aranha: a série animada': {
+    name: 'Homem Aranha: A Série Animada (Dublado)',
+    group: 'VOD Séries: Desenhos & Animações (Dublado)'
+  },
+  'key and peele': {
+    name: 'Key And Peele (Dublado)',
+    group: 'VOD Séries: Comédias & Sitcoms (Dublado)'
+  },
+  'lupin': {
+    name: 'Lupin (Dublado)',
+    group: 'VOD Séries: Drama, Ação & Crime (Dublado)'
+  },
+  'marcada': {
+    name: 'Marcada (Dublado)',
+    group: 'VOD Séries: Drama, Ação & Crime (Dublado)'
+  },
+  'mila no multiverso': {
+    name: 'Mila no Multiverso (Dublado)',
+    group: 'VOD Séries: Ficção, Fantasia & Sobrenatural (Dublado)'
+  },
+  'senna por ayrton': {
+    name: 'Senna por Ayrton (Dublado)',
+    group: 'VOD Séries: Documentários & Biografias (Dublado)'
+  },
+  'september mornings': {
+    name: 'September Mornings (Manhãs de Setembro) (Dublado)',
+    group: 'VOD Séries: Drama, Romance & Época (Dublado)'
+  },
+  'manhas de setembro': {
+    name: 'September Mornings (Manhãs de Setembro) (Dublado)',
+    group: 'VOD Séries: Drama, Romance & Época (Dublado)'
+  },
+  'manhãs de setembro': {
+    name: 'September Mornings (Manhãs de Setembro) (Dublado)',
+    group: 'VOD Séries: Drama, Romance & Época (Dublado)'
+  },
+  'serie cobra kai': {
+    name: 'Cobra Kai (Dublado)',
+    group: 'VOD Séries: Drama, Ação & Crime (Dublado)'
+  },
+  'cobra kai': {
+    name: 'Cobra Kai (Dublado)',
+    group: 'VOD Séries: Drama, Ação & Crime (Dublado)'
+  },
+  'tales from the goose lady: the ugly duck thing': {
+    name: 'Tales from the Goose Lady: The Ugly Duck Thing (Dublado)',
+    group: 'VOD Séries: Desenhos & Animações (Dublado)'
+  },
+  'them (eles)': {
+    name: 'Them (Eles) (Dublado)',
+    group: 'VOD Séries: Suspense, Mistério & Terror (Dublado)'
+  },
+  'them': {
+    name: 'Them (Eles) (Dublado)',
+    group: 'VOD Séries: Suspense, Mistério & Terror (Dublado)'
+  },
+  'um maluco no pedaco': {
+    name: 'Um Maluco no Pedaço (Dublado)',
+    group: 'VOD Séries: Comédias & Sitcoms (Dublado)'
+  },
+  'um maluco no pedaço': {
+    name: 'Um Maluco no Pedaço (Dublado)',
+    group: 'VOD Séries: Comédias & Sitcoms (Dublado)'
+  },
+  'xena: a princesa guerreira': {
+    name: 'Xena: A Princesa Guerreira (Dublada)',
+    group: 'VOD Séries: Ação, Aventura & Fantasia (Dublado)'
+  }
+};
+
+/**
+ * Agrupa múltiplos episódios (S01E01, T01|EP01...) em um único Card de Série
+ * E mescla o catálogo VIP de Blockbusters (window.POBREFLIX_BLOCKBUSTERS)
+ */
 function groupSeriesIntoCatalog(rawChannels, includeBlockbusters = true) {
   const result = [];
   const seriesMap = new Map();
 
   for (const ch of rawChannels) {
+    if (!ch || !ch.name) continue;
+    // Ignorar entradas quebradas ou nulas
+    if (/^null\b/i.test(ch.name) || /^null\b/i.test(ch.seriesTitle || '')) continue;
+
     if (ch.isSeriesEpisode && ch.seriesTitle) {
-      const key = ch.seriesTitle.toLowerCase().trim();
+      let sTitle = ch.seriesTitle
+        .replace(/\s*\(\s*\(/g, ' (')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (/^serie\s+cobra\s+kai/i.test(sTitle)) {
+        sTitle = 'Cobra Kai (Dublado)';
+      }
+      if (/^cangaco\s+novo/i.test(sTitle)) {
+        sTitle = 'Cangaço Novo (Dublado)';
+      }
+
+      const normKey = sTitle
+        .toLowerCase()
+        .replace(/[\(\)]/g, '')
+        .replace(/\bdublad[ao]\b/gi, '')
+        .trim();
+
+      const override =
+        SERIES_KNOWN_METADATA[normKey] ||
+        Object.entries(SERIES_KNOWN_METADATA).find(([k]) => normKey.includes(k))?.[1];
+
+      const finalTitle = override?.name || sTitle;
+      const finalGroup = override?.group || ch.group;
+      const key = finalTitle.toLowerCase().trim();
+
       if (!seriesMap.has(key)) {
         const seriesCard = {
           id: `series_${key}`,
-          name: ch.seriesTitle,
+          name: finalTitle,
           logo: ch.logo,
-          group: ch.group,
+          group: finalGroup,
           quality: ch.quality || 'HD',
           isVod: true,
           isSeriesGroup: true,
-          seriesTitle: ch.seriesTitle,
+          seriesTitle: finalTitle,
           url: ch.url,
           episodes: [ch],
           seasonsCount: 1
@@ -388,6 +547,7 @@ function groupSeriesIntoCatalog(rawChannels, includeBlockbusters = true) {
         const existing = seriesMap.get(key);
         existing.episodes.push(ch);
         if (!existing.logo && ch.logo) existing.logo = ch.logo;
+        if (override?.group) existing.group = override.group;
       }
     } else {
       result.push(ch);
@@ -947,80 +1107,114 @@ const GENRE_DEFINITIONS = [
     id: 'Ação',
     name: 'Ação',
     emoji: '💥',
-    matcher: (ch) =>
-      /ação|acao|action|herói|heroi|combate|guerra|vingadores|velozes|deadpool|john wick|batman|tropa de elite|rambo|exterminador/i.test(
-        `${ch.group || ''} ${ch.name || ''}`
-      )
+    matcher: (ch) => {
+      const g = ch.group || '';
+      const n = ch.name || ch.seriesTitle || '';
+      if (/castelo r[áa]|bridgerton|chaves|chapolin|patroa|friends|as branquelas|super-herói:\s*o filme/i.test(n)) return false;
+      if (/animação|animacao|desenho|infantil/i.test(g) && !/ação|acao|action|herói|heroi|combate|dragon ball|naruto|ninja/i.test(n)) return false;
+      if (/filmes:\s*ação|séries:.*ação|\bação\b|\bacao\b|\baction\b/i.test(g)) return true;
+      return /\b(ação|acao|action|herói|heroi|combate|guerra)\b|deadpool|vingadores|velozes|john wick|batman|rambo|exterminador|cangaço|cangaco|cobra kai|lupin|xena/i.test(n);
+    }
   },
   {
     id: 'Comédia',
     name: 'Comédia',
     emoji: '😂',
-    matcher: (ch) =>
-      /comédia|comedia|comedy|sitcom|humor|besteirol|engraç|chris|patroa|friends|chaves|as branquelas|gente grande/i.test(
-        `${ch.group || ''} ${ch.name || ''}`
-      )
+    matcher: (ch) => {
+      const g = ch.group || '';
+      const n = ch.name || ch.seriesTitle || '';
+      if (/bridgerton|cangaço|cangaco|castelo r[áa]|them|marcada|dope thief|senna por|september mornings|manhãs de setembro|lupin|cobra kai|xena/i.test(n)) {
+        return false;
+      }
+      if (/comédia|comedia|sitcom/i.test(g)) {
+        return true;
+      }
+      return /comédia|comedia|comedy|sitcom|humor|besteirol|engraç|chris|patroa|friends|chaves|chapolin|as branquelas|gente grande|ted lasso|seinfeld|modern family|maluco no pedaço/i.test(n);
+    }
   },
   {
     id: 'Aventura',
     name: 'Aventura',
     emoji: '🗺️',
-    matcher: (ch) =>
-      /aventura|adventure|fantasia|fantasy|jurassic|senhor dos anéis|harry potter|hobbit|indiana jones|piratas/i.test(
-        `${ch.group || ''} ${ch.name || ''}`
-      )
+    matcher: (ch) => {
+      const g = ch.group || '';
+      const n = ch.name || ch.seriesTitle || '';
+      if (/bridgerton|chaves|chapolin/i.test(n)) return false;
+      if (/aventura|adventure|fantasia/i.test(g)) return true;
+      return /aventura|adventure|fantasia|fantasy|jurassic|senhor dos anéis|harry potter|hobbit|indiana jones|piratas|xena/i.test(n);
+    }
   },
   {
     id: 'Drama',
     name: 'Drama',
     emoji: '🎭',
-    matcher: (ch) =>
-      /drama|novela|dorama|emocion|superação|clube da luta|chefão|titanic|vida|sonho|liberdade/i.test(
-        `${ch.group || ''} ${ch.name || ''}`
-      )
+    matcher: (ch) => {
+      const g = ch.group || '';
+      const n = ch.name || ch.seriesTitle || '';
+      if (/castelo r[áa]|chaves|chapolin|as branquelas|todo mundo em pânico/i.test(n)) return false;
+      if (/drama|novela/i.test(g)) return true;
+      return /drama|novela|dorama|emocion|superação|bridgerton|cangaço|cangaco|marcada|dope thief|manhãs de setembro|september mornings|senna|clube da luta|chefão|titanic|vida|sonho|liberdade/i.test(n);
+    }
   },
   {
     id: 'Terror',
     name: 'Terror',
     emoji: '👻',
-    matcher: (ch) =>
-      /terror|horror|maldito|assomb|exorcist|pânico|panico|invocação|jogos mortais|halloween/i.test(
-        `${ch.group || ''} ${ch.name || ''}`
-      )
+    matcher: (ch) => {
+      const g = ch.group || '';
+      const n = ch.name || ch.seriesTitle || '';
+      if (/chaves|chapolin|castelo r[áa]|bridgerton/i.test(n)) return false;
+      if (/terror|horror/i.test(g)) return true;
+      return /terror|horror|maldito|assomb|exorcist|pânico|panico|invocação|jogos mortais|halloween|them\s*\(eles\)/i.test(n);
+    }
   },
   {
     id: 'Suspense',
     name: 'Suspense & Crime',
     emoji: '🕵️',
-    matcher: (ch) =>
-      /suspense|thriller|crime|policial|investig|mistério|misterio|assassino|máfia/i.test(
-        `${ch.group || ''} ${ch.name || ''}`
-      )
+    matcher: (ch) => {
+      const g = ch.group || '';
+      const n = ch.name || ch.seriesTitle || '';
+      if (/chaves|chapolin|castelo r[áa]|bridgerton/i.test(n)) return false;
+      if (/suspense|crime|mistério|misterio|policial/i.test(g)) return true;
+      return /suspense|thriller|crime|policial|investig|mistério|misterio|assassino|máfia|lupin|cangaço|cangaco|dope thief|marcada/i.test(n);
+    }
   },
   {
     id: 'Ficção Científica',
     name: 'Ficção Científica',
     emoji: '🚀',
-    matcher: (ch) =>
-      /ficção|ficcao|sci-fi|alien|interestelar|matrix|duna|star wars|avatar|sobrenatural/i.test(
-        `${ch.group || ''} ${ch.name || ''}`
-      )
+    matcher: (ch) => {
+      const g = ch.group || '';
+      const n = ch.name || ch.seriesTitle || '';
+      if (/chaves|chapolin|castelo r[áa]|bridgerton/i.test(n)) return false;
+      if (/ficção|ficcao|sci-fi|sobrenatural/i.test(g)) return true;
+      return /ficção|ficcao|sci-fi|alien|interestelar|matrix|duna|star wars|avatar|sobrenatural|mila no multiverso|coração de ferro|ironheart/i.test(n);
+    }
   },
   {
     id: 'Animação & Kids',
     name: 'Animação & Kids',
     emoji: '🎨',
-    matcher: (ch) =>
-      /animação|animacao|desenho|kids|infantil|disney|pixar|shrek|era do gelo|toy story|divertida mente|minions/i.test(
-        `${ch.group || ''} ${ch.name || ''}`
-      )
+    matcher: (ch) => {
+      const g = ch.group || '';
+      const n = ch.name || ch.seriesTitle || '';
+      if (/bridgerton|cangaço|cangaco|them|marcada|dope thief/i.test(n)) return false;
+      if (/animação|animacao|desenho|kids|infantil/i.test(g)) return true;
+      return /animação|animacao|desenho|kids|infantil|disney|pixar|shrek|era do gelo|toy story|divertida mente|minions|castelo r[áa]|turma da mônica|patrulha canina|mickey/i.test(n);
+    }
   },
   {
     id: 'Romance',
     name: 'Romance',
     emoji: '❤️',
-    matcher: (ch) =>
-      /romance|romântic|amor|paixão|casamento/i.test(`${ch.group || ''} ${ch.name || ''}`)
+    matcher: (ch) => {
+      const g = ch.group || '';
+      const n = ch.name || ch.seriesTitle || '';
+      if (/chaves|chapolin|castelo r[áa]|cangaço|cangaco/i.test(n)) return false;
+      if (/romance/i.test(g)) return true;
+      return /romance|romântic|amor|paixão|casamento|bridgerton|september mornings|manhãs de setembro/i.test(n);
+    }
   },
   {
     id: 'Animes',
@@ -1028,7 +1222,7 @@ const GENRE_DEFINITIONS = [
     emoji: '🎌',
     matcher: (ch) =>
       ch.isAnime ||
-      /anime|naruto|one piece|dragon ball|bleach|death note|jujutsu|demon slayer|solo leveling/i.test(
+      /anime|naruto|one piece|dragon ball|bleach|death note|jujutsu|demon slayer|solo leveling|cdz|yu yu hakusho|sakura card/i.test(
         `${ch.group || ''} ${ch.name || ''}`
       )
   },
@@ -1037,7 +1231,7 @@ const GENRE_DEFINITIONS = [
     name: 'Doramas & Novelas',
     emoji: '🌸',
     matcher: (ch) =>
-      /dorama|k-drama|novela|corean|globo|pousando|pretendente|tudo bem/i.test(
+      /dorama|k-drama|novela|corean|globo|pousando|pretendente|tudo bem|descendentes do sol/i.test(
         `${ch.group || ''} ${ch.name || ''}`
       )
   },
@@ -2277,34 +2471,21 @@ function App() {
       )
     );
 
-    // 2. Filmes e Séries Separados por Gênero Real
-    const acaoItems = channels.filter((c) =>
-      /ação|acao|action|herói|heroi|combate|guerra|vingadores|velozes|deadpool|john wick|batman|tropa de elite|rambo|exterminador/i.test(`${c.name} ${c.group}`)
-    );
-    const comediaItems = channels.filter((c) =>
-      /comédia|comedia|comedy|sitcom|humor|besteirol|engraç|chris|patroa|friends|chaves|as branquelas|gente grande/i.test(`${c.name} ${c.group}`)
-    );
-    const aventuraItems = channels.filter((c) =>
-      /aventura|adventure|fantasia|fantasy|jurassic|senhor dos anéis|harry potter|hobbit|indiana jones|piratas/i.test(`${c.name} ${c.group}`)
-    );
-    const dramaItems = channels.filter((c) =>
-      /drama|novela|dorama|emocion|superação|clube da luta|chefão|titanic|vida|sonho|liberdade/i.test(`${c.name} ${c.group}`)
-    );
-    const terrorItems = channels.filter((c) =>
-      /terror|horror|maldito|assomb|exorcist|pânico|panico|invocação|jogos mortais|halloween/i.test(`${c.name} ${c.group}`)
-    );
-    const suspenseItems = channels.filter((c) =>
-      /suspense|thriller|crime|policial|investig|mistério|misterio|assassino|máfia/i.test(`${c.name} ${c.group}`)
-    );
-    const ficcaoItems = channels.filter((c) =>
-      /ficção|ficcao|sci-fi|alien|interestelar|matrix|duna|star wars|avatar|sobrenatural/i.test(`${c.name} ${c.group}`)
-    );
-    const animacaoItems = channels.filter((c) =>
-      /animação|animacao|desenho|kids|infantil|disney|pixar|shrek|era do gelo|toy story|divertida mente|minions/i.test(`${c.name} ${c.group}`)
-    );
-    const romanceItems = channels.filter((c) =>
-      /romance|romântic|amor|paixão|casamento/i.test(`${c.name} ${c.group}`)
-    );
+    // 2. Filmes e Séries Separados por Gênero Real (Usando Regras Centrais)
+    const getGenreItems = (genreId) => {
+      const gDef = GENRE_DEFINITIONS.find((g) => g.id === genreId || g.name === genreId);
+      return gDef ? channels.filter(gDef.matcher) : [];
+    };
+
+    const acaoItems = getGenreItems('Ação');
+    const comediaItems = getGenreItems('Comédia');
+    const aventuraItems = getGenreItems('Aventura');
+    const dramaItems = getGenreItems('Drama');
+    const terrorItems = getGenreItems('Terror');
+    const suspenseItems = getGenreItems('Suspense');
+    const ficcaoItems = getGenreItems('Ficção Científica');
+    const animacaoItems = getGenreItems('Animação & Kids');
+    const romanceItems = getGenreItems('Romance');
 
     // 3. Top 10 da PobreFlix Brasil
     const top10Regex = [
@@ -2664,43 +2845,23 @@ function App() {
     } else if (navSection === 'vod-series') {
       list = channels.filter((c) => c.isSeriesGroup && !c.isAnime);
     } else if (navSection === 'acao') {
-      list = channels.filter((c) =>
-        /ação|acao|action|herói|heroi|combate|guerra|vingadores|velozes|deadpool|john wick|batman|tropa de elite|rambo|exterminador/i.test(
-          `${c.group || ''} ${c.name || ''}`
-        )
-      );
+      const gDef = GENRE_DEFINITIONS.find((g) => g.id === 'Ação');
+      list = gDef ? channels.filter(gDef.matcher) : channels;
     } else if (navSection === 'comedia') {
-      list = channels.filter((c) =>
-        /comédia|comedia|comedy|sitcom|humor|besteirol|engraç|chris|patroa|friends|chaves|as branquelas|gente grande/i.test(
-          `${c.group || ''} ${c.name || ''}`
-        )
-      );
+      const gDef = GENRE_DEFINITIONS.find((g) => g.id === 'Comédia');
+      list = gDef ? channels.filter(gDef.matcher) : channels;
     } else if (navSection === 'aventura') {
-      list = channels.filter((c) =>
-        /aventura|adventure|fantasia|fantasy|jurassic|senhor dos anéis|harry potter|hobbit|indiana jones|piratas/i.test(
-          `${c.group || ''} ${c.name || ''}`
-        )
-      );
+      const gDef = GENRE_DEFINITIONS.find((g) => g.id === 'Aventura');
+      list = gDef ? channels.filter(gDef.matcher) : channels;
     } else if (navSection === 'drama') {
-      list = channels.filter((c) =>
-        /drama|novela|dorama|emocion|superação|clube da luta|chefão|titanic|vida|sonho|liberdade/i.test(
-          `${c.group || ''} ${c.name || ''}`
-        )
-      );
+      const gDef = GENRE_DEFINITIONS.find((g) => g.id === 'Drama');
+      list = gDef ? channels.filter(gDef.matcher) : channels;
     } else if (navSection === 'terror') {
-      list = channels.filter((c) =>
-        /terror|horror|maldito|assomb|exorcist|pânico|panico|invocação|jogos mortais|halloween/i.test(
-          `${c.group || ''} ${c.name || ''}`
-        )
-      );
+      const gDef = GENRE_DEFINITIONS.find((g) => g.id === 'Terror');
+      list = gDef ? channels.filter(gDef.matcher) : channels;
     } else if (navSection === 'kids') {
-      list = channels.filter(
-        (c) =>
-          c.isAnime ||
-          /anime|tokusatsu|naruto|one piece|dragon ball|yu yu|sakura|sonic|tartarugas|thundercats|homem-aranha|kids|infantil|bob esponja|nick|cartoon|desenho|animaç/i.test(
-            `${c.name} ${c.group}`
-          )
-      );
+      const gDef = GENRE_DEFINITIONS.find((g) => g.id === 'Animação & Kids');
+      list = gDef ? channels.filter(gDef.matcher) : channels;
     } else if (navSection === 'live') {
       list = channels.filter((c) => !c.isVod);
     }
