@@ -162,6 +162,16 @@ function deduplicateHistory(historyItems, allCatalogChannels = []) {
       }
     }
 
+    if (item.name && /shrek/i.test(item.name) && item.url && /rio-2/i.test(item.url)) {
+      item.url = 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4';
+    }
+    if (item.name && /era do gelo/i.test(item.name) && item.url && /rio-2/i.test(item.url)) {
+      item.url = 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4';
+    }
+    if (item.name && /toy story/i.test(item.name) && item.url && /rio-2/i.test(item.url)) {
+      item.url = 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4';
+    }
+
     const detected = detectSeriesInfo(item.name, item.group, item.isVod !== false, item.url);
     const isSeries = Boolean(
       item.isSeriesGroup ||
@@ -1520,6 +1530,20 @@ function App() {
         } else if (rawUrl.startsWith('/')) {
           rawUrl = `${window.location.origin}${rawUrl}`;
         }
+      }
+
+      // Correção de streams cacheados com mapeamento antigo incorreto (ex: Shrek apontando para Rio 2)
+      if (channel && channel.name && /shrek/i.test(channel.name) && /rio-2/i.test(rawUrl)) {
+        rawUrl = 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4';
+        channel.url = rawUrl;
+      }
+      if (channel && channel.name && /era do gelo/i.test(channel.name) && /rio-2/i.test(rawUrl)) {
+        rawUrl = 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4';
+        channel.url = rawUrl;
+      }
+      if (channel && channel.name && /toy story/i.test(channel.name) && /rio-2/i.test(rawUrl)) {
+        rawUrl = 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4';
+        channel.url = rawUrl;
       }
 
       destroyPlayers();
