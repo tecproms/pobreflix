@@ -6,7 +6,7 @@ const zlib = require('zlib');
 const { URL } = require('url');
 const { handleSaasRequest } = require('./auth_saas');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3050;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 // Agentes HTTP/HTTPS que aceitam certificados autoassinados comuns em servidores IPTV/Streamlock

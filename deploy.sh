@@ -45,6 +45,6 @@ fi
 
 echo "===================================================="
 echo "🎉 DEPLOY CONCLUÍDO COM SUCESSO!"
-echo "🌐 Acesse: http://$(curl -s ifconfig.me || echo 'IP-DA-SUA-VPS'):3000"
+echo "🌐 Acesse: http://$(curl -s ifconfig.me || echo 'IP-DA-SUA-VPS'):3050"
 echo "🔑 Login Master: tecpro@gmail.com | Senha: 53915030"
 echo "===================================================="

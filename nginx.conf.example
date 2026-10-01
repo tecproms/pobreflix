@@ -12,7 +12,7 @@ server {
     client_max_body_size 50M;
 
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://127.0.0.1:3050;
         proxy_http_version 1.1;
 
         # Suporte a WebSocket e Heartbeat de telas simultâneas
