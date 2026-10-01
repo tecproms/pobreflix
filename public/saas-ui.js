@@ -15,6 +15,39 @@ const DEFAULT_AVATARS = [
   { id: 'kids_2', emoji: '🚀', bg: 'linear-gradient(135deg, #00b4db 0%, #0083b0 100%)', label: 'Kids Astronauta' }
 ];
 
+
+const LANDING_MOVIES = [
+  { name: 'Velozes & Furiosos 10', poster: 'https://image.tmdb.org/t/p/w500/xNqt1Om0IlUhDOjZRCL5ewoazVV.jpg', tag: 'AÇÃO • 2023', badge: 'TOP 1', rating: '9.8' },
+  { name: 'Vingadores: Ultimato', poster: 'https://image.tmdb.org/t/p/w500/q6725aR8Zs4IwGMXzZT8aC8lh41.jpg', tag: 'MARVEL • 4K', badge: 'TOP 2', rating: '9.9' },
+  { name: 'Homem-Aranha: Sem Volta', poster: 'https://image.tmdb.org/t/p/w500/xaKydnMw6wR1MBAjS5seGPVusbs.jpg', tag: 'HERÓIS • 4K', badge: 'TOP 3', rating: '9.8' },
+  { name: 'Duna: Parte Dois', poster: 'https://image.tmdb.org/t/p/w500/VMy4UGsI2u3f4fALGeCqCdsQBb.jpg', tag: 'FICÇÃO • 4K', badge: 'TOP 4', rating: '9.7' },
+  { name: 'Oppenheimer', poster: 'https://image.tmdb.org/t/p/w500/dUPQszWoRSE9FucJTbVp2bwEi9G.jpg', tag: 'OSCAR • 4K', badge: 'TOP 5', rating: '9.6' },
+  { name: 'Avatar: O Caminho da Água', poster: 'https://image.tmdb.org/t/p/w500/hm6nONQOgVpKmRK5YUX9EqfJ0NH.jpg', tag: 'AVENTURA • 4K', badge: 'TOP 6', rating: '9.5' },
+  { name: 'Batman (2022)', poster: 'https://image.tmdb.org/t/p/w500/wd7b4Nv9QBHDTIjc2m7sr0IUMoh.jpg', tag: 'DC • 4K', badge: 'TOP 7', rating: '9.4' },
+  { name: 'John Wick 4: Baba Yaga', poster: 'https://image.tmdb.org/t/p/w500/rXTqhpkpj6E0YilQ49PK1SSqLhm.jpg', tag: 'AÇÃO • 4K', badge: 'TOP 8', rating: '9.7' },
+  { name: 'Super Mario Bros. O Filme', poster: 'https://image.tmdb.org/t/p/w500/ij8sapIEbLf2g8npOu6XgsQS2w0.jpg', tag: 'KIDS • 4K', badge: 'TOP 9', rating: '9.5' },
+  { name: 'Top Gun: Maverick', poster: 'https://image.tmdb.org/t/p/w500/kPbuLGVSJHATkW9fX9L3h1wM0Pa.jpg', tag: 'AÇÃO • 4K', badge: 'TOP 10', rating: '9.7' },
+  { name: 'Harry Potter Relíquias 2', poster: 'https://image.tmdb.org/t/p/w500/yD3VosOVW8WxPUzBDpEdzfv5pGx.jpg', tag: 'FANTASIA • FHD', badge: 'SAGA', rating: '9.8' },
+  { name: 'Jogos Vorazes: A Cantiga', poster: 'https://image.tmdb.org/t/p/w500/a9z2cmIBfx99dtzj8TaSFU50AnW.jpg', tag: 'AÇÃO • 4K', badge: 'EM ALTA', rating: '9.4' }
+];
+
+const LANDING_SERIES = [
+  { name: 'Stranger Things', poster: 'https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg', tag: 'NETFLIX • 4K', badge: 'SÉRIE VIP', rating: '9.9' },
+  { name: 'Wandinha (Wednesday)', poster: 'https://image.tmdb.org/t/p/w500/7rxiQrZjrer0RB9qNA8rHYFo53R.jpg', tag: 'NETFLIX • 4K', badge: 'SÉRIE VIP', rating: '9.7' },
+  { name: 'The Last of Us', poster: 'https://image.tmdb.org/t/p/w500/qWo5TP7mBijoZrfxBJkUMctkBt0.jpg', tag: 'HBO MAX • 4K', badge: 'SÉRIE VIP', rating: '9.8' },
+  { name: 'Breaking Bad', poster: 'https://image.tmdb.org/t/p/w500/hGwm9Cj3CdbJIqQWNExQqiYmCd4.jpg', tag: 'CLÁSSICO • 4K', badge: 'NOTA 10', rating: '10' },
+  { name: 'A Casa do Dragão', poster: 'https://image.tmdb.org/t/p/w500/oKJDm4QCKbp6mR4FnxXrFlPJP8Y.jpg', tag: 'HBO MAX • 4K', badge: 'NOVA TEMP.', rating: '9.6' },
+  { name: 'Game of Thrones', poster: 'https://image.tmdb.org/t/p/w500/aqomTRKjNZkmNEeOZnEmWrFTmKU.jpg', tag: 'HBO • 4K', badge: 'COMPLETA', rating: '9.7' },
+  { name: 'Round 6', poster: 'https://image.tmdb.org/t/p/w500/sUolfAUop5JtKkO0fSq33r9KCKW.jpg', tag: 'NETFLIX • 4K', badge: 'FENÔMENO', rating: '9.5' },
+  { name: 'The Boys', poster: 'https://image.tmdb.org/t/p/w500/in1R2dDc421JxsoRWaIIAqVI2KE.jpg', tag: 'PRIME • 4K', badge: 'NOVA TEMP.', rating: '9.7' },
+  { name: 'Peaky Blinders', poster: 'https://image.tmdb.org/t/p/w500/i0uajcHH9yogXMfDHpOXexIukG9.jpg', tag: 'NETFLIX • 4K', badge: 'COMPLETA', rating: '9.8' },
+  { name: 'One Piece (Dublado)', poster: 'https://image.tmdb.org/t/p/w500/aesLt9fsKSA6KCgGxA60VVxjtLk.jpg', tag: 'ANIME • DUBLADO', badge: 'TOP ANIME', rating: '9.9' },
+  { name: 'Naruto Shippuden', poster: 'https://image.tmdb.org/t/p/w500/nRJmByfK9XdtOY73VArcN8KpKVs.jpg', tag: 'ANIME • DUBLADO', badge: 'LENDÁRIO', rating: '9.9' },
+  { name: 'Demon Slayer (Kimetsu)', poster: 'https://image.tmdb.org/t/p/w500/7Uj6vqmznWQ3w3hpQ1eIY9mMyMw.jpg', tag: 'ANIME • DUBLADO', badge: '4K ANIME', rating: '9.8' },
+  { name: 'Dragon Ball Super', poster: 'https://image.tmdb.org/t/p/w500/cQDCIp92rTzTnd8mjb1syLhrAqy.jpg', tag: 'ANIME • DUBLADO', badge: 'ANIME VIP', rating: '9.7' },
+  { name: 'Jujutsu Kaisen', poster: 'https://image.tmdb.org/t/p/w500/8R1mMSC1gX1cg5ed7ns49JOEqw3.jpg', tag: 'ANIME • DUBLADO', badge: 'EM ALTA', rating: '9.8' }
+];
+
 const DEFAULT_PLANS = {
   teste_gratis: {
     id: 'teste_gratis',
@@ -300,222 +333,444 @@ function AuthLandingScreen({ saasConfig, onAuthSuccess }) {
           MODO 1: TELA PÚBLICA DE APRESENTAÇÃO DA PLATAFORMA
          ==================================================== */}
       {viewMode === 'landing' && (
-        <div style={{ width: '100%', maxWidth: '1160px', display: 'flex', flexDirection: 'column', gap: '36px' }}>
-          {/* HERO CENTRAL DE APRESENTAÇÃO */}
+        <div style={{ width: '100%', maxWidth: '1240px', display: 'flex', flexDirection: 'column', gap: '48px', position: 'relative', zIndex: 2 }}>
+          
+          {/* HERO CENTRAL DE APRESENTAÇÃO VIP */}
           <div
             style={{
-              background:
-                'radial-gradient(circle at 50% 20%, rgba(229, 9, 20, 0.35) 0%, rgba(16, 16, 22, 0.96) 70%)',
-              border: '1px solid rgba(255, 255, 255, 0.14)',
-              borderRadius: '20px',
-              padding: '54px 28px',
+              position: 'relative',
+              background: 'radial-gradient(circle at 50% 20%, rgba(229, 9, 20, 0.42) 0%, rgba(18, 18, 24, 0.98) 65%, #0d0d12 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.16)',
+              borderRadius: '24px',
+              padding: 'clamp(36px, 6vw, 68px) 24px',
               textAlign: 'center',
-              boxShadow: '0 28px 80px rgba(0, 0, 0, 0.85)'
+              boxShadow: '0 32px 90px rgba(0, 0, 0, 0.9), 0 0 60px rgba(229, 9, 20, 0.18)',
+              overflow: 'hidden'
             }}
           >
-            <div
-              style={{
-                display: 'inline-block',
-                background: 'rgba(229, 9, 20, 0.24)',
-                border: '1px solid #e50914',
-                color: '#fff',
-                fontSize: '12px',
-                fontWeight: 900,
-                padding: '5px 14px',
-                borderRadius: '99px',
-                marginBottom: '16px',
-                letterSpacing: '1px'
-              }}
-            >
-              🎬 PLATAFORMA OFICIAL POBREFLIX • 100% DUBLADO PT-BR • ZERO ANÚNCIOS
+            {/* MOSAICO DE CAPAS SUAVE AO FUNDO DO HERO */}
+            <div className="landing-hero-backdrop">
+              <div className="landing-backdrop-grid">
+                {[...LANDING_MOVIES, ...LANDING_SERIES].slice(0, 16).map((item, idx) => (
+                  <img key={idx} src={item.poster} alt="" loading="lazy" />
+                ))}
+              </div>
+              <div className="landing-backdrop-overlay" />
             </div>
 
-            <h1
-              style={{
-                fontSize: 'clamp(28px, 4.6vw, 52px)',
-                fontWeight: 900,
-                lineHeight: 1.1,
-                maxWidth: '880px',
-                margin: '0 auto',
-                color: '#fff'
-              }}
-            >
-              Os 20.000 Melhores Filmes, 20.000 Séries e 10.000 Animes & Kids em um só lugar.
-            </h1>
-
-            <p
-              style={{
-                fontSize: 'clamp(15px, 2vw, 19px)',
-                color: '#ccc',
-                maxWidth: '740px',
-                margin: '16px auto 28px',
-                lineHeight: 1.5
-              }}
-            >
-              Crie perfis personalizados para toda a família, controle suas telas simultâneas em tempo real e assista sem travamentos.{' '}
-              <strong style={{ color: '#46d369' }}>
-                Experimente com o Teste Grátis de 2 Horas mediante cadastro!
-              </strong>
-            </p>
-
-            {/* Barra de Entrada Rápida por E-mail (estilo Netflix) */}
-            <form
-              onSubmit={handleStartWithEmail}
-              style={{
-                maxWidth: '640px',
-                margin: '0 auto',
-                display: 'flex',
-                gap: '10px',
-                flexWrap: 'wrap',
-                justifyContent: 'center'
-              }}
-            >
-              <input
-                type="email"
-                className="form-input"
+            {/* CONTEÚDO PRINCIPAL DO HERO */}
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <div
                 style={{
-                  flex: '1 1 300px',
-                  padding: '15px 18px',
-                  fontSize: '15.5px',
-                  background: 'rgba(0,0,0,0.75)',
-                  border: '1px solid rgba(255,255,255,0.3)'
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'rgba(229, 9, 20, 0.28)',
+                  border: '1px solid #e50914',
+                  color: '#fff',
+                  fontSize: '12.5px',
+                  fontWeight: 900,
+                  padding: '6px 18px',
+                  borderRadius: '99px',
+                  marginBottom: '20px',
+                  letterSpacing: '1px',
+                  boxShadow: '0 0 20px rgba(229, 9, 20, 0.4)'
                 }}
-                placeholder="Digite seu e-mail para Entrar ou Criar Conta..."
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <button
-                type="submit"
-                className="nf-btn nf-btn-red"
-                style={{
-                  padding: '15px 28px',
-                  fontSize: '16px',
-                  fontWeight: 900
-                }}
-                disabled={loading}
               >
-                {loading ? 'Verificando...' : 'Vamos lá ›'}
-              </button>
-            </form>
+                🔥 O MAIOR STREAMING VIP DO BRASIL • 100% DUBLADO • ZERO TRAVAMENTOS
+              </div>
 
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                gap: '16px',
-                marginTop: '18px',
-                flexWrap: 'wrap',
-                fontSize: '13px',
-                color: '#aaa'
-              }}
-            >
-              <span>✔ Já tem conta? Clique em <strong>Entrar</strong></span>
-              <span>•</span>
-              <span>✔ Novo por aqui? Cadastre-se e ganhe <strong>2 Horas de Teste Grátis</strong></span>
+              <h1
+                style={{
+                  fontSize: 'clamp(32px, 5.5vw, 60px)',
+                  fontWeight: 950,
+                  lineHeight: 1.1,
+                  maxWidth: '960px',
+                  margin: '0 auto',
+                  color: '#fff',
+                  letterSpacing: '-0.5px',
+                  textShadow: '0 4px 24px rgba(0,0,0,0.8)'
+                }}
+              >
+                Filmes do Cinema, Séries Famosas, Animes e TV Ao Vivo.
+              </h1>
+
+              <p
+                style={{
+                  fontSize: 'clamp(16px, 2.2vw, 20px)',
+                  color: '#ddd',
+                  maxWidth: '780px',
+                  margin: '20px auto 32px',
+                  lineHeight: 1.55,
+                  textShadow: '0 2px 10px rgba(0,0,0,0.8)'
+                }}
+              >
+                Os maiores sucessos da <strong>Netflix, HBO Max, Disney+, Prime Video e Cinema</strong> em um único aplicativo.{' '}
+                <strong style={{ color: '#46d369' }}>
+                  Cadastre-se e ganhe 2 Horas de Teste Grátis imediato!
+                </strong>
+              </p>
+
+              {/* Barra de Entrada Rápida por E-mail (estilo Netflix) */}
+              <form
+                onSubmit={handleStartWithEmail}
+                style={{
+                  maxWidth: '680px',
+                  margin: '0 auto',
+                  display: 'flex',
+                  gap: '12px',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center'
+                }}
+              >
+                <input
+                  type="email"
+                  className="form-input"
+                  style={{
+                    flex: '1 1 320px',
+                    padding: '16px 20px',
+                    fontSize: '16px',
+                    background: 'rgba(0,0,0,0.82)',
+                    border: '1px solid rgba(255,255,255,0.35)',
+                    borderRadius: '8px',
+                    boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.6)'
+                  }}
+                  placeholder="Digite seu e-mail para Começar..."
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <button
+                  type="submit"
+                  className="nf-btn nf-btn-red"
+                  style={{
+                    padding: '16px 34px',
+                    fontSize: '17px',
+                    fontWeight: 900,
+                    borderRadius: '8px',
+                    boxShadow: '0 0 25px rgba(229, 9, 20, 0.7)'
+                  }}
+                  disabled={loading}
+                >
+                  {loading ? 'Verificando...' : 'COMEÇAR TESTE GRÁTIS ›'}
+                </button>
+              </form>
+
+              {/* SELOS DE QUALIDADE / CONFIANÇA */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: '12px',
+                  marginTop: '28px',
+                  flexWrap: 'wrap'
+                }}
+              >
+                {[
+                  '⚡ 4K Ultra HD & Full HD',
+                  '🎧 Áudio Dolby 5.1',
+                  '🇧🇷 100% Dublado PT-BR',
+                  '🚫 Zero Anúncios & Sem Travamentos',
+                  '📱 Até 4 Telas Simultâneas'
+                ].map((badgeText, bIdx) => (
+                  <span
+                    key={bIdx}
+                    style={{
+                      background: 'rgba(255,255,255,0.08)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255,255,255,0.14)',
+                      padding: '6px 14px',
+                      borderRadius: '99px',
+                      fontSize: '12.5px',
+                      fontWeight: 700,
+                      color: '#eee'
+                    }}
+                  >
+                    {badgeText}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* 4 PILARES DE APRESENTAÇÃO DA PLATAFORMA */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-              gap: '16px'
-            }}
-          >
-            <div
-              style={{
-                background: '#14141a',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '14px',
-                padding: '22px'
-              }}
-            >
-              <div style={{ fontSize: '34px', marginBottom: '10px' }}>🍿</div>
-              <h3 style={{ fontSize: '17px', fontWeight: 900, marginBottom: '6px' }}>
-                20.000 Melhores Filmes Dublados
-              </h3>
-              <p style={{ fontSize: '13px', color: '#aaa', lineHeight: 1.5 }}>
-                Lançamentos, Ação, Comédia, Terror, Ficção e Animações em alta definição, 100% em Português e sem anúncios.
-              </p>
+          {/* ====================================================
+              CARROSSEL INFINITO 1: FILMES BLOCKBUSTERS DO CINEMA
+             ==================================================== */}
+          <div style={{ width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '24px' }}>🔥</span>
+                <h2 style={{ fontSize: '22px', fontWeight: 900, color: '#fff', margin: 0 }}>
+                  Filmes Mais Assistidos do Cinema & Blockbusters
+                </h2>
+              </div>
+              <span style={{ fontSize: '13px', color: '#e50914', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                🎬 20.000 Filmes • 100% Dublado • 4K
+              </span>
             </div>
 
-            <div
-              style={{
-                background: '#14141a',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '14px',
-                padding: '22px'
-              }}
-            >
-              <div style={{ fontSize: '34px', marginBottom: '10px' }}>📺</div>
-              <h3 style={{ fontSize: '17px', fontWeight: 900, marginBottom: '6px' }}>
-                20.000 Séries com Próximo Episódio
-              </h3>
-              <p style={{ fontSize: '13px', color: '#aaa', lineHeight: 1.5 }}>
-                Escolha a temporada e o episódio, pule a abertura e avance automaticamente assim que começam os créditos finais.
-              </p>
-            </div>
-
-            <div
-              style={{
-                background: '#14141a',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '14px',
-                padding: '22px'
-              }}
-            >
-              <div style={{ fontSize: '34px', marginBottom: '10px' }}>📡</div>
-              <h3 style={{ fontSize: '17px', fontWeight: 900, marginBottom: '6px' }}>
-                109 Canais de TV Ao Vivo
-              </h3>
-              <p style={{ fontSize: '13px', color: '#aaa', lineHeight: 1.5 }}>
-                Globo, SporTV, Premiere, ESPN, HBO, Telecine, Discovery, Band, Record, SBT e canais infantis 24 horas no ar.
-              </p>
-            </div>
-
-            <div
-              style={{
-                background: '#14141a',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '14px',
-                padding: '22px'
-              }}
-            >
-              <div style={{ fontSize: '34px', marginBottom: '10px' }}>📱</div>
-              <h3 style={{ fontSize: '17px', fontWeight: 900, marginBottom: '6px' }}>
-                Perfis, PIN & Controle de Telas
-              </h3>
-              <p style={{ fontSize: '13px', color: '#aaa', lineHeight: 1.5 }}>
-                Até 5 perfis por conta (com modo Kids automático e bloqueio por PIN) e painel ao vivo para gerenciar aparelhos conectados.
-              </p>
+            <div className="landing-marquee-container">
+              <div className="landing-marquee-track scroll-left">
+                {[...LANDING_MOVIES, ...LANDING_MOVIES].map((m, idx) => (
+                  <div
+                    key={`m_${idx}`}
+                    className="landing-poster-card"
+                    onClick={() => {
+                      setSelectedPlan('teste_gratis');
+                      setViewMode('register');
+                    }}
+                    title={`Assistir ${m.name} no Teste Grátis`}
+                  >
+                    <span className="landing-poster-badge">{m.badge}</span>
+                    <span className="landing-poster-rating">★ {m.rating}</span>
+                    <img src={m.poster} alt={m.name} className="landing-poster-img" loading="lazy" />
+                    <div className="landing-poster-info">
+                      <div className="landing-poster-title">{m.name}</div>
+                      <div className="landing-poster-tag">{m.tag}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* VITRINE DE PLANOS E TESTE GRÁTIS DE 2 HORAS */}
-          <div
-            style={{
-              background: '#121217',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '16px',
-              padding: '28px'
-            }}
-          >
-            <div style={{ textAlign: 'center', marginBottom: '22px' }}>
-              <h2 style={{ fontSize: '26px', fontWeight: 900 }}>
-                Escolha seu Plano ou Ative o Teste Grátis de 2 Horas
+          {/* ====================================================
+              CARROSSEL INFINITO 2: SÉRIES CONSAGRADAS & ANIMES
+             ==================================================== */}
+          <div style={{ width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '24px' }}>🍿</span>
+                <h2 style={{ fontSize: '22px', fontWeight: 900, color: '#fff', margin: 0 }}>
+                  Séries Famosas do Momento & Animes Clássicos
+                </h2>
+              </div>
+              <span style={{ fontSize: '13px', color: '#46d369', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                📺 20.000 Séries • Temporadas Completas
+              </span>
+            </div>
+
+            <div className="landing-marquee-container">
+              <div className="landing-marquee-track scroll-right">
+                {[...LANDING_SERIES, ...LANDING_SERIES].map((s, idx) => (
+                  <div
+                    key={`s_${idx}`}
+                    className="landing-poster-card"
+                    onClick={() => {
+                      setSelectedPlan('teste_gratis');
+                      setViewMode('register');
+                    }}
+                    title={`Assistir ${s.name} no Teste Grátis`}
+                  >
+                    <span
+                      className="landing-poster-badge"
+                      style={{ background: s.badge.includes('ANIME') ? '#f97316' : '#e50914' }}
+                    >
+                      {s.badge}
+                    </span>
+                    <span className="landing-poster-rating">★ {s.rating}</span>
+                    <img src={s.poster} alt={s.name} className="landing-poster-img" loading="lazy" />
+                    <div className="landing-poster-info">
+                      <div className="landing-poster-title">{s.name}</div>
+                      <div className="landing-poster-tag">{s.tag}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ====================================================
+              VITRINES VISUAIS DOS GRANDES CATÁLOGOS (COM 3D STACK)
+             ==================================================== */}
+          <div style={{ width: '100%' }}>
+            <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+              <h2 style={{ fontSize: '30px', fontWeight: 900, color: '#fff' }}>
+                Tudo o que Você Ama em um Só Lugar
               </h2>
-              <p style={{ fontSize: '13.5px', color: '#aaa', marginTop: '4px' }}>
-                O cadastro de conta é obrigatório para liberar qualquer acesso, inclusive o Teste Grátis de 2 Horas.
+              <p style={{ fontSize: '15px', color: '#aaa', marginTop: '6px' }}>
+                Chega de pagar 5 assinaturas diferentes todo mês. No PobreFlix você tem acesso unificado a tudo!
               </p>
             </div>
 
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
-                gap: '14px'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                gap: '20px'
+              }}
+            >
+              {/* Card 1: Filmes */}
+              <div className="landing-cat-card">
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                    <span style={{ fontSize: '28px' }}>🎬</span>
+                    <h3 style={{ fontSize: '19px', fontWeight: 900, color: '#fff', margin: 0 }}>20.000 Filmes de Sucesso</h3>
+                  </div>
+                  <p style={{ fontSize: '13px', color: '#aaa', lineHeight: 1.5 }}>
+                    Lançamentos recém-saídos do cinema, sagas completas (Velozes e Furiosos, Harry Potter, Matrix) e clássicos em Full HD e 4K.
+                  </p>
+                </div>
+                <div className="landing-cat-stack">
+                  <img src="https://image.tmdb.org/t/p/w500/xNqt1Om0IlUhDOjZRCL5ewoazVV.jpg" alt="Velozes 10" />
+                  <img src="https://image.tmdb.org/t/p/w500/q6725aR8Zs4IwGMXzZT8aC8lh41.jpg" alt="Vingadores" />
+                  <img src="https://image.tmdb.org/t/p/w500/dUPQszWoRSE9FucJTbVp2bwEi9G.jpg" alt="Oppenheimer" />
+                </div>
+              </div>
+
+              {/* Card 2: Séries */}
+              <div className="landing-cat-card">
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                    <span style={{ fontSize: '28px' }}>📺</span>
+                    <h3 style={{ fontSize: '19px', fontWeight: 900, color: '#fff', margin: 0 }}>20.000 Séries Famosas</h3>
+                  </div>
+                  <p style={{ fontSize: '13px', color: '#aaa', lineHeight: 1.5 }}>
+                    Temporadas completas com seleção de episódios, player inteligente que avança para o próximo episódio automaticamente.
+                  </p>
+                </div>
+                <div className="landing-cat-stack">
+                  <img src="https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg" alt="Stranger Things" />
+                  <img src="https://image.tmdb.org/t/p/w500/qWo5TP7mBijoZrfxBJkUMctkBt0.jpg" alt="The Last of Us" />
+                  <img src="https://image.tmdb.org/t/p/w500/7rxiQrZjrer0RB9qNA8rHYFo53R.jpg" alt="Wandinha" />
+                </div>
+              </div>
+
+              {/* Card 3: Animes & Kids */}
+              <div className="landing-cat-card">
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                    <span style={{ fontSize: '28px' }}>⚔️</span>
+                    <h3 style={{ fontSize: '19px', fontWeight: 900, color: '#fff', margin: 0 }}>10.000 Animes & Kids</h3>
+                  </div>
+                  <p style={{ fontSize: '13px', color: '#aaa', lineHeight: 1.5 }}>
+                    One Piece, Naruto, Dragon Ball e Demon Slayer 100% dublados, além de perfil Kids com bloqueio seguro para crianças.
+                  </p>
+                </div>
+                <div className="landing-cat-stack">
+                  <img src="https://image.tmdb.org/t/p/w500/aesLt9fsKSA6KCgGxA60VVxjtLk.jpg" alt="One Piece" />
+                  <img src="https://image.tmdb.org/t/p/w500/nRJmByfK9XdtOY73VArcN8KpKVs.jpg" alt="Naruto" />
+                  <img src="https://image.tmdb.org/t/p/w500/7Uj6vqmznWQ3w3hpQ1eIY9mMyMw.jpg" alt="Demon Slayer" />
+                </div>
+              </div>
+
+              {/* Card 4: TV Ao Vivo */}
+              <div className="landing-cat-card">
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                    <span style={{ fontSize: '28px' }}>📡</span>
+                    <h3 style={{ fontSize: '19px', fontWeight: 900, color: '#fff', margin: 0 }}>109 Canais de TV Ao Vivo</h3>
+                  </div>
+                  <p style={{ fontSize: '13px', color: '#aaa', lineHeight: 1.5 }}>
+                    Futebol nacional e internacional ao vivo, filmes 24h, notícias e entretenimento com canais abertos e fechados sem delay.
+                  </p>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '20px' }}>
+                  {['⚽ Premiere', '📺 SporTV', '🍿 Telecine', '🎬 HBO', '🥊 ESPN', '📰 Globo', '📡 Band', '⭐ Discovery'].map((ch, i) => (
+                    <span
+                      key={i}
+                      style={{
+                        background: 'rgba(255,255,255,0.07)',
+                        border: '1px solid rgba(255,255,255,0.12)',
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        color: '#eee'
+                      }}
+                    >
+                      {ch}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ====================================================
+              ASSISTA EM QUALQUER DISPOSITIVO
+             ==================================================== */}
+          <div
+            style={{
+              background: 'linear-gradient(180deg, rgba(20,20,26,0.85) 0%, rgba(14,14,18,0.95) 100%)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '20px',
+              padding: '36px 24px',
+              textAlign: 'center'
+            }}
+          >
+            <h2 style={{ fontSize: '28px', fontWeight: 900, color: '#fff' }}>
+              Assista Onde Quiser, Quando Quiser
+            </h2>
+            <p style={{ fontSize: '14.5px', color: '#aaa', maxWidth: '640px', margin: '8px auto 0' }}>
+              Transmita na sua TV da sala ou assista no celular enquanto viaja. Compatibilidade total com seus aparelhos favoritos:
+            </p>
+
+            <div className="landing-device-grid">
+              <div className="landing-device-item">
+                <div className="landing-device-icon">📺</div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>Smart TVs</div>
+                <div style={{ fontSize: '12px', color: '#aaa', marginTop: '4px' }}>Samsung, LG, Android TV, Fire TV, Roku & Apple TV</div>
+              </div>
+              <div className="landing-device-item">
+                <div className="landing-device-icon">📱</div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>Celulares & Tablets</div>
+                <div style={{ fontSize: '12px', color: '#aaa', marginTop: '4px' }}>Android, iPhone e iPad com modo cinema e tela cheia</div>
+              </div>
+              <div className="landing-device-item">
+                <div className="landing-device-icon">💻</div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>Computadores</div>
+                <div style={{ fontSize: '12px', color: '#aaa', marginTop: '4px' }}>Google Chrome, Microsoft Edge, Opera e Safari</div>
+              </div>
+              <div className="landing-device-item">
+                <div className="landing-device-icon">🎮</div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>TV Box & Consoles</div>
+                <div style={{ fontSize: '12px', color: '#aaa', marginTop: '4px' }}>Chromecast, Mi Box, MXQ, Xbox e PlayStation</div>
+              </div>
+            </div>
+          </div>
+
+          {/* ====================================================
+              VITRINE DE PLANOS E TESTE GRÁTIS DE 2 HORAS
+             ==================================================== */}
+          <div
+            style={{
+              background: '#121217',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: '20px',
+              padding: '36px 24px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.8)'
+            }}
+          >
+            <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+              <div
+                style={{
+                  display: 'inline-block',
+                  background: 'rgba(70, 211, 105, 0.16)',
+                  border: '1px solid #46d369',
+                  color: '#46d369',
+                  fontSize: '12px',
+                  fontWeight: 900,
+                  padding: '4px 14px',
+                  borderRadius: '99px',
+                  marginBottom: '10px'
+                }}
+              >
+                SEM FIDELIDADE • CANCELE QUANDO QUISER
+              </div>
+              <h2 style={{ fontSize: '28px', fontWeight: 900, color: '#fff' }}>
+                Planos Transparentes ou Teste Grátis de 2 Horas
+              </h2>
+              <p style={{ fontSize: '14px', color: '#aaa', marginTop: '4px' }}>
+                Crie sua conta agora para liberar o acesso imediato sem precisar de cartão de crédito.
+              </p>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: '16px'
               }}
             >
               {planList.map((pl) => (
@@ -523,26 +778,37 @@ function AuthLandingScreen({ saasConfig, onAuthSuccess }) {
                   key={pl.id}
                   className="saas-plan-card"
                   style={{
-                    padding: '20px',
+                    padding: '24px 20px',
                     justifyContent: 'space-between',
-                    gap: '14px',
-                    borderColor: pl.id === 'familia_4k' ? '#e50914' : 'rgba(255,255,255,0.12)'
+                    gap: '16px',
+                    borderColor: pl.id === 'familia_4k' ? '#e50914' : 'rgba(255,255,255,0.12)',
+                    boxShadow: pl.id === 'familia_4k' ? '0 0 30px rgba(229, 9, 20, 0.28)' : 'none'
                   }}
                 >
-                  {pl.badge && <span className="saas-plan-badge">{pl.badge}</span>}
+                  {pl.badge && (
+                    <span
+                      className="saas-plan-badge"
+                      style={{
+                        background: pl.id === 'familia_4k' ? '#e50914' : pl.id === 'teste_gratis' ? '#46d369' : '#333',
+                        color: '#fff'
+                      }}
+                    >
+                      {pl.badge}
+                    </span>
+                  )}
                   <div>
-                    <div style={{ fontWeight: 900, fontSize: '17px', color: '#fff' }}>{pl.name}</div>
-                    <div style={{ fontSize: '24px', fontWeight: 900, color: '#46d369', marginTop: '6px' }}>
+                    <div style={{ fontWeight: 900, fontSize: '18px', color: '#fff' }}>{pl.name}</div>
+                    <div style={{ fontSize: '26px', fontWeight: 950, color: '#46d369', marginTop: '8px' }}>
                       {pl.priceFormatted}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#bbb', marginTop: '4px' }}>
+                    <div style={{ fontSize: '12.5px', color: '#ccc', marginTop: '6px' }}>
                       📱 <strong>{pl.maxScreens}</strong>{' '}
                       {pl.maxScreens === 1 ? 'Tela Simultânea' : 'Telas Simultâneas'} • Até {pl.maxProfiles} Perfis
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '12px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
                       {(pl.features || []).map((f, i) => (
-                        <div key={i} style={{ fontSize: '12px', color: '#ccc' }}>
-                          ✓ {f}
+                        <div key={i} style={{ fontSize: '12.5px', color: '#bbb', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ color: '#46d369', fontWeight: 900 }}>✓</span> {f}
                         </div>
                       ))}
                     </div>
@@ -551,7 +817,7 @@ function AuthLandingScreen({ saasConfig, onAuthSuccess }) {
                   <button
                     type="button"
                     className={`nf-btn ${pl.id === 'familia_4k' ? 'nf-btn-red' : 'nf-btn-white'}`}
-                    style={{ width: '100%', justifyContent: 'center' }}
+                    style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '15px', fontWeight: 900, borderRadius: '8px' }}
                     onClick={() => {
                       setSelectedPlan(pl.id);
                       setViewMode('register');
@@ -559,11 +825,17 @@ function AuthLandingScreen({ saasConfig, onAuthSuccess }) {
                       setInfoMsg('');
                     }}
                   >
-                    {pl.id === 'teste_gratis' ? '⏳ Criar Conta p/ Teste de 2h' : '🚀 Criar Conta neste Plano'}
+                    {pl.id === 'teste_gratis' ? '⏳ Ativar Teste 2h Grátis' : '🚀 Assinar Este Plano'}
                   </button>
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* RODAPÉ ELEGANTE POBREFLIX */}
+          <div style={{ textAlign: 'center', padding: '20px 0 40px', color: '#777', fontSize: '12.5px' }}>
+            <p>© 2026 PobreFlix VIP — O Maior Catálogo de Filmes, Séries, Animes e TV Ao Vivo do Brasil.</p>
+            <p style={{ marginTop: '4px' }}>Dúvidas ou suporte? Entre em contato com o administrador da sua conta.</p>
           </div>
         </div>
       )}

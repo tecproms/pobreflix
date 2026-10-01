@@ -2049,3 +2049,247 @@ body {
   background: #fbbf24;
   box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
 }
+
+/* ====================================================
+   POBREFLIX — LANDING DE APRESENTAÇÃO VIP (NETFLIX STYLE)
+   ==================================================== */
+.landing-hero-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 680px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing-backdrop-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 12px;
+  opacity: 0.15;
+  filter: blur(2px) saturate(1.2);
+  transform: rotate(-3deg) scale(1.18) translateY(-40px);
+}
+
+.landing-backdrop-grid img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.landing-backdrop-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 25%, rgba(229, 9, 20, 0.32) 0%, rgba(12, 12, 16, 0.92) 58%, #08080a 100%);
+}
+
+.landing-marquee-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  margin: 12px 0;
+}
+
+.landing-marquee-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+}
+
+.landing-marquee-track.scroll-left {
+  animation: marqueeLeft 48s linear infinite;
+}
+
+.landing-marquee-track.scroll-right {
+  animation: marqueeRight 52s linear infinite;
+}
+
+.landing-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.landing-poster-card {
+  width: 154px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #15151c;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.28s cubic-bezier(0.2, 0, 0, 1);
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+}
+
+.landing-poster-card:hover {
+  transform: translateY(-8px) scale(1.06);
+  border-color: #e50914;
+  box-shadow: 0 16px 36px rgba(229, 9, 20, 0.45);
+  z-index: 10;
+}
+
+.landing-poster-img {
+  width: 100%;
+  height: 224px;
+  object-fit: cover;
+  display: block;
+}
+
+.landing-poster-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(229, 9, 20, 0.92);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+.landing-poster-rating {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  color: #fbbf24;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.landing-poster-info {
+  padding: 10px 10px 12px;
+  background: linear-gradient(180deg, rgba(16, 16, 20, 0.85) 0%, #101014 100%);
+}
+
+.landing-poster-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.landing-poster-tag {
+  font-size: 10.5px;
+  color: #aaa;
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* Big Category Showcase Cards with 3D Stacked Posters */
+.landing-cat-card {
+  background: linear-gradient(145deg, #171720 0%, #0e0e13 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  min-height: 290px;
+}
+
+.landing-cat-card:hover {
+  border-color: rgba(229, 9, 20, 0.6);
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(229, 9, 20, 0.15);
+}
+
+.landing-cat-stack {
+  position: relative;
+  height: 120px;
+  margin-top: 16px;
+}
+
+.landing-cat-stack img {
+  position: absolute;
+  height: 110px;
+  width: 76px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: all 0.3s ease;
+}
+
+.landing-cat-stack img:nth-child(1) {
+  left: 10px;
+  transform: rotate(-10deg);
+  z-index: 1;
+}
+
+.landing-cat-stack img:nth-child(2) {
+  left: 60px;
+  transform: translateY(-8px);
+  z-index: 2;
+}
+
+.landing-cat-stack img:nth-child(3) {
+  left: 110px;
+  transform: rotate(10deg);
+  z-index: 3;
+}
+
+.landing-cat-card:hover .landing-cat-stack img:nth-child(1) {
+  transform: rotate(-16deg) translateX(-10px);
+}
+
+.landing-cat-card:hover .landing-cat-stack img:nth-child(3) {
+  transform: rotate(16deg) translateX(10px);
+}
+
+/* Device Compatibility Grid */
+.landing-device-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.landing-device-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px 16px;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.landing-device-item:hover {
+  background: rgba(229, 9, 20, 0.1);
+  border-color: rgba(229, 9, 20, 0.4);
+  transform: translateY(-3px);
+}
+
+.landing-device-icon {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
