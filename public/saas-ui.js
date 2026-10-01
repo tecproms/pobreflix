@@ -2047,8 +2047,11 @@ function AdminDashboardModal({
   onOpenProfilePicker,
   onLogout,
   onBannersUpdated,
-  initialTab
+  initialTab,
+  isStandalone = false
 }) {
+  if (!isOpen && !isStandalone) return null;
+
   const [tab, setTab] = useState(initialTab || 'users'); // 'users' | 'screens' | 'vouchers' | 'banners'
   const [overview, setOverview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -2372,56 +2375,47 @@ function AdminDashboardModal({
     });
   });
 
-  return (
-    <div className="modal-backdrop" onClick={onClose} style={{ zIndex: 995 }}>
-      <div
-        className="modal-card"
-        style={{ maxWidth: '1080px', width: '96%', background: '#121216' }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="modal-header" style={{ flexWrap: 'wrap', gap: '10px' }}>
-          <div>
-            <h2 style={{ fontSize: '21px', fontWeight: 900, color: '#fbbf24' }}>
-              👑 Painel Master PobreFlix — Gerenciador de Contas, Assinaturas e Telas
-            </h2>
-            <div style={{ fontSize: '12px', color: '#aaa' }}>
-              Acesso exclusivo Master (tecpro@gmail.com) • Controle de clientes, limites de telas, renovação e vouchers.
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            <button type="button" className="nf-btn nf-btn-dark" onClick={fetchOverview}>
-              🔄 Atualizar Dados
-            </button>
-            {onOpenProfilePicker && (
-              <button
-                type="button"
-                className="nf-btn nf-btn-red"
-                onClick={() => {
-                  onClose();
-                  onOpenProfilePicker();
-                }}
-              >
-                🎬 Ir p/ Streaming (Escolher Telas)
-              </button>
-            )}
-            <button type="button" className="nf-btn nf-btn-dark" onClick={onClose}>
-              📺 Ver Catálogo
-            </button>
-            {onLogout && (
-              <button
-                type="button"
-                className="nf-btn nf-btn-dark"
-                style={{ color: '#ff8a8f', borderColor: 'rgba(229,9,20,0.4)' }}
-                onClick={() => {
-                  onClose();
-                  onLogout();
-                }}
-              >
-                🚪 Sair do Master
-              </button>
-            )}
+  const dashboardCard = (
+    <div
+      className={isStandalone ? 'saas-admin-standalone-card' : 'modal-card'}
+      style={{
+        maxWidth: isStandalone ? '1240px' : '1080px',
+        width: '100%',
+        background: '#121216',
+        borderRadius: '12px',
+        border: '1px solid rgba(255,255,255,0.1)',
+        boxShadow: '0 20px 50px rgba(0,0,0,0.8)',
+        display: 'flex',
+        flexDirection: 'column',
+        maxHeight: isStandalone ? 'none' : '90vh'
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="modal-header" style={{ flexWrap: 'wrap', gap: '10px' }}>
+        <div>
+          <h2 style={{ fontSize: '21px', fontWeight: 900, color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            👑 Painel Master PobreFlix — Controle Administrativo
+          </h2>
+          <div style={{ fontSize: '12px', color: '#aaa' }}>
+            Acesso exclusivo Master (tecpro@gmail.com) • Gestão total de clientes, limites de telas, renovação e vouchers.
           </div>
         </div>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <button type="button" className="nf-btn nf-btn-dark" onClick={fetchOverview}>
+            🔄 Atualizar Dados
+          </button>
+          {onLogout && (
+            <button
+              type="button"
+              className="nf-btn nf-btn-red"
+              style={{ background: '#e50914', color: '#fff', fontWeight: 800, padding: '7px 14px' }}
+              onClick={onLogout}
+            >
+              🚪 Sair do Painel Master
+            </button>
+          )}
+        </div>
+      </div>
 
         <div className="modal-body" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
           {/* Cards de Métricas */}
@@ -3432,6 +3426,19 @@ function AdminDashboardModal({
           )}
         </div>
       </div>
+  );
+
+  if (isStandalone) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#0a0a0d', padding: '24px 16px', display: 'flex', justifyContent: 'center' }}>
+        {dashboardCard}
+      </div>
+    );
+  }
+
+  return (
+    <div className="modal-backdrop" onClick={onClose} style={{ zIndex: 995 }}>
+      {dashboardCard}
     </div>
   );
 }

@@ -697,6 +697,14 @@ async function handleSaasRequest(req, res, pathname, parsedReqUrl) {
       return sendJson(res, 401, { ok: false, error: 'Conta não encontrada.' });
     }
 
+    if (user.role === 'admin' || user.id === 'usr_admin_master') {
+      return sendJson(res, 403, {
+        ok: false,
+        code: 'ADMIN_NO_STREAM',
+        error: 'Conta Master Administrativa: esta conta é exclusiva para controle do painel master e não possui acesso ao streaming.'
+      });
+    }
+
     const sessionKey = `${user.id}_${deviceId}`;
     if (kickedDevicesMap.has(sessionKey)) {
       const reason = kickedDevicesMap.get(sessionKey);

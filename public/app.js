@@ -954,15 +954,29 @@ function App() {
       .then((data) => {
         if (data && data.ok && data.user) {
           setCurrentUser(data.user);
-          const savedProfId = sessionStorage.getItem('pobreflix_active_profile_id');
-          const foundProf = (data.user.profiles || []).find((p) => p.id === savedProfId);
-          if (foundProf) {
-            setActiveProfile(foundProf);
-            setFavorites(Array.isArray(foundProf.favorites) ? foundProf.favorites : []);
-            setHistory(Array.isArray(foundProf.history) ? foundProf.history : []);
+          const isMaster =
+            data.user.role === 'admin' ||
+            data.user.id === 'usr_admin_master' ||
+            String(data.user.email || '').toLowerCase() === 'tecpro@gmail.com';
+          if (isMaster) {
+            setActiveProfile(null);
             setShowProfilePicker(false);
+            setShowAdminModal(true);
+            setIsPlayerOpen(false);
+            try {
+              sessionStorage.removeItem('pobreflix_active_profile_id');
+            } catch {}
           } else {
-            setShowProfilePicker(true);
+            const savedProfId = sessionStorage.getItem('pobreflix_active_profile_id');
+            const foundProf = (data.user.profiles || []).find((p) => p.id === savedProfId);
+            if (foundProf) {
+              setActiveProfile(foundProf);
+              setFavorites(Array.isArray(foundProf.favorites) ? foundProf.favorites : []);
+              setHistory(Array.isArray(foundProf.history) ? foundProf.history : []);
+              setShowProfilePicker(false);
+            } else {
+              setShowProfilePicker(true);
+            }
           }
         } else {
           localStorage.removeItem('pobreflix_auth_token');
@@ -984,20 +998,17 @@ function App() {
     const isMasterAccount =
       redirectTo === 'master_panel' ||
       String(userObj?.email || '').toLowerCase() === 'tecpro@gmail.com' ||
-      userObj?.role === 'admin';
+      userObj?.role === 'admin' ||
+      userObj?.id === 'usr_admin_master';
 
     if (isMasterAccount) {
-      const defaultProf = (userObj?.profiles && userObj.profiles[0]) || null;
-      setActiveProfile(defaultProf);
-      if (defaultProf) {
-        try {
-          sessionStorage.setItem('pobreflix_active_profile_id', defaultProf.id);
-        } catch {}
-        if (Array.isArray(defaultProf.favorites)) setFavorites(defaultProf.favorites);
-        if (Array.isArray(defaultProf.history)) setHistory(defaultProf.history);
-      }
+      setActiveProfile(null);
       setShowProfilePicker(false);
       setShowAdminModal(true);
+      setIsPlayerOpen(false);
+      try {
+        sessionStorage.removeItem('pobreflix_active_profile_id');
+      } catch {}
     } else {
       setShowAdminModal(false);
       setActiveProfile(null);
@@ -1044,7 +1055,14 @@ function App() {
 
   // Pulso (Heartbeat) em tempo real para o Gerenciador de Telas Simultâneas
   const sendScreenHeartbeat = useCallback(async () => {
-    if (!authToken || !currentUser || !activeProfile) return;
+    if (
+      !authToken ||
+      !currentUser ||
+      !activeProfile ||
+      currentUser.role === 'admin' ||
+      currentUser.id === 'usr_admin_master'
+    )
+      return;
     try {
       const customName = localStorage.getItem('pobreflix_custom_device_name');
       const watchingTitle =
@@ -2731,6 +2749,32 @@ function App() {
       <SaaS.AuthLandingScreen
         saasConfig={saasConfig}
         onAuthSuccess={handleAuthSuccess}
+      />
+    );
+  }
+
+  // O login Master Administrativo tem acesso EXCLUSIVO ao Painel de Controle Master (NÃO acessa o streamer)
+  const isMasterUser =
+    currentUser &&
+    (currentUser.role === 'admin' ||
+      currentUser.id === 'usr_admin_master' ||
+      String(currentUser.email || '').toLowerCase() === 'tecpro@gmail.com');
+
+  if (isMasterUser && SaaS.AdminDashboardModal) {
+    return (
+      <SaaS.AdminDashboardModal
+        isOpen={true}
+        isStandalone={true}
+        authToken={authToken}
+        initialTab={adminInitialTab}
+        onBannersUpdated={(allBanners, bannerSettings) => {
+          setSaasConfig((prev) => ({
+            ...(prev || {}),
+            adBanners: (allBanners || []).filter((b) => b && b.active !== false && b.imageUrl),
+            adBannerSettings: bannerSettings || prev?.adBannerSettings
+          }));
+        }}
+        onLogout={handleLogout}
       />
     );
   }
