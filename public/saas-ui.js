@@ -1155,6 +1155,7 @@ function ProfilePickerOverlay({
   saasConfig,
   activeProfile,
   onSelectProfile,
+  onClose,
   onUserUpdated,
   onOpenSubModal,
   onOpenAdminModal,
@@ -1277,6 +1278,17 @@ function ProfilePickerOverlay({
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          {onClose && activeProfile && (
+            <button
+              type="button"
+              className="nf-btn nf-btn-dark"
+              onClick={onClose}
+              title="Voltar ao Catálogo da PobreFlix"
+              style={{ borderColor: 'rgba(255,255,255,0.3)', fontWeight: 700 }}
+            >
+              ← Voltar ao Catálogo
+            </button>
+          )}
           <button type="button" className="nf-btn nf-btn-dark" onClick={onOpenSubModal}>
             📱 Assinatura & Telas ({user?.activeScreensCount || 0}/{user?.maxScreens || 1})
           </button>
@@ -1285,8 +1297,13 @@ function ProfilePickerOverlay({
               👑 Painel Admin SaaS
             </button>
           )}
-          <button type="button" className="nf-btn nf-btn-dark" onClick={onLogout}>
-            🚪 Sair da Conta
+          <button
+            type="button"
+            className="nf-btn nf-btn-red"
+            style={{ fontWeight: 800, background: 'linear-gradient(135deg, #e50914 0%, #b80710 100%)' }}
+            onClick={onLogout}
+          >
+            🚪 Sair da Conta (Logout)
           </button>
         </div>
       </div>

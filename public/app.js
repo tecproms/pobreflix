@@ -1230,12 +1230,12 @@ function App() {
             const savedProfId = sessionStorage.getItem('pobreflix_active_profile_id');
             const foundProf = (data.user.profiles || []).find((p) => p.id === savedProfId);
             if (foundProf) {
-              setActiveProfile(foundProf);
+              setActiveProfile((prev) => prev || foundProf);
               setFavorites(Array.isArray(foundProf.favorites) ? foundProf.favorites : []);
               setHistory(
-                Array.isArray(foundProf.history) ? deduplicateHistory(foundProf.history, channels) : []
+                Array.isArray(foundProf.history) ? deduplicateHistory(foundProf.history) : []
               );
-              setShowProfilePicker(false);
+              setShowProfilePicker((prev) => (prev ? true : false));
             } else {
               setShowProfilePicker(true);
             }
@@ -1247,7 +1247,7 @@ function App() {
         }
       })
       .catch(() => {});
-  }, [authToken, channels]);
+  }, [authToken]);
 
   const handleAuthSuccess = useCallback((token, userObj, redirectTo) => {
     try {
@@ -3194,6 +3194,7 @@ function App() {
             saasConfig={saasConfig}
             activeProfile={activeProfile}
             onSelectProfile={handleSelectProfile}
+            onClose={() => setShowProfilePicker(false)}
             onUserUpdated={(updatedUser) => {
               setCurrentUser(updatedUser);
               if (activeProfile) {
@@ -3452,8 +3453,11 @@ function App() {
 
           <div
             className="nf-profile-chip"
-            onClick={() => setShowProfilePicker(true)}
-            title="Trocar de Perfil ('Quem está assistindo?') ou Gerenciar Perfis"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowProfilePicker(true);
+            }}
+            title="Trocar de Perfil ou Sair da Conta (Logout)"
           >
             <div
               className="nf-profile-avatar"
