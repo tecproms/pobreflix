@@ -324,11 +324,24 @@ function ensureDb() {
       db.adBannerSettings = { ...DEFAULT_AD_BANNER_SETTINGS };
       changed = true;
     }
+    if (!Array.isArray(db.plans) || db.plans.length === 0) {
+      db.plans = JSON.parse(JSON.stringify(PLANS));
+      changed = true;
+    }
 
     if (changed) {
       fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf8');
     }
   } catch {}
+}
+
+function getDbPlans(db) {
+  if (db && Array.isArray(db.plans) && db.plans.length > 0) return db.plans;
+  try {
+    const raw = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+    if (Array.isArray(raw.plans) && raw.plans.length > 0) return raw.plans;
+  } catch {}
+  return PLANS;
 }
 
 function saveBannerImageData(imageDataUrl) {
@@ -414,7 +427,8 @@ function sanitizeUser(u) {
   const daysLeft = Math.max(0, Math.ceil((expMs - now) / 86400000));
   const hoursLeft = Math.max(0, Math.ceil((expMs - now) / 3600000));
   const minutesLeft = Math.max(0, Math.ceil((expMs - now) / 60000));
-  const planObj = PLANS.find((p) => p.id === u.planId) || PLANS[1];
+  const currentPlans = getDbPlans();
+  const planObj = currentPlans.find((p) => p.id === u.planId) || currentPlans[1] || PLANS[1];
   const activeScreens = getUserActiveScreens(u.id);
 
   return {
@@ -478,9 +492,10 @@ function extractToken(req, parsedReqUrl, body = {}) {
   ).trim();
 }
 
-function getPlansDictionary() {
+function getPlansDictionary(plansList) {
+  const list = Array.isArray(plansList) && plansList.length > 0 ? plansList : getDbPlans();
   const dict = {};
-  PLANS.forEach((p) => {
+  list.forEach((p) => {
     dict[p.id] = p;
   });
   return dict;
@@ -492,12 +507,13 @@ async function handleSaasRequest(req, res, pathname, parsedReqUrl) {
   // 1. Configuração pública (Planos, Avatares, PIX e Banners de Anúncio em Carrossel)
   if (pathname === '/api/saas/config' && req.method === 'GET') {
     const db = loadDb();
+    const currentPlans = getDbPlans(db);
     const allBanners = Array.isArray(db.adBanners) ? db.adBanners : DEFAULT_AD_BANNERS;
     const activeBanners = allBanners.filter((b) => b && b.active !== false && b.imageUrl);
     return sendJson(res, 200, {
       ok: true,
-      plans: getPlansDictionary(),
-      plansList: PLANS,
+      plans: getPlansDictionary(currentPlans),
+      plansList: currentPlans,
       avatars: AVATARS,
       pixKey: db.pixSettings?.pixKey || 'pix@pobreflix.com.br',
       pixBeneficiary: db.pixSettings?.pixReceiver || 'POBREFLIX STREAMING VIP',
@@ -988,9 +1004,10 @@ async function handleSaasRequest(req, res, pathname, parsedReqUrl) {
       const usersList = db.users.map(sanitizeUser);
       const allScreens = getAllActiveScreens();
       const activeUsers = usersList.filter((u) => u.status === 'active');
+      const currentPlans = getDbPlans(db);
       const monthlyRevenue = activeUsers.reduce((acc, u) => {
-        const p = PLANS.find((pl) => pl.id === u.planId);
-        return acc + (p ? p.price : 0);
+        const p = currentPlans.find((pl) => pl.id === u.planId);
+        return acc + (p ? Number(p.price) || 0 : 0);
       }, 0);
 
       const metrics = {
@@ -1017,7 +1034,7 @@ async function handleSaasRequest(req, res, pathname, parsedReqUrl) {
         pixSettings: db.pixSettings || {},
         adBanners: Array.isArray(db.adBanners) ? db.adBanners : DEFAULT_AD_BANNERS,
         adBannerSettings: db.adBannerSettings || DEFAULT_AD_BANNER_SETTINGS,
-        plans: PLANS
+        plans: currentPlans
       });
     }
 
@@ -1309,6 +1326,91 @@ async function handleSaasRequest(req, res, pathname, parsedReqUrl) {
         ok: true,
         adBanners: db.adBanners,
         adBannerSettings: db.adBannerSettings
+      });
+    }
+
+    // 5. Salvar ou Editar Plano de Assinatura no Painel Master
+    if (pathname === '/api/saas/admin/plan-save' && req.method === 'POST') {
+      const planId = String(body.id || '').trim();
+      const name = String(body.name || '').trim();
+      const price = Number(body.price);
+      const maxScreens = Math.max(1, Math.min(20, Number(body.maxScreens) || 1));
+      const maxProfiles = Math.max(1, Math.min(10, Number(body.maxProfiles) || 5));
+      const quality = String(body.quality || 'Full HD 1080p').trim();
+      const badge = String(body.badge || '').trim();
+      const durationDays = Number(body.durationDays) || 30;
+
+      if (!name) {
+        return sendJson(res, 400, { ok: false, error: 'O nome do plano é obrigatório.' });
+      }
+
+      if (!Array.isArray(db.plans) || db.plans.length === 0) {
+        db.plans = JSON.parse(JSON.stringify(PLANS));
+      }
+
+      let existing = db.plans.find((p) => p.id === planId);
+      const priceFormatted = price === 0 ? 'Grátis (2 Horas)' : `R$ ${price.toFixed(2).replace('.', ',')}/mês`;
+
+      if (existing) {
+        existing.name = name;
+        if (!isNaN(price)) {
+          existing.price = price;
+          existing.priceFormatted = priceFormatted;
+        }
+        existing.maxScreens = maxScreens;
+        existing.maxProfiles = maxProfiles;
+        existing.quality = quality;
+        existing.badge = badge;
+        if (body.durationDays !== undefined) existing.durationDays = durationDays;
+        if (Array.isArray(body.features)) existing.features = body.features;
+      } else {
+        const newId = planId || `plano_${Date.now()}`;
+        const newPlan = {
+          id: newId,
+          name,
+          price: isNaN(price) ? 19.9 : price,
+          priceFormatted,
+          maxScreens,
+          maxProfiles,
+          quality,
+          badge,
+          durationDays,
+          features: Array.isArray(body.features)
+            ? body.features
+            : [
+                `${maxScreens} Tela(s) simultânea(s)`,
+                'Catálogo Completo de Filmes e Séries',
+                'Canais de TV Ao Vivo',
+                `Qualidade ${quality}`
+              ]
+        };
+        db.plans.push(newPlan);
+      }
+
+      saveDb(db);
+      return sendJson(res, 200, {
+        ok: true,
+        plans: db.plans,
+        message: `Plano "${name}" salvo e atualizado com sucesso!`
+      });
+    }
+
+    // Excluir Plano Customizado
+    if (pathname === '/api/saas/admin/plan-delete' && req.method === 'POST') {
+      const planId = String(body.id || '').trim();
+      if (!planId) return sendJson(res, 400, { ok: false, error: 'ID do plano obrigatório.' });
+      if (planId === 'teste_gratis') {
+        return sendJson(res, 400, { ok: false, error: 'O plano de teste grátis não pode ser excluído.' });
+      }
+      if (!Array.isArray(db.plans) || db.plans.length === 0) {
+        db.plans = JSON.parse(JSON.stringify(PLANS));
+      }
+      db.plans = db.plans.filter((p) => p.id !== planId);
+      saveDb(db);
+      return sendJson(res, 200, {
+        ok: true,
+        plans: db.plans,
+        message: 'Plano removido com sucesso!'
       });
     }
   }

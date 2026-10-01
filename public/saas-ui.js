@@ -2084,6 +2084,18 @@ function AdminDashboardModal({
   const [bannerImageData, setBannerImageData] = useState('');
   const [bannerSaving, setBannerSaving] = useState(false);
 
+  // Form Gerenciador de Planos de Assinatura
+  const [editingPlan, setEditingPlan] = useState(null);
+  const [planFormId, setPlanFormId] = useState('');
+  const [planFormName, setPlanFormName] = useState('');
+  const [planFormPrice, setPlanFormPrice] = useState(19.9);
+  const [planFormScreens, setPlanFormScreens] = useState(2);
+  const [planFormProfiles, setPlanFormProfiles] = useState(4);
+  const [planFormQuality, setPlanFormQuality] = useState('Full HD 1080p');
+  const [planFormBadge, setPlanFormBadge] = useState('');
+  const [planFormDays, setPlanFormDays] = useState(30);
+  const [showPlanModal, setShowPlanModal] = useState(false);
+
   useEffect(() => {
     if (initialTab) setTab(initialTab);
   }, [initialTab]);
@@ -2349,6 +2361,78 @@ function AdminDashboardModal({
     } catch {}
   };
 
+  const plansList = Array.isArray(overview?.plans) && overview.plans.length > 0
+    ? overview.plans
+    : Object.values(DEFAULT_PLANS);
+  const plansDict = {};
+  plansList.forEach((p) => {
+    plansDict[p.id] = p;
+  });
+
+  const handleOpenEditPlan = (p) => {
+    setEditingPlan(p);
+    setPlanFormId(p ? p.id : `plano_${Date.now()}`);
+    setPlanFormName(p ? p.name : '');
+    setPlanFormPrice(p ? p.price : 19.9);
+    setPlanFormScreens(p ? p.maxScreens : 2);
+    setPlanFormProfiles(p ? p.maxProfiles : 4);
+    setPlanFormQuality(p ? p.quality : 'Full HD 1080p');
+    setPlanFormBadge(p ? p.badge || '' : '');
+    setPlanFormDays(p ? (p.durationDays || 30) : 30);
+    setShowPlanModal(true);
+  };
+
+  const handleSavePlan = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/saas/admin/plan-save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': authToken
+        },
+        body: JSON.stringify({
+          id: planFormId,
+          name: planFormName.trim(),
+          price: Number(planFormPrice),
+          maxScreens: Number(planFormScreens),
+          maxProfiles: Number(planFormProfiles),
+          quality: planFormQuality.trim(),
+          badge: planFormBadge.trim(),
+          durationDays: Number(planFormDays)
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Erro ao salvar plano');
+      setFeedback(`✅ Plano "${planFormName}" salvo com sucesso!`);
+      setShowPlanModal(false);
+      setEditingPlan(null);
+      fetchOverview();
+    } catch (err) {
+      setFeedback(`⚠️ ${err.message}`);
+    }
+  };
+
+  const handleDeletePlan = async (planId, planName) => {
+    if (!window.confirm(`Tem certeza que deseja excluir o plano "${planName}"?`)) return;
+    try {
+      const res = await fetch('/api/saas/admin/plan-delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': authToken
+        },
+        body: JSON.stringify({ id: planId })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Erro ao excluir plano');
+      setFeedback(`🗑️ Plano "${planName}" removido.`);
+      fetchOverview();
+    } catch (err) {
+      setFeedback(`⚠️ ${err.message}`);
+    }
+  };
+
   const metrics = overview?.metrics || {
     totalUsers: 0,
     activeSubscriptions: 0,
@@ -2479,6 +2563,18 @@ function AdminDashboardModal({
             >
               🎟️ Vouchers / Códigos Pré-Pagos ({overview?.vouchers?.length || 0})
             </button>
+            <button
+              type="button"
+              className={`nf-btn ${tab === 'plans' ? 'nf-btn-red' : 'nf-btn-dark'}`}
+              style={
+                tab !== 'plans'
+                  ? { borderColor: 'rgba(70, 211, 105, 0.45)', color: '#46d369' }
+                  : undefined
+              }
+              onClick={() => setTab('plans')}
+            >
+              💳 Planos & Preços ({plansList.length})
+            </button>
           </div>
 
           {feedback && (
@@ -2574,11 +2670,11 @@ function AdminDashboardModal({
                       value={newUserPlan}
                       onChange={(e) => {
                         setNewUserPlan(e.target.value);
-                        const p = DEFAULT_PLANS[e.target.value];
+                        const p = plansDict[e.target.value];
                         if (p) setNewUserScreens(p.maxScreens);
                       }}
                     >
-                      {Object.values(DEFAULT_PLANS).map((p) => (
+                      {plansList.map((p) => (
                         <option key={p.id} value={p.id}>
                           {p.name} ({p.maxScreens}T)
                         </option>
@@ -2648,7 +2744,7 @@ function AdminDashboardModal({
                                 )
                               }
                             >
-                              {Object.values(DEFAULT_PLANS).map((p) => (
+                              {plansList.map((p) => (
                                 <option key={p.id} value={p.id}>
                                   {p.name}
                                 </option>
@@ -2876,7 +2972,7 @@ function AdminDashboardModal({
                     value={voucherPlan}
                     onChange={(e) => setVoucherPlan(e.target.value)}
                   >
-                    {Object.values(DEFAULT_PLANS).map((p) => (
+                    {plansList.map((p) => (
                       <option key={p.id} value={p.id}>
                         {p.name} ({p.maxScreens} Telas)
                       </option>
@@ -2928,7 +3024,7 @@ function AdminDashboardModal({
                         <td style={{ fontWeight: 900, color: '#46d369', fontFamily: 'monospace', fontSize: '14px' }}>
                           {v.code}
                         </td>
-                        <td>{DEFAULT_PLANS[v.planId]?.name || v.planId}</td>
+                        <td>{plansDict[v.planId]?.name || v.planId}</td>
                         <td>+{v.days} dias</td>
                         <td>
                           {v.usedCount} / {v.maxUses}
@@ -3421,6 +3517,239 @@ function AdminDashboardModal({
                     </div>
                   ))
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* ABA 5: GERENCIADOR DE PLANOS DE ASSINATURA & PREÇOS */}
+          {tab === 'plans' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#46d369' }}>
+                    💳 Planos de Assinatura, Preços e Limites de Telas
+                  </h3>
+                  <div style={{ fontSize: '12.5px', color: '#aaa', marginTop: '3px' }}>
+                    Altere o nome, valor em R$, quantidade de telas simultâneas e resolução dos planos. As edições atualizam automaticamente a tela de cadastro, vouchers e assinaturas.
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="nf-btn nf-btn-red"
+                  style={{ background: '#46d369', color: '#000', fontWeight: 800 }}
+                  onClick={() => handleOpenEditPlan(null)}
+                >
+                  ➕ Criar Novo Plano
+                </button>
+              </div>
+
+              {/* Modal / Formulário de Edição de Plano */}
+              {showPlanModal && (
+                <div
+                  style={{
+                    background: '#191920',
+                    border: '1px solid rgba(70, 211, 105, 0.4)',
+                    borderRadius: '10px',
+                    padding: '18px',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.6)'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                    <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>
+                      {editingPlan ? `✏️ Editar Plano: ${editingPlan.name}` : '➕ Criar Novo Plano de Assinatura'}
+                    </h4>
+                    <button
+                      type="button"
+                      className="nf-btn nf-btn-dark"
+                      style={{ padding: '4px 8px', fontSize: '12px' }}
+                      onClick={() => setShowPlanModal(false)}
+                    >
+                      ✕ Fechar
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleSavePlan} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                      <div>
+                        <label className="form-label">Nome do Plano *</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          style={{ width: '100%' }}
+                          placeholder="Ex: Plano Família VIP 4K"
+                          value={planFormName}
+                          onChange={(e) => setPlanFormName(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">Preço Mensal (R$) *</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          className="form-input"
+                          style={{ width: '100%' }}
+                          placeholder="Ex: 34.90 (ou 0 para grátis)"
+                          value={planFormPrice}
+                          onChange={(e) => setPlanFormPrice(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">Telas Simultâneas *</label>
+                        <select
+                          className="nf-select"
+                          style={{ width: '100%' }}
+                          value={planFormScreens}
+                          onChange={(e) => setPlanFormScreens(Number(e.target.value))}
+                        >
+                          {[1, 2, 3, 4, 5, 6, 8, 10].map((n) => (
+                            <option key={n} value={n}>
+                              📱 {n} {n === 1 ? 'Tela Simultânea' : 'Telas Simultâneas'}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="form-label">Máx. Perfis na Conta</label>
+                        <select
+                          className="nf-select"
+                          style={{ width: '100%' }}
+                          value={planFormProfiles}
+                          onChange={(e) => setPlanFormProfiles(Number(e.target.value))}
+                        >
+                          {[1, 2, 3, 4, 5, 6, 8, 10].map((n) => (
+                            <option key={n} value={n}>
+                              👤 {n} {n === 1 ? 'Perfil' : 'Perfis'}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="form-label">Qualidade / Resolução</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          style={{ width: '100%' }}
+                          placeholder="Ex: 4K Ultra HD + Premiere"
+                          value={planFormQuality}
+                          onChange={(e) => setPlanFormQuality(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">Duração Padrão (Dias)</label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="365"
+                          className="form-input"
+                          style={{ width: '100%' }}
+                          value={planFormDays}
+                          onChange={(e) => setPlanFormDays(Number(e.target.value))}
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">Selo de Destaque (Opcional)</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          style={{ width: '100%' }}
+                          placeholder="Ex: MAIS VENDIDO, PROMOÇÃO, VIP"
+                          value={planFormBadge}
+                          onChange={(e) => setPlanFormBadge(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '6px' }}>
+                      <button
+                        type="button"
+                        className="nf-btn nf-btn-dark"
+                        onClick={() => setShowPlanModal(false)}
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        className="nf-btn nf-btn-red"
+                        style={{ background: '#46d369', color: '#000', fontWeight: 800 }}
+                      >
+                        💾 Salvar Alterações do Plano
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* Grid de Cards dos Planos */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))',
+                  gap: '14px'
+                }}
+              >
+                {plansList.map((p) => (
+                  <div
+                    key={p.id}
+                    style={{
+                      background: '#191920',
+                      border: '1px solid rgba(255,255,255,0.09)',
+                      borderRadius: '10px',
+                      padding: '16px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      gap: '12px'
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '11px', fontWeight: 800, color: '#fbbf24', background: 'rgba(251,191,36,0.1)', padding: '2px 8px', borderRadius: '4px' }}>
+                          {p.badge || 'PLANO'}
+                        </span>
+                        <span style={{ fontSize: '11px', color: '#777' }}>ID: {p.id}</span>
+                      </div>
+                      <h4 style={{ fontSize: '17px', fontWeight: 900, color: '#fff', marginTop: '8px' }}>
+                        {p.name}
+                      </h4>
+                      <div style={{ fontSize: '20px', fontWeight: 900, color: '#46d369', marginTop: '4px' }}>
+                        {p.price === 0 ? 'Grátis' : `R$ ${Number(p.price || 0).toFixed(2).replace('.', ',')}`}
+                        {p.price > 0 && <span style={{ fontSize: '12px', color: '#aaa', fontWeight: 400 }}> /mês</span>}
+                      </div>
+
+                      <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '12.5px', color: '#ccc' }}>
+                        <div>📱 Telas Simultâneas: <strong style={{ color: '#fff' }}>{p.maxScreens} {p.maxScreens === 1 ? 'Tela' : 'Telas'}</strong></div>
+                        <div>👤 Perfis Permitidos: <strong style={{ color: '#fff' }}>Até {p.maxProfiles || 4} Perfis</strong></div>
+                        <div>🎬 Resolução: <strong style={{ color: '#fff' }}>{p.quality || 'Full HD'}</strong></div>
+                        <div>⏳ Validade: <strong style={{ color: '#fff' }}>{p.durationDays >= 1 ? `${p.durationDays} dias` : `${p.durationHours || 2} horas`}</strong></div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '12px' }}>
+                      <button
+                        type="button"
+                        className="nf-btn nf-btn-dark"
+                        style={{ flex: 1, justifyContent: 'center', color: '#fbbf24', borderColor: 'rgba(251,191,36,0.3)' }}
+                        onClick={() => handleOpenEditPlan(p)}
+                      >
+                        ✏️ Editar Plano
+                      </button>
+                      {p.id !== 'teste_gratis' && (
+                        <button
+                          type="button"
+                          className="nf-btn nf-btn-dark"
+                          style={{ padding: '6px 10px', color: '#ff6b72', borderColor: 'rgba(255,107,114,0.3)' }}
+                          title="Excluir este plano"
+                          onClick={() => handleDeletePlan(p.id, p.name)}
+                        >
+                          🗑️
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
