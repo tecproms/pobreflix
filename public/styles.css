@@ -107,11 +107,21 @@ body {
   letter-spacing: 0.04em;
 }
 
-.nf-menu {
+.nf-menu,
+.nf-nav-menu {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.nf-menu::-webkit-scrollbar,
+.nf-nav-menu::-webkit-scrollbar {
+  display: none;
 }
 
 .nf-menu-item {

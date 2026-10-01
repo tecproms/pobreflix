@@ -934,6 +934,122 @@ function CatalogRow({
 }
 
 // ==========================================
+// DEFINIÇÃO CENTRAL DE GÊNEROS & CATEGORIAS
+// ==========================================
+const GENRE_DEFINITIONS = [
+  {
+    id: 'Todos',
+    name: 'Todos',
+    emoji: '🌟',
+    matcher: () => true
+  },
+  {
+    id: 'Ação',
+    name: 'Ação',
+    emoji: '💥',
+    matcher: (ch) =>
+      /ação|acao|action|herói|heroi|combate|guerra|vingadores|velozes|deadpool|john wick|batman|tropa de elite|rambo|exterminador/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Comédia',
+    name: 'Comédia',
+    emoji: '😂',
+    matcher: (ch) =>
+      /comédia|comedia|comedy|sitcom|humor|besteirol|engraç|chris|patroa|friends|chaves|as branquelas|gente grande/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Aventura',
+    name: 'Aventura',
+    emoji: '🗺️',
+    matcher: (ch) =>
+      /aventura|adventure|fantasia|fantasy|jurassic|senhor dos anéis|harry potter|hobbit|indiana jones|piratas/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Drama',
+    name: 'Drama',
+    emoji: '🎭',
+    matcher: (ch) =>
+      /drama|novela|dorama|emocion|superação|clube da luta|chefão|titanic|vida|sonho|liberdade/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Terror',
+    name: 'Terror',
+    emoji: '👻',
+    matcher: (ch) =>
+      /terror|horror|maldito|assomb|exorcist|pânico|panico|invocação|jogos mortais|halloween/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Suspense',
+    name: 'Suspense & Crime',
+    emoji: '🕵️',
+    matcher: (ch) =>
+      /suspense|thriller|crime|policial|investig|mistério|misterio|assassino|máfia/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Ficção Científica',
+    name: 'Ficção Científica',
+    emoji: '🚀',
+    matcher: (ch) =>
+      /ficção|ficcao|sci-fi|alien|interestelar|matrix|duna|star wars|avatar|sobrenatural/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Animação & Kids',
+    name: 'Animação & Kids',
+    emoji: '🎨',
+    matcher: (ch) =>
+      /animação|animacao|desenho|kids|infantil|disney|pixar|shrek|era do gelo|toy story|divertida mente|minions/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Romance',
+    name: 'Romance',
+    emoji: '❤️',
+    matcher: (ch) =>
+      /romance|romântic|amor|paixão|casamento/i.test(`${ch.group || ''} ${ch.name || ''}`)
+  },
+  {
+    id: 'Animes',
+    name: 'Animes',
+    emoji: '🎌',
+    matcher: (ch) =>
+      ch.isAnime ||
+      /anime|naruto|one piece|dragon ball|bleach|death note|jujutsu|demon slayer|solo leveling/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Doramas & Novelas',
+    name: 'Doramas & Novelas',
+    emoji: '🌸',
+    matcher: (ch) =>
+      /dorama|k-drama|novela|corean|globo|pousando|pretendente|tudo bem/i.test(
+        `${ch.group || ''} ${ch.name || ''}`
+      )
+  },
+  {
+    id: 'Canais Ao Vivo',
+    name: 'TV Ao Vivo',
+    emoji: '📡',
+    matcher: (ch) => !ch.isVod
+  }
+];
+
+// ==========================================
 // APLICAÇÃO PRINCIPAL POBREFLIX
 // ==========================================
 function App() {
@@ -2114,13 +2230,20 @@ function App() {
   }, [channels]);
 
   const categories = useMemo(() => {
-    const map = new Map();
-    map.set('Todos', channels.length);
-    channels.forEach((ch) => {
-      const g = ch.group || 'Geral';
-      map.set(g, (map.get(g) || 0) + 1);
-    });
-    return Array.from(map.entries()).map(([name, count]) => ({ name, count }));
+    return GENRE_DEFINITIONS.map((genre) => {
+      let count = 0;
+      if (genre.id === 'Todos') {
+        count = channels.length;
+      } else {
+        count = channels.filter(genre.matcher).length;
+      }
+      return {
+        id: genre.id,
+        name: genre.name,
+        emoji: genre.emoji,
+        count
+      };
+    }).filter((g) => g.count > 0);
   }, [channels]);
 
   const catalogRows = useMemo(() => {
@@ -2154,22 +2277,33 @@ function App() {
       )
     );
 
-    // 2. Filmes VOD Sob Demanda
-    const vodMovies = channels.filter((c) => c.isVod && !c.isSeriesGroup);
-    const vodMoviesAction = vodMovies.filter((c) =>
-      /ação|acao|aventura|ficção|velozes|deadpool|jurassic|macacos|quarteto|matrix|007|guerra|combate|assassino|vingadores|homem-aranha|batman|duna|gladiador|venom|bad boys|john wick|top gun|avatar|interestelar|origem|senhor dos anéis|tropa de elite/i.test(
-        `${c.name} ${c.group}`
-      )
+    // 2. Filmes e Séries Separados por Gênero Real
+    const acaoItems = channels.filter((c) =>
+      /ação|acao|action|herói|heroi|combate|guerra|vingadores|velozes|deadpool|john wick|batman|tropa de elite|rambo|exterminador/i.test(`${c.name} ${c.group}`)
     );
-    const vodMoviesFamily = vodMovies.filter((c) =>
-      /animação|animacao|família|comédia|comedia|gelo|rio |vaca|super-herói|asterix|loucos|branca de neve|wallace|yu-gi-oh|divertida mente|branquelas|pânico|gente grande|click|máskara|shrek|toy story|carros|gato de botas|harry potter|auto da compadecida/i.test(
-        `${c.name} ${c.group}`
-      )
+    const comediaItems = channels.filter((c) =>
+      /comédia|comedia|comedy|sitcom|humor|besteirol|engraç|chris|patroa|friends|chaves|as branquelas|gente grande/i.test(`${c.name} ${c.group}`)
     );
-    const vodMoviesHorrorDrama = vodMovies.filter((c) =>
-      /terror|suspense|drama|romance|clássico|enigma|vermes|maldito|demônio|donnie|vagalumes|amor|sentença|rosa|1984|invocação|coisa|corra|silencioso|clube da luta|lobo de wall street|sonho de liberdade|titanic|oppenheimer|coringa|cidade de deus/i.test(
-        `${c.name} ${c.group}`
-      )
+    const aventuraItems = channels.filter((c) =>
+      /aventura|adventure|fantasia|fantasy|jurassic|senhor dos anéis|harry potter|hobbit|indiana jones|piratas/i.test(`${c.name} ${c.group}`)
+    );
+    const dramaItems = channels.filter((c) =>
+      /drama|novela|dorama|emocion|superação|clube da luta|chefão|titanic|vida|sonho|liberdade/i.test(`${c.name} ${c.group}`)
+    );
+    const terrorItems = channels.filter((c) =>
+      /terror|horror|maldito|assomb|exorcist|pânico|panico|invocação|jogos mortais|halloween/i.test(`${c.name} ${c.group}`)
+    );
+    const suspenseItems = channels.filter((c) =>
+      /suspense|thriller|crime|policial|investig|mistério|misterio|assassino|máfia/i.test(`${c.name} ${c.group}`)
+    );
+    const ficcaoItems = channels.filter((c) =>
+      /ficção|ficcao|sci-fi|alien|interestelar|matrix|duna|star wars|avatar|sobrenatural/i.test(`${c.name} ${c.group}`)
+    );
+    const animacaoItems = channels.filter((c) =>
+      /animação|animacao|desenho|kids|infantil|disney|pixar|shrek|era do gelo|toy story|divertida mente|minions/i.test(`${c.name} ${c.group}`)
+    );
+    const romanceItems = channels.filter((c) =>
+      /romance|romântic|amor|paixão|casamento/i.test(`${c.name} ${c.group}`)
     );
 
     // 3. Top 10 da PobreFlix Brasil
@@ -2420,9 +2554,57 @@ function App() {
         navTarget: 'vod-series'
       },
       {
-        id: 'vod-movies-action',
-        title: '💥 Filmes Blockbusters: Ação, Heróis & Ficção Científica',
-        items: vodMoviesAction.slice(0, 45),
+        id: 'row-acao',
+        title: '💥 Filmes & Séries de Ação (Adrenalina Pura)',
+        items: acaoItems.slice(0, 45),
+        navTarget: 'acao'
+      },
+      {
+        id: 'row-comedia',
+        title: '😂 Comédias & Sitcoms (Para Morrer de Rir)',
+        items: comediaItems.slice(0, 45),
+        navTarget: 'comedia'
+      },
+      {
+        id: 'row-aventura',
+        title: '🗺️ Grandes Aventuras & Fantasia Épica',
+        items: aventuraItems.slice(0, 45),
+        navTarget: 'aventura'
+      },
+      {
+        id: 'row-drama',
+        title: '🎭 Dramas Emocionantes & Premiados',
+        items: dramaItems.slice(0, 45),
+        navTarget: 'drama'
+      },
+      {
+        id: 'row-terror',
+        title: '👻 Terror & Histórias Macabras',
+        items: terrorItems.slice(0, 45),
+        navTarget: 'terror'
+      },
+      {
+        id: 'row-suspense',
+        title: '🕵️ Suspense, Crime & Mistério',
+        items: suspenseItems.slice(0, 45),
+        navTarget: 'vod-movies'
+      },
+      {
+        id: 'row-ficcao',
+        title: '🚀 Ficção Científica & Futuro',
+        items: ficcaoItems.slice(0, 45),
+        navTarget: 'vod-movies'
+      },
+      {
+        id: 'row-animacao',
+        title: '🎨 Animações & Família (Disney, Pixar e Muito Mais)',
+        items: animacaoItems.slice(0, 45),
+        navTarget: 'kids'
+      },
+      {
+        id: 'row-romance',
+        title: '❤️ Romance & Histórias de Amor',
+        items: romanceItems.slice(0, 45),
         navTarget: 'vod-movies'
       },
       {
@@ -2432,22 +2614,10 @@ function App() {
         navTarget: 'vod-series'
       },
       {
-        id: 'vod-movies-family',
-        title: '🍿 Filmes de Comédia, Animação & Família',
-        items: vodMoviesFamily.slice(0, 45),
-        navTarget: 'vod-movies'
-      },
-      {
         id: 'vod-series-cartoons',
         title: '🦸 Desenhos, Heróis & Animações Adultas (Temporadas & Episódios)',
         items: vodSeriesCartoons.slice(0, 45),
         navTarget: 'vod-series'
-      },
-      {
-        id: 'vod-movies-drama',
-        title: '👻 Filmes de Terror, Suspense, Drama & Clássicos do Cinema',
-        items: vodMoviesHorrorDrama.slice(0, 45),
-        navTarget: 'vod-movies'
       },
       {
         id: 'vod-series-doramas',
@@ -2493,6 +2663,36 @@ function App() {
       list = channels.filter((c) => c.isVod && !c.isSeriesGroup && !c.isAnime);
     } else if (navSection === 'vod-series') {
       list = channels.filter((c) => c.isSeriesGroup && !c.isAnime);
+    } else if (navSection === 'acao') {
+      list = channels.filter((c) =>
+        /ação|acao|action|herói|heroi|combate|guerra|vingadores|velozes|deadpool|john wick|batman|tropa de elite|rambo|exterminador/i.test(
+          `${c.group || ''} ${c.name || ''}`
+        )
+      );
+    } else if (navSection === 'comedia') {
+      list = channels.filter((c) =>
+        /comédia|comedia|comedy|sitcom|humor|besteirol|engraç|chris|patroa|friends|chaves|as branquelas|gente grande/i.test(
+          `${c.group || ''} ${c.name || ''}`
+        )
+      );
+    } else if (navSection === 'aventura') {
+      list = channels.filter((c) =>
+        /aventura|adventure|fantasia|fantasy|jurassic|senhor dos anéis|harry potter|hobbit|indiana jones|piratas/i.test(
+          `${c.group || ''} ${c.name || ''}`
+        )
+      );
+    } else if (navSection === 'drama') {
+      list = channels.filter((c) =>
+        /drama|novela|dorama|emocion|superação|clube da luta|chefão|titanic|vida|sonho|liberdade/i.test(
+          `${c.group || ''} ${c.name || ''}`
+        )
+      );
+    } else if (navSection === 'terror') {
+      list = channels.filter((c) =>
+        /terror|horror|maldito|assomb|exorcist|pânico|panico|invocação|jogos mortais|halloween/i.test(
+          `${c.group || ''} ${c.name || ''}`
+        )
+      );
     } else if (navSection === 'kids') {
       list = channels.filter(
         (c) =>
@@ -2505,8 +2705,13 @@ function App() {
       list = channels.filter((c) => !c.isVod);
     }
 
-    if (selectedCategory !== 'Todos') {
-      list = list.filter((ch) => (ch.group || 'Geral') === selectedCategory);
+    if (selectedCategory && selectedCategory !== 'Todos') {
+      const gDef = GENRE_DEFINITIONS.find((g) => g.name === selectedCategory || g.id === selectedCategory);
+      if (gDef) {
+        list = list.filter(gDef.matcher);
+      } else {
+        list = list.filter((ch) => (ch.group || 'Geral') === selectedCategory);
+      }
     }
 
     if (searchQuery.trim() !== '') {
@@ -3086,22 +3291,14 @@ function App() {
 
           <nav className="nf-menu">
             <button
-              className={`nf-menu-item ${navSection === 'home' ? 'active' : ''}`}
+              className={`nf-menu-item ${navSection === 'home' && selectedCategory === 'Todos' ? 'active' : ''}`}
               onClick={() => {
                 setNavSection('home');
                 setSelectedCategory('Todos');
+                setSearchQuery('');
               }}
             >
               Início
-            </button>
-            <button
-              className={`nf-menu-item ${navSection === 'vod-series' ? 'active' : ''}`}
-              onClick={() => {
-                setNavSection('vod-series');
-                setSelectedCategory('Todos');
-              }}
-            >
-              📺 Séries ({vodSeriesCount.toLocaleString('pt-BR')})
             </button>
             <button
               className={`nf-menu-item ${navSection === 'vod-movies' ? 'active' : ''}`}
@@ -3110,7 +3307,61 @@ function App() {
                 setSelectedCategory('Todos');
               }}
             >
-              🍿 Filmes ({vodMoviesCount.toLocaleString('pt-BR')})
+              🍿 Filmes
+            </button>
+            <button
+              className={`nf-menu-item ${navSection === 'vod-series' ? 'active' : ''}`}
+              onClick={() => {
+                setNavSection('vod-series');
+                setSelectedCategory('Todos');
+              }}
+            >
+              📺 Séries
+            </button>
+            <button
+              className={`nf-menu-item ${navSection === 'acao' ? 'active' : ''}`}
+              onClick={() => {
+                setNavSection('acao');
+                setSelectedCategory('Todos');
+              }}
+            >
+              💥 Ação
+            </button>
+            <button
+              className={`nf-menu-item ${navSection === 'comedia' ? 'active' : ''}`}
+              onClick={() => {
+                setNavSection('comedia');
+                setSelectedCategory('Todos');
+              }}
+            >
+              😂 Comédia
+            </button>
+            <button
+              className={`nf-menu-item ${navSection === 'aventura' ? 'active' : ''}`}
+              onClick={() => {
+                setNavSection('aventura');
+                setSelectedCategory('Todos');
+              }}
+            >
+              🗺️ Aventura
+            </button>
+            <button
+              className={`nf-menu-item ${navSection === 'drama' ? 'active' : ''}`}
+              onClick={() => {
+                setNavSection('drama');
+                setSelectedCategory('Todos');
+              }}
+            >
+              🎭 Drama
+            </button>
+            <button
+              className={`nf-menu-item ${navSection === 'terror' ? 'active' : ''}`}
+              onClick={() => {
+                setNavSection('terror');
+                setSelectedCategory('Todos');
+              }}
+            >
+              👻 Terror
             </button>
             <button
               className={`nf-menu-item ${navSection === 'kids' ? 'active' : ''}`}
@@ -3119,7 +3370,7 @@ function App() {
                 setSelectedCategory('Todos');
               }}
             >
-              🎌 Animes & Kids ({animeCount.toLocaleString('pt-BR')})
+              🎌 Animes & Kids
             </button>
             <button
               className={`nf-menu-item ${navSection === 'live' ? 'active' : ''}`}
@@ -3137,7 +3388,7 @@ function App() {
                 setSelectedCategory('Todos');
               }}
             >
-              Minha Lista ({favorites.length})
+              Minha Lista
             </button>
             {history.length > 0 && (
               <button
@@ -3147,7 +3398,7 @@ function App() {
                   setSelectedCategory('Todos');
                 }}
               >
-                Continuar ({history.length})
+                Continuar
               </button>
             )}
           </nav>
@@ -3169,32 +3420,6 @@ function App() {
               </button>
             )}
           </div>
-
-          <select
-            className="nf-select"
-            value={activePlaylistId}
-            onChange={(e) => {
-              const chosen = playlists.find((p) => p.id === e.target.value);
-              if (chosen && chosen.url) {
-                loadPlaylistFromUrl(chosen.url, chosen.name, chosen.id, false);
-              }
-            }}
-            title="Trocar Fonte de Catálogo M3U"
-          >
-            {playlists.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name} {p.count ? `(${p.count})` : ''}
-              </option>
-            ))}
-          </select>
-
-          <button
-            className="nf-btn nf-btn-dark"
-            onClick={() => setShowPlaylistModal(true)}
-            title="Importar ou trocar lista M3U"
-          >
-            ➕ M3U
-          </button>
 
           {currentUser && (
             <button
@@ -3949,17 +4174,17 @@ function App() {
       )}
 
       {/* ==========================================
-          BARRA DE PÍLULAS DE CATEGORIAS
+          BARRA DE PÍLULAS DE CATEGORIAS & GÊNEROS
          ========================================== */}
       <div className="nf-filter-strip">
         <div className="nf-category-pills">
-          {categories.slice(0, 24).map((cat) => (
+          {categories.map((cat) => (
             <button
-              key={cat.name}
+              key={cat.id || cat.name}
               className={`nf-pill ${selectedCategory === cat.name ? 'active' : ''}`}
               onClick={() => setSelectedCategory(cat.name)}
             >
-              {cat.name} ({cat.count})
+              {cat.emoji} {cat.name} ({cat.count.toLocaleString('pt-BR')})
             </button>
           ))}
         </div>
@@ -4046,11 +4271,23 @@ function App() {
                 : selectedCategory !== 'Todos'
                 ? `📂 Categoria: ${selectedCategory}`
                 : navSection === 'vod-series'
-                ? '📺 Todas as Séries (Clique na Série para Escolher Temporada & Episódio)'
+                ? '📺 Todas as Séries (Temporadas & Episódios)'
                 : navSection === 'vod-movies'
                 ? '🍿 Todos os Filmes Sob Demanda'
+                : navSection === 'acao'
+                ? '💥 Filmes e Séries de Ação'
+                : navSection === 'comedia'
+                ? '😂 Filmes e Séries de Comédia'
+                : navSection === 'aventura'
+                ? '🗺️ Filmes e Séries de Aventura'
+                : navSection === 'drama'
+                ? '🎭 Filmes e Séries de Drama'
+                : navSection === 'terror'
+                ? '👻 Filmes e Séries de Terror'
                 : navSection === 'kids'
                 ? '🍥 Animes, Desenhos & Kids'
+                : navSection === 'live'
+                ? '📡 Canais Ao Vivo'
                 : navSection === 'mylist'
                 ? '⭐ Minha Lista'
                 : navSection === 'history'
