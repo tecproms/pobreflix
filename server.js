@@ -458,7 +458,7 @@ const server = http.createServer(async (req, res) => {
 
   // 1.7 Endpoint para resolver link direto .MP4 100% SEM ANÚNCIOS (Internet Archive) para qualquer Filme ou Série
   if (pathname === '/api/resolve-vod') {
-    const titleRaw = (parsedReqUrl.searchParams.get('title') || '').trim();
+    const titleRaw = (parsedReqUrl.searchParams.get('title') || parsedReqUrl.searchParams.get('query') || '').trim();
     const cleanTitle = titleRaw
       .replace(/\(.*?\)|\[.*?\]/g, '')
       .replace(/-\s*T\d+E\d+.*$/i, '')
