@@ -2036,11 +2036,11 @@ function App() {
         });
 
         const effectiveUrl =
-          (match && match.url) ||
           def.url ||
+          (match && match.url) ||
           `cloud://movie/${encodeURIComponent(def.name)}`;
 
-        const effectiveLogo = (match && match.logo) || def.logo || '';
+        const effectiveLogo = def.logo || (match && match.logo) || '';
 
         return {
           id: `seq_${id}_${idx + 1}`,
@@ -2068,126 +2068,127 @@ function App() {
 
     const franchiseRows = [
       buildFranchiseRow('seq-fast-furious', '🏎️ Saga Velozes & Furiosos (Ordem Cronológica 1 ao 10)', [
-        { name: 'Velozes e Furiosos 1 (2001)', pattern: /velozes e furiosos 1\b/i },
-        { name: '+ Velozes + Furiosos 2 (2003)', pattern: /velozes e furiosos 2\b|\+ velozes \+ furiosos/i },
-        { name: 'Velozes e Furiosos 3: Desafio em Tóquio (2006)', pattern: /desafio em t[oó]quio/i },
-        { name: 'Velozes e Furiosos 4 (2009)', pattern: /velozes e furiosos 4\b/i },
-        { name: 'Velozes e Furiosos 5: Operação Rio (2011)', pattern: /opera[çc][aã]o rio/i },
-        { name: 'Velozes e Furiosos 6 (2013)', pattern: /velozes e furiosos 6\b/i },
-        { name: 'Velozes e Furiosos 7 (2015)', pattern: /velozes e furiosos 7\b/i },
-        { name: 'Velozes e Furiosos 8 (2017)', pattern: /velozes e furiosos 8\b/i },
-        { name: 'Velozes & Furiosos: Hobbs & Shaw (2019)', pattern: /hobbs (e|&) shaw/i },
-        { name: 'Velozes e Furiosos 9 (2021)', pattern: /velozes e furiosos 9\b/i },
-        { name: 'Velozes e Furiosos 10 (2023)', pattern: /velozes e furiosos 10\b/i }
+        { name: 'Velozes e Furiosos 1 (2001)', pattern: /velozes e furiosos 1\b/i, logo: 'https://image.tmdb.org/t/p/w500/rKaaYM4CtuJZFdOA0SZWbaMNHbn.jpg' },
+        { name: '+ Velozes + Furiosos 2 (2003)', pattern: /velozes e furiosos 2\b|\+ velozes \+ furiosos/i, logo: 'https://image.tmdb.org/t/p/w500/mx0CB8H78PQu0g9YUWG47hdi93S.jpg' },
+        { name: 'Velozes e Furiosos 3: Desafio em Tóquio (2006)', pattern: /desafio em t[oó]quio/i, logo: 'https://image.tmdb.org/t/p/w500/1kzW2GImY1YVmLRx3NLhXFBfLLO.jpg' },
+        { name: 'Velozes e Furiosos 4 (2009)', pattern: /velozes e furiosos 4\b/i, logo: 'https://image.tmdb.org/t/p/w500/7sjbAOmNFtfTyZ6KFC9t9FDDOcK.jpg' },
+        { name: 'Velozes e Furiosos 5: Operação Rio (2011)', pattern: /opera[çc][aã]o rio/i, logo: 'https://image.tmdb.org/t/p/w500/5BKmQMUPOEtDFDCBW8jrUCI9ZbI.jpg' },
+        { name: 'Velozes e Furiosos 6 (2013)', pattern: /velozes e furiosos 6\b/i, logo: 'https://image.tmdb.org/t/p/w500/h8SD0Kkqv3PUBneQX9tFsDrFu8.jpg' },
+        { name: 'Velozes e Furiosos 7 (2015)', pattern: /velozes e furiosos 7\b/i, logo: 'https://image.tmdb.org/t/p/w500/spydMyyD81HjGJVwZvjajkrWW1h.jpg' },
+        { name: 'Velozes e Furiosos 8 (2017)', pattern: /velozes e furiosos 8\b/i, logo: 'https://image.tmdb.org/t/p/w500/1wcMoiMZ2VxrrWswuarI7g9m9nN.jpg' },
+        { name: 'Velozes & Furiosos: Hobbs & Shaw (2019)', pattern: /hobbs (e|&) shaw/i, logo: 'https://image.tmdb.org/t/p/w500/ltRrxSvxqYrQPQRCEQnhr0KXAlb.jpg' },
+        { name: 'Velozes e Furiosos 9 (2021)', pattern: /velozes e furiosos 9\b/i, logo: 'https://image.tmdb.org/t/p/w500/6TuEPZ3ItlBO8WmH8BmY2aGLhes.jpg' },
+        { name: 'Velozes e Furiosos 10 (2023)', pattern: /velozes e furiosos 10\b/i, logo: 'https://image.tmdb.org/t/p/w500/xNqt1Om0IlUhDOjZRCL5ewoazVV.jpg' }
       ]),
 
       buildFranchiseRow('seq-harry-potter', '⚡ Saga Harry Potter Completa (Ordem 1 ao 8)', [
-        { name: 'Harry Potter 1 e a Pedra Filosofal (2001)', pattern: /pedra filosofal/i },
-        { name: 'Harry Potter 2 e a Câmara Secreta (2002)', pattern: /c[âa]mara secreta/i },
-        { name: 'Harry Potter 3 e o Prisioneiro de Azkaban (2004)', pattern: /prisioneiro de azkaban/i },
-        { name: 'Harry Potter 4 e o Cálice de Fogo (2005)', pattern: /c[áa]lice de fogo/i },
-        { name: 'Harry Potter 5 e a Ordem da Fênix (2007)', pattern: /ordem da f[êe]nix/i },
-        { name: 'Harry Potter 6 e o Enigma do Príncipe (2009)', pattern: /enigma do pr[íi]ncipe/i },
-        { name: 'Harry Potter 7 e as Relíquias da Morte - Parte 1 (2010)', pattern: /rel[íi]quias da morte.*(parte 1|1)/i, url: 'https://archive.org/download/harry-potter-reliquias-da-morte-paixaoflix/Harry%20Potter%20e%20as%20Rel%C3%ADquias%20da%20Morte%20-%20Parte%201.ia.mp4', logo: 'https://m.media-amazon.com/images/M/MV5BOTA1Mzc2N2ItZWRiNS00MjQzLTlmZDQtMjU0NmY1YWRkMGQ4XkEyXkFqcGc@._V1_UX600_.jpg' },
-        { name: 'Harry Potter 8 e as Relíquias da Morte - Parte 2 (2011)', pattern: /rel[íi]quias da morte.*(parte 2|2)/i, url: 'https://archive.org/download/harry-potter-reliquias-da-morte-paixaoflix/Harry%20Potter%20e%20as%20Rel%C3%ADquias%20da%20Morte%20-%20Parte%202.ia.mp4', logo: 'https://m.media-amazon.com/images/M/MV5BNDM1YzgxNWEtZDNjZi00YmFiLWJmODMtNDM1Y2RkM2VkZDNkXkEyXkFqcGc@._V1_UX600_.jpg' }
+        { name: 'Harry Potter 1 e a Pedra Filosofal (2001)', pattern: /pedra filosofal/i, logo: 'https://image.tmdb.org/t/p/w500/4rtsbE9aQ1qw4gv7yYwaNYfWFoS.jpg' },
+        { name: 'Harry Potter 2 e a Câmara Secreta (2002)', pattern: /c[âa]mara secreta/i, logo: 'https://image.tmdb.org/t/p/w500/811j0Jf2D0mK1U6RxXJoZgOB29n.jpg' },
+        { name: 'Harry Potter 3 e o Prisioneiro de Azkaban (2004)', pattern: /prisioneiro de azkaban/i, logo: 'https://image.tmdb.org/t/p/w500/1HdMUghqlgOIvbsU9ZtO40IPRzl.jpg' },
+        { name: 'Harry Potter 4 e o Cálice de Fogo (2005)', pattern: /c[áa]lice de fogo/i, logo: 'https://image.tmdb.org/t/p/w500/5oWB3hjzyECRBAjgWkmZinxl9qA.jpg' },
+        { name: 'Harry Potter 5 e a Ordem da Fênix (2007)', pattern: /ordem da f[êe]nix/i, logo: 'https://image.tmdb.org/t/p/w500/tIf9aUyNljda9MG1pjlOLHCZ3b0.jpg' },
+        { name: 'Harry Potter 6 e o Enigma do Príncipe (2009)', pattern: /enigma do pr[íi]ncipe/i, logo: 'https://image.tmdb.org/t/p/w500/hTQQ5l9mxA3Rob8PTyvrNNGuj6y.jpg' },
+        { name: 'Harry Potter 7 e as Relíquias da Morte - Parte 1 (2010)', pattern: /rel[íi]quias da morte.*(parte 1|1)/i, url: 'https://archive.org/download/harry-potter-reliquias-da-morte-paixaoflix/Harry%20Potter%20e%20as%20Rel%C3%ADquias%20da%20Morte%20-%20Parte%201.ia.mp4', logo: 'https://image.tmdb.org/t/p/w500/67FVFOTaeBUQnimhCWpUkDawDct.jpg' },
+        { name: 'Harry Potter 8 e as Relíquias da Morte - Parte 2 (2011)', pattern: /rel[íi]quias da morte.*(parte 2|2)/i, url: 'https://archive.org/download/harry-potter-reliquias-da-morte-paixaoflix/Harry%20Potter%20e%20as%20Rel%C3%ADquias%20da%20Morte%20-%20Parte%202.ia.mp4', logo: 'https://image.tmdb.org/t/p/w500/yD3VosOVW8WxPUzBDpEdzfv5pGx.jpg' }
       ]),
 
       buildFranchiseRow('seq-hunger-games', '🏹 Saga Jogos Vorazes Completa (Ordem 1 ao 5)', [
-        { name: 'Jogos Vorazes 1 (2012)', pattern: /jogos vorazes 2012|jogos vorazes \(dublado\)|^jogos vorazes\b/i, exclude: /em chamas|esperan[çc]a|cantiga/i },
-        { name: 'Jogos Vorazes 2: Em Chamas (2013)', pattern: /jogos vorazes.*em chamas/i },
-        { name: 'Jogos Vorazes 3: A Esperança - Parte 1 (2014)', pattern: /jogos vorazes.*a esperan[çc]a.*parte 1/i },
-        { name: 'Jogos Vorazes 4: A Esperança - O Final (2015)', pattern: /jogos vorazes.*a esperan[çc]a.*final/i },
-        { name: 'Jogos Vorazes 5: A Cantiga dos Pássaros e das Serpentes (2023)', pattern: /jogos vorazes.*cantiga/i }
+        { name: 'Jogos Vorazes 1 (2012)', pattern: /jogos vorazes 2012|jogos vorazes \(dublado\)|^jogos vorazes\b/i, exclude: /em chamas|esperan[çc]a|cantiga/i, logo: 'https://image.tmdb.org/t/p/w500/l6jn53LMu07uPt8A42JWIKi1Beb.jpg' },
+        { name: 'Jogos Vorazes 2: Em Chamas (2013)', pattern: /jogos vorazes.*em chamas/i, logo: 'https://image.tmdb.org/t/p/w500/m1lky5ftnhLRpkoYWKssH8qvlRU.jpg' },
+        { name: 'Jogos Vorazes 3: A Esperança - Parte 1 (2014)', pattern: /jogos vorazes.*a esperan[çc]a.*parte 1/i, logo: 'https://image.tmdb.org/t/p/w500/hekpVNWOROZm57RS4OLW0ySkxx9.jpg' },
+        { name: 'Jogos Vorazes 4: A Esperança - O Final (2015)', pattern: /jogos vorazes.*a esperan[çc]a.*final/i, logo: 'https://image.tmdb.org/t/p/w500/5KSQkozSelQj6bq8NCKtINvsSSj.jpg' },
+        { name: 'Jogos Vorazes 5: A Cantiga dos Pássaros e das Serpentes (2023)', pattern: /jogos vorazes.*cantiga/i, logo: 'https://image.tmdb.org/t/p/w500/a9z2cmIBfx99dtzj8TaSFU50AnW.jpg' }
       ]),
 
       buildFranchiseRow('seq-twilight', '🧛 Saga Crepúsculo Completa (Ordem 1 ao 5)', [
-        { name: 'Crepúsculo 1 (2008)', pattern: /crep[uú]sculo/i, exclude: /lua nova|eclipse|amanhecer/i },
-        { name: 'Crepúsculo 2: Lua Nova (2009)', pattern: /lua nova/i },
-        { name: 'Crepúsculo 3: Eclipse (2010)', pattern: /eclipse/i },
-        { name: 'Crepúsculo 4: Amanhecer - Parte 1 (2011)', pattern: /amanhecer.*parte 1/i },
-        { name: 'Crepúsculo 5: Amanhecer - Parte 2 (2012)', pattern: /amanhecer.*parte 2/i }
+        { name: 'Crepúsculo 1 (2008)', pattern: /crep[uú]sculo/i, exclude: /lua nova|eclipse|amanhecer/i, logo: 'https://image.tmdb.org/t/p/w500/o4ki1gYHkP6IWNdwjHvI9vzfpuC.jpg' },
+        { name: 'Crepúsculo 2: Lua Nova (2009)', pattern: /lua nova/i, logo: 'https://image.tmdb.org/t/p/w500/z39dbVwa1iIihdUDHGiRy4tc2Ov.jpg' },
+        { name: 'Crepúsculo 3: Eclipse (2010)', pattern: /eclipse/i, logo: 'https://image.tmdb.org/t/p/w500/a8qPjwfKA1MwjEoVPhTf1ptVzdE.jpg' },
+        { name: 'Crepúsculo 4: Amanhecer - Parte 1 (2011)', pattern: /amanhecer.*parte 1/i, logo: 'https://image.tmdb.org/t/p/w500/a6PexAo0jJRLlPNBfdiXXr0HYyz.jpg' },
+        { name: 'Crepúsculo 5: Amanhecer - Parte 2 (2012)', pattern: /amanhecer.*parte 2/i, logo: 'https://image.tmdb.org/t/p/w500/1clnx7FymVEo1NC3Yikf1GrEfq7.jpg' }
       ]),
 
       buildFranchiseRow('seq-matrix', '🕶️ Saga Matrix Completa (Ordem 1 ao 4)', [
-        { name: 'Matrix 1 (1999)', pattern: /^matrix\b/i, exclude: /reloaded|revolutions|resurrections/i },
-        { name: 'Matrix 2: Reloaded (2003)', pattern: /matrix reloaded/i },
-        { name: 'Matrix 3: Revolutions (2003)', pattern: /matrix revolutions/i },
-        { name: 'Matrix 4: Resurrections (2021)', pattern: /matrix resurrections/i, logo: 'https://image.tmdb.org/t/p/w500/8c4a8kE7PizaGQQvMiMmSuF930x.jpg', url: 'cloud://movie/Matrix%20Resurrections' }
+        { name: 'Matrix 1 (1999)', pattern: /^matrix\b/i, exclude: /reloaded|revolutions|resurrections/i, logo: 'https://image.tmdb.org/t/p/w500/lDqMDI3xpbB9UQRyeXfei0MXhqb.jpg' },
+        { name: 'Matrix 2: Reloaded (2003)', pattern: /matrix reloaded/i, logo: 'https://image.tmdb.org/t/p/w500/ayZkaN2f3ASjWW8ooCfuJT3T8Va.jpg' },
+        { name: 'Matrix 3: Revolutions (2003)', pattern: /matrix revolutions/i, logo: 'https://image.tmdb.org/t/p/w500/92oJ810bYqijBQ8tqYL74mSpPtV.jpg' },
+        { name: 'Matrix 4: Resurrections (2021)', pattern: /matrix resurrections/i, url: 'cloud://movie/Matrix%20Resurrections', logo: 'https://image.tmdb.org/t/p/w500/9DT4WVqZqBEI9Kub18gZ3m1D89m.jpg' }
       ]),
 
       buildFranchiseRow('seq-spiderman', '🕷️ Saga Homem-Aranha (Filmes em Sequência & Aranhaverso)', [
-        { name: 'Homem-Aranha 1 (Tobey Maguire - 2002)', pattern: /^spider-man \(dublado\)|^spider-man\b/i, exclude: /2|3|unlimited|animated|across|into|amazing|reloaded/i, logo: 'https://image.tmdb.org/t/p/w500/gh4c2bk0QxgMuueCS2mXdD67daB.jpg' },
-        { name: 'Homem-Aranha 2 (Tobey Maguire - 2004)', pattern: /^spider-man 2/i, logo: 'https://image.tmdb.org/t/p/w500/olxpyq9MgrKW3HQ47usxhOkLumi.jpg' },
-        { name: 'Homem-Aranha 3 (Tobey Maguire - 2007)', pattern: /^spider-man 3/i, logo: 'https://image.tmdb.org/t/p/w500/2jLxvdEu1vjA1zH3P7f31jSff2Y.jpg' },
-        { name: 'O Espetacular Homem-Aranha 1 (Andrew Garfield - 2012)', pattern: /espetacular homem aranha|the amazing spider-man/i, exclude: /2/i },
-        { name: 'O Espetacular Homem-Aranha 2 (Andrew Garfield - 2014)', pattern: /the amazing spider-man 2/i, logo: 'https://image.tmdb.org/t/p/w500/h5oU44U1mI4q9dZ4qMh2V1bC3eC.jpg' },
-        { name: 'Homem-Aranha: De Volta ao Lar (Tom Holland - 2017)', pattern: /homem-aranha.*de volta ao lar|spider-man.*homecoming/i, logo: 'https://image.tmdb.org/t/p/w500/c24sv2weTHPsmDa7jEMN0m2P3RT.jpg', url: 'cloud://movie/Homem-Aranha%3A%20De%20Volta%20ao%20Lar' },
-        { name: 'Homem-Aranha no Aranhaverso (Miles Morales - 2018)', pattern: /no aranhaverso|into the spider-verse/i },
-        { name: 'Homem-Aranha: Longe de Casa (Tom Holland - 2019)', pattern: /homem-aranha.*longe de casa|spider-man.*far from home/i, logo: 'https://image.tmdb.org/t/p/w500/4q2NNXdrwmDYGddZ4x7UrYziq7W.jpg', url: 'cloud://movie/Homem-Aranha%3A%20Longe%20de%20Casa' },
-        { name: 'Homem-Aranha: Sem Volta Para Casa (Tom Holland - 2021)', pattern: /sem volta para casa|no way home/i },
-        { name: 'Homem-Aranha: Através do Aranhaverso (Miles Morales - 2023)', pattern: /atrav[eé]s do aranhaverso|across the spider-verse/i }
+        { name: 'Homem-Aranha 1 (Tobey Maguire - 2002)', pattern: /^spider-man \(dublado\)|^spider-man\b/i, exclude: /2|3|unlimited|animated|across|into|amazing|reloaded/i, logo: 'https://image.tmdb.org/t/p/w500/RbZQL5hXmydecu82UHw9ZGyytB.jpg' },
+        { name: 'Homem-Aranha 2 (Tobey Maguire - 2004)', pattern: /^spider-man 2/i, logo: 'https://image.tmdb.org/t/p/w500/xB05Gyeo2w4RBwt7nZlPkjZzt9X.jpg' },
+        { name: 'Homem-Aranha 3 (Tobey Maguire - 2007)', pattern: /^spider-man 3/i, logo: 'https://image.tmdb.org/t/p/w500/5831VrgpYNPEokBwxurLVpQ3twM.jpg' },
+        { name: 'O Espetacular Homem-Aranha 1 (Andrew Garfield - 2012)', pattern: /espetacular homem aranha|the amazing spider-man/i, exclude: /2/i, logo: 'https://image.tmdb.org/t/p/w500/gxSsFBCFuDhVQMCuIDoZcmHOqlY.jpg' },
+        { name: 'O Espetacular Homem-Aranha 2 (Andrew Garfield - 2014)', pattern: /the amazing spider-man 2/i, logo: 'https://image.tmdb.org/t/p/w500/cyMz4OfmNqpuQ02QQOQCbGxQjwK.jpg' },
+        { name: 'Homem-Aranha: De Volta ao Lar (Tom Holland - 2017)', pattern: /homem-aranha.*de volta ao lar|spider-man.*homecoming/i, url: 'cloud://movie/Homem-Aranha%3A%20De%20Volta%20ao%20Lar', logo: 'https://image.tmdb.org/t/p/w500/1nkwRL17cAGO8A1yu3miRBdvOsl.jpg' },
+        { name: 'Homem-Aranha no Aranhaverso (Miles Morales - 2018)', pattern: /no aranhaverso|into the spider-verse/i, logo: 'https://image.tmdb.org/t/p/w500/ybQSBSrINtjWsJQ6Ih8sva8HlEZ.jpg' },
+        { name: 'Homem-Aranha: Longe de Casa (Tom Holland - 2019)', pattern: /homem-aranha.*longe de casa|spider-man.*far from home/i, url: 'cloud://movie/Homem-Aranha%3A%20Longe%20de%20Casa', logo: 'https://image.tmdb.org/t/p/w500/tX0o4AdHpidgniTWwfzK0dNTKrc.jpg' },
+        { name: 'Homem-Aranha: Sem Volta Para Casa (Tom Holland - 2021)', pattern: /sem volta para casa|no way home/i, logo: 'https://image.tmdb.org/t/p/w500/xaKydnMw6wR1MBAjS5seGPVusbs.jpg' },
+        { name: 'Homem-Aranha: Através do Aranhaverso (Miles Morales - 2023)', pattern: /atrav[eé]s do aranhaverso|across the spider-verse/i, logo: 'https://image.tmdb.org/t/p/w500/fBS6y0LYX4kU6pPSBYMdQy6SIHX.jpg' }
       ]),
 
       buildFranchiseRow('seq-lotr-hobbit', '💍 Saga O Senhor dos Anéis & O Hobbit (Ordem Cronológica 1 ao 6)', [
-        { name: '1. O Hobbit: Uma Jornada Inesperada (2012)', pattern: /unexpected journey|uma jornada inesperada/i, logo: 'https://image.tmdb.org/t/p/w500/yHA9Fc37Vmpap5UmvgwioRAInter.jpg' },
-        { name: '2. O Hobbit: A Desolação de Smaug (2013)', pattern: /desolation of smaug|desola[çc][aã]o de smaug/i, logo: 'https://image.tmdb.org/t/p/w500/xQYiOqd1QJ7xez7vS92qXbKz7kP.jpg' },
-        { name: '3. O Hobbit: A Batalha dos Cinco Exércitos (2014)', pattern: /battle of the five armies|batalha dos cinco/i, logo: 'https://image.tmdb.org/t/p/w500/9z25McwP63805urCnh0tOM3p8as.jpg' },
-        { name: '4. O Senhor dos Anéis: A Sociedade do Anel (2001)', pattern: /fellowship of the ring|sociedade do anel/i, logo: 'https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cDK6.jpg' },
-        { name: '5. O Senhor dos Anéis: As Duas Torres (2002)', pattern: /two towers|duas torres/i, logo: 'https://image.tmdb.org/t/p/w500/5VTN0pR89TFehuRpOPVNOYjTw9f.jpg' },
-        { name: '6. O Senhor dos Anéis: O Retorno do Rei (2003)', pattern: /return of the king|retorno do rei/i, logo: 'https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg' }
+        { name: '1. O Hobbit: Uma Jornada Inesperada (2012)', pattern: /unexpected journey|uma jornada inesperada/i, logo: 'https://image.tmdb.org/t/p/w500/lZtmn2pLw1kgDYj4Ig4s3DYBQCD.jpg' },
+        { name: '2. O Hobbit: A Desolação de Smaug (2013)', pattern: /desolation of smaug|desola[çc][aã]o de smaug/i, logo: 'https://image.tmdb.org/t/p/w500/ws5z2UmmVzRDD8hZtHTHfcqTOAW.jpg' },
+        { name: '3. O Hobbit: A Batalha dos Cinco Exércitos (2014)', pattern: /battle of the five armies|batalha dos cinco/i, logo: 'https://image.tmdb.org/t/p/w500/wRKwrfQ7p0ttrb09G3mcOSyN1pk.jpg' },
+        { name: '4. O Senhor dos Anéis: A Sociedade do Anel (2001)', pattern: /fellowship of the ring|sociedade do anel/i, logo: 'https://image.tmdb.org/t/p/w500/tlvsNCwWEIgwAM23aNzTmMIcPEZ.jpg' },
+        { name: '5. O Senhor dos Anéis: As Duas Torres (2002)', pattern: /two towers|duas torres/i, logo: 'https://image.tmdb.org/t/p/w500/mCs8vxvScCqVM3YFMQIdbrdFEhu.jpg' },
+        { name: '6. O Senhor dos Anéis: O Retorno do Rei (2003)', pattern: /return of the king|retorno do rei/i, logo: 'https://image.tmdb.org/t/p/w500/rU4oIKv5I4C59DpcXKmT7kNwGI0.jpg' }
       ]),
 
       buildFranchiseRow('seq-starwars', '🪐 Saga Star Wars (A Saga Skywalker - Episódios 1 ao 9)', [
-        { name: 'Star Wars: Ep. I - A Ameaça Fantasma (1999)', pattern: /phantom menace|amea[çc]a fantasma/i, logo: 'https://image.tmdb.org/t/p/w500/6wkfovpn7Eq8dYNKaG5PY3q2oq6.jpg' },
-        { name: 'Star Wars: Ep. II - Ataque dos Clones (2002)', pattern: /attack of the clones|ataque dos clones/i, logo: 'https://image.tmdb.org/t/p/w500/oZNPzxqM2s5DyVWab09NTQScDQt.jpg' },
-        { name: 'Star Wars: Ep. III - A Vingança dos Sith (2005)', pattern: /revenge of the sith|vingan[çc]a dos sith/i, logo: 'https://image.tmdb.org/t/p/w500/xfSAoBEm9MNBjmlNcDYLvLSMlnq.jpg' },
-        { name: 'Star Wars: Ep. IV - Uma Nova Esperança (1977)', pattern: /^star wars \(dublado\)|^star wars\b/i, exclude: /episode|clone|making|lego|robot|holiday|force|vision/i, logo: 'https://image.tmdb.org/t/p/w500/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg' },
-        { name: 'Star Wars: Ep. V - O Império Contra-Ataca (1980)', pattern: /empire strikes back|imp[eé]rio contra-ataca/i, exclude: /lego/i, logo: 'https://image.tmdb.org/t/p/w500/7BuH8itoSrLExs2YZSsM01Qk2no.jpg' },
-        { name: 'Star Wars: Ep. VI - O Retorno de Jedi (1983)', pattern: /return of the jedi|retorno de jedi/i, logo: 'https://image.tmdb.org/t/p/w500/mDCBZw9Bz462ZlK5WSRf357J1Nu.jpg' },
-        { name: 'Star Wars: Ep. VII - O Despertar da Força (2015)', pattern: /force awakens|despertar da for[çc]a/i, logo: 'https://image.tmdb.org/t/p/w500/wqnLdwVXoGOVoYbCiLJaeC5R3yy.jpg' },
-        { name: 'Star Wars: Ep. VIII - Os Últimos Jedi (2017)', pattern: /last jedi|[uú]ltimos jedi/i, logo: 'https://image.tmdb.org/t/p/w500/kOVEVeg59E0wsnXmY9nrh6STWPy.jpg', url: 'cloud://movie/Star%20Wars%3A%20Os%20%C3%9Altimos%20Jedi' },
-        { name: 'Star Wars: Ep. IX - A Ascensão Skywalker (2019)', pattern: /rise of skywalker|ascens[aã]o skywalker/i, logo: 'https://image.tmdb.org/t/p/w500/db32LaOibwEliAmSL2jjDF6oDdj.jpg', url: 'cloud://movie/Star%20Wars%3A%20A%20Ascens%C3%A3o%20Skywalker' }
+        { name: 'Star Wars: Ep. I - A Ameaça Fantasma (1999)', pattern: /phantom menace|amea[çc]a fantasma/i, logo: 'https://image.tmdb.org/t/p/w500/gNk8UNAumXlfCdtaxDqsQe7ZGlt.jpg' },
+        { name: 'Star Wars: Ep. II - Ataque dos Clones (2002)', pattern: /attack of the clones|ataque dos clones/i, logo: 'https://image.tmdb.org/t/p/w500/9m1nJ2MfTG5QEmjOCg0b4YCo4W8.jpg' },
+        { name: 'Star Wars: Ep. III - A Vingança dos Sith (2005)', pattern: /revenge of the sith|vingan[çc]a dos sith/i, logo: 'https://image.tmdb.org/t/p/w500/nuF5yWtTJEEAd4Qa6cVkYz1XCST.jpg' },
+        { name: 'Star Wars: Ep. IV - Uma Nova Esperança (1977)', pattern: /^star wars \(dublado\)|^star wars\b/i, exclude: /episode|clone|making|lego|robot|holiday|force|vision/i, logo: 'https://image.tmdb.org/t/p/w500/dw7X9YPjjAfIxKHW04V64Bb9TB0.jpg' },
+        { name: 'Star Wars: Ep. V - O Império Contra-Ataca (1980)', pattern: /empire strikes back|imp[eé]rio contra-ataca/i, exclude: /lego/i, logo: 'https://image.tmdb.org/t/p/w500/dLGT8b4Ut10z44uYLaip4QiwKta.jpg' },
+        { name: 'Star Wars: Ep. VI - O Retorno de Jedi (1983)', pattern: /return of the jedi|retorno de jedi/i, logo: 'https://image.tmdb.org/t/p/w500/llaJ35p5e23ygDbqd0H3otJLWsA.jpg' },
+        { name: 'Star Wars: Ep. VII - O Despertar da Força (2015)', pattern: /force awakens|despertar da for[çc]a/i, logo: 'https://image.tmdb.org/t/p/w500/lqMDbo4rXnakFgc4C6LzPv6pG7F.jpg' },
+        { name: 'Star Wars: Ep. VIII - Os Últimos Jedi (2017)', pattern: /last jedi|[uú]ltimos jedi/i, url: 'cloud://movie/Star%20Wars%3A%20Os%20%C3%9Altimos%20Jedi', logo: 'https://image.tmdb.org/t/p/w500/5dGufuaIG5vNcxPm8QPij5MSPeQ.jpg' },
+        { name: 'Star Wars: Ep. IX - A Ascensão Skywalker (2019)', pattern: /rise of skywalker|ascens[aã]o skywalker/i, url: 'cloud://movie/Star%20Wars%3A%20A%20Ascens%C3%A3o%20Skywalker', logo: 'https://image.tmdb.org/t/p/w500/uLlrDUtFG2tKtDcJN6kBznlqqsp.jpg' }
       ]),
 
       buildFranchiseRow('seq-jurassic', '🦖 Saga Jurassic Park & Jurassic World (Ordem 1 ao 6)', [
-        { name: 'Jurassic Park 1: O Parque dos Dinossauros (1993)', pattern: /^jurassic park \(dublado\)|^jurassic park\b/i, exclude: /2|3|shark|world/i, logo: 'https://image.tmdb.org/t/p/w500/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg' },
-        { name: 'Jurassic Park 2: O Mundo Perdido (1997)', pattern: /mundo perdido.*jurassic|the lost world.*jurassic/i, logo: 'https://image.tmdb.org/t/p/w500/jReA9K3g2g7sL2rS5lV2g3Sg8.jpg', url: 'cloud://movie/O%20Mundo%20Perdido%3A%20Jurassic%20Park' },
-        { name: 'Jurassic Park 3 (2001)', pattern: /jurassic park 3|jurassic park iii/i, logo: 'https://image.tmdb.org/t/p/w500/hH0vS2fM0S5x3X7Dq8X9eX0k.jpg', url: 'cloud://movie/Jurassic%20Park%203' },
-        { name: 'Jurassic World 1: O Mundo dos Dinossauros (2015)', pattern: /^jurassic world \(dublado\)|^jurassic world\b/i, exclude: /reino|dom[ií]nio|recome[çc]o/i, logo: 'https://image.tmdb.org/t/p/w500/A0LZHmq499Kb1W9NAZeDCqd48vW.jpg' },
-        { name: 'Jurassic World 2: Reino Ameaçado (2018)', pattern: /reino amea[çc]ado|fallen kingdom/i, logo: 'https://image.tmdb.org/t/p/w500/c9XnHe9MnlRPipbtGH6EjZaE9Fp.jpg' },
-        { name: 'Jurassic World 3: Domínio (2022)', pattern: /jurassic world.*(dom[ií]nio|dominion)/i, logo: 'https://image.tmdb.org/t/p/w500/7BqB0lTqVp1A8cZ4wP9B5J9h7y6.jpg', url: 'cloud://movie/Jurassic%20World%3A%20Dom%C3%ADnio' }
+        { name: 'Jurassic Park 1: O Parque dos Dinossauros (1993)', pattern: /^jurassic park \(dublado\)|^jurassic park\b/i, exclude: /2|3|shark|world/i, logo: 'https://image.tmdb.org/t/p/w500/mgjJ7FH4V3exsmoHwXrmsUhn0h1.jpg' },
+        { name: 'Jurassic Park 2: O Mundo Perdido (1997)', pattern: /mundo perdido.*jurassic|the lost world.*jurassic/i, url: 'cloud://movie/O%20Mundo%20Perdido%3A%20Jurassic%20Park', logo: 'https://image.tmdb.org/t/p/w500/gkF6JPfru2FEIP9du7QyHVLSOzu.jpg' },
+        { name: 'Jurassic Park 3 (2001)', pattern: /jurassic park 3|jurassic park iii/i, url: 'cloud://movie/Jurassic%20Park%203', logo: 'https://image.tmdb.org/t/p/w500/1dObEUGvS4cTbVNi8ewvd6gLIv4.jpg' },
+        { name: 'Jurassic World 1: O Mundo dos Dinossauros (2015)', pattern: /^jurassic world \(dublado\)|^jurassic world\b/i, exclude: /reino|dom[ií]nio|recome[çc]o/i, logo: 'https://image.tmdb.org/t/p/w500/mTRLIP4J4iJrVbJplKiaGnc3G93.jpg' },
+        { name: 'Jurassic World 2: Reino Ameaçado (2018)', pattern: /reino amea[çc]ado|fallen kingdom/i, logo: 'https://image.tmdb.org/t/p/w500/pi23N55j5ezB2wvybgAFuSGrVHB.jpg' },
+        { name: 'Jurassic World 3: Domínio (2022)', pattern: /jurassic world.*(dom[ií]nio|dominion)/i, url: 'cloud://movie/Jurassic%20World%3A%20Dom%C3%ADnio', logo: 'https://image.tmdb.org/t/p/w500/7qeiCNSmzrkcEyIWi8sIcsjrOyW.jpg' }
       ]),
 
       buildFranchiseRow('seq-avengers', '🦸 Saga Os Vingadores (Universo Marvel MCU 1 ao 4)', [
-        { name: 'Os Vingadores 1 (2012)', pattern: /^the avengers \(dublado\)|^the avengers\b/i, exclude: /ultimate|age|next|crippled|earth|assemble|wars|united/i, logo: 'https://image.tmdb.org/t/p/w500/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg' },
-        { name: 'Vingadores 2: Era de Ultron (2015)', pattern: /age of ultron|era de ultron/i, logo: 'https://image.tmdb.org/t/p/w500/4ssDuvEDkS9NvmR191urR22blNs.jpg' },
-        { name: 'Vingadores 3: Guerra Infinita (2018)', pattern: /infinity war|guerra infinita/i, logo: 'https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGKV3hFpyyt.jpg', url: 'cloud://movie/Vingadores%3A%20Guerra%20Infinita' },
-        { name: 'Vingadores 4: Ultimato (2019)', pattern: /vingadores.*ultimato|avengers.*endgame/i, logo: 'https://image.tmdb.org/t/p/w500/q6725aR8Zs4IwGMXzZT8aC8lh41.jpg', url: 'cloud://movie/Vingadores%3A%20Ultimato' }
+        { name: 'Os Vingadores 1 (2012)', pattern: /^the avengers \(dublado\)|^the avengers\b/i, exclude: /ultimate|age|next|crippled|earth|assemble|wars|united/i, logo: 'https://image.tmdb.org/t/p/w500/PtSapjHdDjlVcsqdEo0u7rDE6i.jpg' },
+        { name: 'Vingadores 2: Era de Ultron (2015)', pattern: /age of ultron|era de ultron/i, logo: 'https://image.tmdb.org/t/p/w500/uvzqTsRmUzk9mJVzX8cMSWMyM5l.jpg' },
+        { name: 'Vingadores 3: Guerra Infinita (2018)', pattern: /infinity war|guerra infinita/i, url: 'cloud://movie/Vingadores%3A%20Guerra%20Infinita', logo: 'https://image.tmdb.org/t/p/w500/A4kvp7vY1BDLrrQIagRCffLKj1t.jpg' },
+        { name: 'Vingadores 4: Ultimato (2019)', pattern: /vingadores.*ultimato|avengers.*endgame/i, url: 'cloud://movie/Vingadores%3A%20Ultimato', logo: 'https://image.tmdb.org/t/p/w500/q6725aR8Zs4IwGMXzZT8aC8lh41.jpg' }
       ]),
 
       buildFranchiseRow('seq-shrek', '🧅 Saga Shrek & Gato de Botas (Ordem 1 ao 6)', [
-        { name: 'Shrek 1 (2001)', pattern: /^shrek \(dublado\)|^shrek\b/i, exclude: /2|terceiro|3|sempre|4/i, logo: 'https://image.tmdb.org/t/p/w500/iB64vpL3dIObOtMZg3vuvAqamTe.jpg', url: 'cloud://movie/Shrek' },
-        { name: 'Shrek 2 (2004)', pattern: /^shrek 2/i, logo: 'https://image.tmdb.org/t/p/w500/2yYP0PQjG8zVq5enNu48RwHGvVI.jpg', url: 'cloud://movie/Shrek%202' },
-        { name: 'Shrek 3: O Terceiro (2007)', pattern: /shrek terceiro|shrek the third/i },
-        { name: 'Shrek 4: Para Sempre (2010)', pattern: /shrek para sempre|forever after/i, logo: 'https://image.tmdb.org/t/p/w500/1Xdd36q4D7uF6tO7g1j4fC5rX4z.jpg', url: 'cloud://movie/Shrek%20Para%20Sempre' },
-        { name: 'Gato de Botas 1 (2011)', pattern: /^gato de botas\b|puss in boots/i, exclude: /2|[uú]ltimo pedido/i, logo: 'https://image.tmdb.org/t/p/w500/t3aR3xLp4EaJk6Xz7c4Y1f5M1eK.jpg', url: 'cloud://movie/Gato%20de%20Botas' },
-        { name: 'Gato de Botas 2: O Último Pedido (2022)', pattern: /[uú]ltimo pedido|last wish/i, logo: 'https://image.tmdb.org/t/p/w500/1NqwE629USnyvvRIZkHp3W29xUp.jpg', url: 'cloud://movie/Gato%20de%20Botas%202%3A%20O%20%C3%9Altimo%20Pedido' }
+        { name: 'Shrek 1 (2001)', pattern: /^shrek \(dublado\)|^shrek\b/i, exclude: /2|terceiro|3|sempre|4/i, url: 'cloud://movie/Shrek', logo: 'https://image.tmdb.org/t/p/w500/wxeqfC221YMptRRdzxlijAh7q8l.jpg' },
+        { name: 'Shrek 2 (2004)', pattern: /^shrek 2/i, url: 'cloud://movie/Shrek%202', logo: 'https://image.tmdb.org/t/p/w500/2yYP0PQjG8zVqturh1BAqu2Tixl.jpg' },
+        { name: 'Shrek 3: O Terceiro (2007)', pattern: /shrek terceiro|shrek the third/i, logo: 'https://image.tmdb.org/t/p/w500/abw1mIJIjG9X3xSEffE9siLcOkN.jpg' },
+        { name: 'Shrek 4: Para Sempre (2010)', pattern: /shrek para sempre|forever after/i, url: 'cloud://movie/Shrek%20Para%20Sempre', logo: 'https://image.tmdb.org/t/p/w500/iFXVU0ni6YWgQNSPkoGO1Tk5L3g.jpg' },
+        { name: 'Gato de Botas 1 (2011)', pattern: /^gato de botas\b|puss in boots/i, exclude: /2|[uú]ltimo pedido/i, url: 'cloud://movie/Gato%20de%20Botas', logo: 'https://image.tmdb.org/t/p/w500/kc7TJHzlLOsN0M6srM67BXdGmhn.jpg' },
+        { name: 'Gato de Botas 2: O Último Pedido (2022)', pattern: /[uú]ltimo pedido|last wish/i, url: 'cloud://movie/Gato%20de%20Botas%202%3A%20O%20%C3%9Altimo%20Pedido', logo: 'https://image.tmdb.org/t/p/w500/atJxZfCaQ7kXRFSfbm8cqAKkns7.jpg' }
       ]),
 
       buildFranchiseRow('seq-ice-age', '❄️ Saga A Era do Gelo (Ordem 1 ao 5)', [
-        { name: 'A Era do Gelo 1 (2002)', pattern: /a era do gelo 1|^a era do gelo \(dublado\)|^a era do gelo\b/i, exclude: /2|3|4|5|big bang|pascoa|natal/i },
-        { name: 'A Era do Gelo 2: O Degelo (2006)', pattern: /a era do gelo 2|meltdown/i, logo: 'https://image.tmdb.org/t/p/w500/1eD5Z3jK7z8z1aZq5o8e8w9x8c.jpg', url: 'cloud://movie/A%20Era%20do%20Gelo%202' },
-        { name: 'A Era do Gelo 3: Despertar dos Dinossauros (2009)', pattern: /a era do gelo 3|dawn of the dinosaurs/i },
-        { name: 'A Era do Gelo 4: Deriva Continental (2012)', pattern: /a era do gelo 4|continental drift/i },
-        { name: 'A Era do Gelo 5: O Big Bang (2016)', pattern: /a era do gelo.*(5|big bang)|ice age.*collision/i, logo: 'https://image.tmdb.org/t/p/w500/xsmF1iQZ4hT7f3Y8p0uQ7x5y6w.jpg', url: 'cloud://movie/A%20Era%20do%20Gelo%3A%20O%20Big%20Bang' }
+        { name: 'A Era do Gelo 1 (2002)', pattern: /a era do gelo 1|^a era do gelo \(dublado\)|^a era do gelo\b/i, exclude: /2|3|4|5|big bang|pascoa|natal/i, logo: 'https://image.tmdb.org/t/p/w500/dlqC2gJs02gc23XvyOjoz52ToRI.jpg' },
+        { name: 'A Era do Gelo 2: O Degelo (2006)', pattern: /a era do gelo 2|meltdown/i, url: 'cloud://movie/A%20Era%20do%20Gelo%202', logo: 'https://image.tmdb.org/t/p/w500/uWeiAd2X4vrXHDMAUoTDz8R5vxI.jpg' },
+        { name: 'A Era do Gelo 3: Despertar dos Dinossauros (2009)', pattern: /a era do gelo 3|dawn of the dinosaurs/i, logo: 'https://image.tmdb.org/t/p/w500/kaXQMlurbJ6n5u33TRePTXWxPHY.jpg' },
+        { name: 'A Era do Gelo 4: Deriva Continental (2012)', pattern: /a era do gelo 4|continental drift/i, logo: 'https://image.tmdb.org/t/p/w500/dWiHLqARtyAAOy0nLvXIxRYkfNA.jpg' },
+        { name: 'A Era do Gelo 5: O Big Bang (2016)', pattern: /a era do gelo.*(5|big bang)|ice age.*collision/i, url: 'cloud://movie/A%20Era%20do%20Gelo%3A%20O%20Big%20Bang', logo: 'https://image.tmdb.org/t/p/w500/e7R8ULZLdiKO2uYtXqifwf2pJfy.jpg' }
       ]),
 
       buildFranchiseRow('seq-toy-story', '🧸 Saga Toy Story (Ordem 1 ao 4)', [
-        { name: 'Toy Story 1 (1995)', pattern: /^toy story \(dublado\)|^toy story\b/i, exclude: /2|3|4|terror|tempo/i, logo: 'https://image.tmdb.org/t/p/w500/uXDfjJbdP4ijW5hWSBrPrlKpxab.jpg' },
-        { name: 'Toy Story 2 (1999)', pattern: /toy story 2/i, logo: 'https://image.tmdb.org/t/p/w500/3Gkstg4U3hK5e9s4f5nL3k1cQ.jpg' },
-        { name: 'Toy Story 3 (2010)', pattern: /toy story 3/i, logo: 'https://image.tmdb.org/t/p/w500/AbbXspMOwdvwWZgVN0nabZq03O8.jpg' },
-        { name: 'Toy Story 4 (2019)', pattern: /toy story 4/i, logo: 'https://image.tmdb.org/t/p/w500/w9kR8qbmQ01HwnvK4CutvnomxIG.jpg', url: 'cloud://movie/Toy%20Story%204' }
+        { name: 'Toy Story 1 (1995)', pattern: /^toy story \(dublado\)|^toy story\b/i, exclude: /2|3|4|terror|tempo/i, logo: 'https://image.tmdb.org/t/p/w500/686F0CEPmI4ZXjFbWtIHQOBwnfI.jpg' },
+        { name: 'Toy Story 2 (1999)', pattern: /toy story 2/i, logo: 'https://image.tmdb.org/t/p/w500/xVhEI1WCgNCCa5I86AqiwuZoog3.jpg' },
+        { name: 'Toy Story 3 (2010)', pattern: /toy story 3/i, logo: 'https://image.tmdb.org/t/p/w500/rf67AeS9nP8DD7dZYbvhjEVoIBf.jpg' },
+        { name: 'Toy Story 4 (2019)', pattern: /toy story 4/i, url: 'cloud://movie/Toy%20Story%204', logo: 'https://image.tmdb.org/t/p/w500/csiyO6q8rR74pfgJDjwINzhoick.jpg' }
       ])
+
     ];
 
     return [
