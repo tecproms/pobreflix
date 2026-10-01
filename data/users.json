@@ -98,58 +98,19 @@
               "episodes": []
             },
             {
-              "id": "Cangaco Novo (Dublado) - S01E08_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=8&v=.mp4_1117",
-              "name": "Cangaco Novo (Dublado) - S01E08",
+              "id": "series_cangaco_novo",
+              "name": "Cangaco Novo (Dublado)",
+              "seriesTitle": "Cangaco Novo (Dublado)",
+              "seasonNumber": 1,
+              "episodeNumber": 8,
+              "episodeTitle": "Temporada 1 • Episódio 8",
               "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
               "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
               "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=8&v=.mp4",
               "quality": "HD",
-              "isVod": true
-            },
-            {
-              "id": "Cangaco Novo (Dublado) - S01E07_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=7&v=.mp4_1116",
-              "name": "Cangaco Novo (Dublado) - S01E07",
-              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
-              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
-              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=7&v=.mp4",
-              "quality": "HD",
-              "isVod": true
-            },
-            {
-              "id": "Cangaco Novo (Dublado) - S01E06_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=6&v=.mp4_1115",
-              "name": "Cangaco Novo (Dublado) - S01E06",
-              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
-              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
-              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=6&v=.mp4",
-              "quality": "HD",
-              "isVod": true
-            },
-            {
-              "id": "Cangaco Novo (Dublado) - S01E05_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=5&v=.mp4_1114",
-              "name": "Cangaco Novo (Dublado) - S01E05",
-              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
-              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
-              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=5&v=.mp4",
-              "quality": "HD",
-              "isVod": true
-            },
-            {
-              "id": "Cangaco Novo (Dublado) - S01E04_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=4&v=.mp4_1113",
-              "name": "Cangaco Novo (Dublado) - S01E04",
-              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
-              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
-              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=4&v=.mp4",
-              "quality": "HD",
-              "isVod": true
-            },
-            {
-              "id": "Cangaco Novo (Dublado) - S01E03_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=3&v=.mp4_1112",
-              "name": "Cangaco Novo (Dublado) - S01E03",
-              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
-              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
-              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=3&v=.mp4",
-              "quality": "HD",
-              "isVod": true
+              "isVod": true,
+              "isSeriesGroup": true,
+              "isSeriesEpisode": true
             }
           ]
         },

@@ -119,6 +119,115 @@ function detectSeriesInfo(name, group, isVod, url = '') {
   };
 }
 
+/**
+ * Normaliza e consolida o histórico (Continuar Assistindo).
+ * Garante que NUNCA haja mais de um card para a mesma série.
+ * Mantém apenas o episódio mais recente assistido e anexa dados da série.
+ */
+function deduplicateHistory(historyItems, allCatalogChannels = []) {
+  if (!Array.isArray(historyItems) || historyItems.length === 0) return [];
+  const seenSeries = new Map();
+  const seenUrls = new Set();
+  const result = [];
+
+  const catalogSeriesMap = new Map();
+  if (Array.isArray(allCatalogChannels)) {
+    for (const c of allCatalogChannels) {
+      if (c && (c.isSeriesGroup || c.episodes) && c.name) {
+        const k = c.name
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]/g, '');
+        if (k) catalogSeriesMap.set(k, c);
+        if (c.seriesTitle) {
+          const ks = c.seriesTitle
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]/g, '');
+          if (ks) catalogSeriesMap.set(ks, c);
+        }
+      }
+    }
+  }
+
+  for (const item of historyItems) {
+    if (!item) continue;
+
+    const detected = detectSeriesInfo(item.name, item.group, item.isVod !== false, item.url);
+    const isSeries = Boolean(
+      item.isSeriesGroup ||
+      item.isSeriesEpisode ||
+      Boolean(item.seriesTitle) ||
+      detected.isSeriesEpisode ||
+      (item.group && /série|serie|anime|sitcom/i.test(item.group)) ||
+      /[ST]\d+[\s.:-]*[E|EP]\d+/i.test(item.name || '') ||
+      /\s*-\s*[ST]\d+/i.test(item.name || '') ||
+      /ep=\d+/i.test(item.url || '')
+    );
+
+    const baseTitle = (
+      detected.seriesTitle ||
+      item.seriesTitle ||
+      (isSeries
+        ? item.name
+            .replace(/\s*-\s*[ST]\d+.*$/i, '')
+            .replace(/\s*[ST]\d+E\d+.*$/i, '')
+            .trim()
+        : item.name)
+    );
+
+    const cleanKey = (baseTitle || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '');
+
+    if (isSeries && cleanKey) {
+      if (seenSeries.has(cleanKey)) {
+        // Já existe o card dessa série no histórico -> não duplica!
+        continue;
+      }
+      seenSeries.set(cleanKey, true);
+
+      const catalogMatch = catalogSeriesMap.get(cleanKey);
+      const episodesList =
+        item.episodes && item.episodes.length > 0
+          ? item.episodes
+          : catalogMatch?.episodes && catalogMatch.episodes.length > 0
+          ? catalogMatch.episodes
+          : [];
+
+      const seasonNumber = item.seasonNumber || detected.seasonNumber || 1;
+      const episodeNumber = item.episodeNumber || detected.episodeNumber || 1;
+
+      result.push({
+        ...item,
+        name: baseTitle,
+        seriesTitle: baseTitle,
+        seasonNumber,
+        episodeNumber,
+        episodeTitle: item.episodeTitle || detected.episodeTitle || `Episódio ${episodeNumber}`,
+        isVod: true,
+        isSeriesGroup: true,
+        isSeriesEpisode: true,
+        logo: item.logo || catalogMatch?.logo,
+        episodes: episodesList
+      });
+    } else {
+      if (item.url && seenUrls.has(item.url)) continue;
+      if (cleanKey && seenSeries.has(cleanKey)) continue;
+      if (item.url) seenUrls.add(item.url);
+      if (cleanKey) seenSeries.set(cleanKey, true);
+
+      result.push(item);
+    }
+  }
+
+  return result;
+}
+
 // ==========================================
 // PARSER M3U / M3U8 COMPLETO
 // ==========================================
@@ -535,8 +644,12 @@ function PobreFlixCard({
   const isSeries = Boolean(
     channel.isSeriesGroup ||
     channel.isSeriesEpisode ||
+    Boolean(channel.seriesTitle) ||
     isAnime ||
-    (channel.episodes && channel.episodes.length > 0)
+    (channel.episodes && channel.episodes.length > 0) ||
+    (channel.group && /série|serie|sitcom/i.test(channel.group)) ||
+    /[ST]\d+[\s.:-]*[E|EP]\d+/i.test(channel.name || '') ||
+    /ep=\d+/i.test(channel.url || '')
   );
   const isPoster = Boolean(channel.isVod || channel.isSeriesGroup || isSeries);
   const epCount = channel.episodes?.length || 0;
@@ -588,6 +701,20 @@ function PobreFlixCard({
             <span className="nf-tag-live">● AO VIVO</span>
           )}
 
+          {isSeries && onOpenEpisodes && (
+            <button
+              className="nf-fav-circle"
+              style={{ marginRight: '6px' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenEpisodes(channel);
+              }}
+              title="Ver todas as temporadas e episódios desta série"
+            >
+              ☰
+            </button>
+          )}
+
           <button
             className={`nf-fav-circle ${isFav ? 'active' : ''}`}
             onClick={(e) => onToggleFav(channel.url, e)}
@@ -608,7 +735,7 @@ function PobreFlixCard({
       </div>
 
       <div className="nf-card-body">
-        <div className="nf-card-title" title={channel.name}>
+        <div className="nf-card-title" title={channel.seriesTitle || channel.name}>
           {statusInfo && (
             <span
               className={`status-dot ${
@@ -620,7 +747,7 @@ function PobreFlixCard({
               }`}
             />
           )}
-          <span>{channel.name}</span>
+          <span>{channel.seriesTitle || channel.name}</span>
         </div>
 
         <div className="nf-card-sub">
@@ -972,7 +1099,9 @@ function App() {
             if (foundProf) {
               setActiveProfile(foundProf);
               setFavorites(Array.isArray(foundProf.favorites) ? foundProf.favorites : []);
-              setHistory(Array.isArray(foundProf.history) ? foundProf.history : []);
+              setHistory(
+                Array.isArray(foundProf.history) ? deduplicateHistory(foundProf.history, channels) : []
+              );
               setShowProfilePicker(false);
             } else {
               setShowProfilePicker(true);
@@ -985,7 +1114,7 @@ function App() {
         }
       })
       .catch(() => {});
-  }, [authToken]);
+  }, [authToken, channels]);
 
   const handleAuthSuccess = useCallback((token, userObj, redirectTo) => {
     try {
@@ -1023,8 +1152,8 @@ function App() {
       sessionStorage.setItem('pobreflix_active_profile_id', prof.id);
     } catch {}
     if (Array.isArray(prof.favorites)) setFavorites(prof.favorites);
-    if (Array.isArray(prof.history)) setHistory(prof.history);
-  }, []);
+    if (Array.isArray(prof.history)) setHistory(deduplicateHistory(prof.history, channels));
+  }, [channels]);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -1666,13 +1795,13 @@ function App() {
           episodes: episodesList
         };
 
-        return [historyItem, ...filtered].slice(0, 30);
+        return deduplicateHistory([historyItem, ...filtered], channels).slice(0, 30);
       });
     } else {
       destroyPlayers();
     }
     return () => destroyPlayers();
-  }, [currentChannel, isPlayerOpen, activeSeriesGroup, startPlayback, destroyPlayers]);
+  }, [currentChannel, isPlayerOpen, activeSeriesGroup, channels, startPlayback, destroyPlayers]);
 
   // Estados do "Próximo Episódio nos Créditos" e "Pular Abertura" estilo Netflix
   const [showUpNextOverlay, setShowUpNextOverlay] = useState(false);
@@ -1791,6 +1920,13 @@ function App() {
       if (ch.isSeriesGroup) {
         const eps = ch.episodes && ch.episodes.length > 0 ? ch.episodes : [];
         if (eps.length === 0) {
+          if (ch.url && (ch.isSeriesEpisode || ch.episodeNumber)) {
+            setCurrentChannel(ch);
+            setHeroChannel(ch);
+            setIsPlayerOpen(true);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+          }
           handleOpenEpisodesModal(ch);
           return;
         }
@@ -2298,7 +2434,7 @@ function App() {
       const favSet = new Set(favorites);
       list = channels.filter((ch) => favSet.has(ch.url));
     } else if (navSection === 'history') {
-      list = history;
+      list = deduplicateHistory(history, channels);
     } else if (navSection === 'vod-movies') {
       list = channels.filter((c) => c.isVod && !c.isSeriesGroup && !c.isAnime);
     } else if (navSection === 'vod-series') {
@@ -2719,6 +2855,11 @@ function App() {
     const favSet = new Set(favorites);
     return channels.filter((c) => favSet.has(c.url));
   }, [channels, favorites]);
+
+  const deduplicatedHistory = useMemo(
+    () => deduplicateHistory(history, channels),
+    [history, channels]
+  );
 
   const vodMoviesCount = useMemo(
     () => channels.filter((c) => c.isVod && !c.isSeriesGroup && !c.isAnime).length,
@@ -3802,10 +3943,10 @@ function App() {
             />
           )}
 
-          {history.length > 0 && (
+          {deduplicatedHistory.length > 0 && (
             <CatalogRow
               title="🕒 Continuar Assistindo"
-              channels={history}
+              channels={deduplicatedHistory}
               currentChannel={currentChannel}
               favorites={favorites}
               channelStatuses={channelStatuses}

@@ -329,10 +329,74 @@ function ensureDb() {
       changed = true;
     }
 
+    // Garantir que nenhum perfil tenha múltiplos episódios da mesma série no histórico
+    (db.users || []).forEach((u) => {
+      (u.profiles || []).forEach((p) => {
+        if (Array.isArray(p.history) && p.history.length > 0) {
+          const before = p.history.length;
+          p.history = deduplicateHistory(p.history);
+          if (p.history.length !== before) changed = true;
+        }
+      });
+    });
+
     if (changed) {
       fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf8');
     }
   } catch {}
+}
+
+function deduplicateHistory(items) {
+  if (!Array.isArray(items)) return [];
+  const seenSeries = new Map();
+  const seenUrls = new Set();
+  const result = [];
+
+  for (const item of items) {
+    if (!item) continue;
+    const isSeries = Boolean(
+      item.isSeriesGroup ||
+      item.isSeriesEpisode ||
+      item.seriesTitle ||
+      (item.group && /série|serie|anime|sitcom/i.test(item.group)) ||
+      /[ST]\d+[\s.:-]*[E|EP]\d+/i.test(item.name || '') ||
+      /\s*-\s*[ST]\d+/i.test(item.name || '') ||
+      /ep=\d+/i.test(item.url || '')
+    );
+
+    const baseTitle = isSeries
+      ? (item.seriesTitle || item.name)
+          .replace(/\s*-\s*[ST]\d+.*$/i, '')
+          .replace(/\s*[ST]\d+E\d+.*$/i, '')
+          .trim()
+      : item.name;
+
+    const cleanKey = (baseTitle || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '');
+
+    if (isSeries && cleanKey) {
+      if (seenSeries.has(cleanKey)) continue;
+      seenSeries.set(cleanKey, true);
+      result.push({
+        ...item,
+        name: baseTitle,
+        seriesTitle: baseTitle,
+        isVod: true,
+        isSeriesGroup: true,
+        isSeriesEpisode: true
+      });
+    } else {
+      if (item.url && seenUrls.has(item.url)) continue;
+      if (cleanKey && seenSeries.has(cleanKey)) continue;
+      if (item.url) seenUrls.add(item.url);
+      if (cleanKey) seenSeries.set(cleanKey, true);
+      result.push(item);
+    }
+  }
+  return result;
 }
 
 function getDbPlans(db) {
@@ -929,7 +993,7 @@ async function handleSaasRequest(req, res, pathname, parsedReqUrl) {
     const prof = (user.profiles || []).find((p) => p.id === profileId);
     if (prof) {
       if (Array.isArray(body.favorites)) prof.favorites = body.favorites.slice(0, 200);
-      if (Array.isArray(body.history)) prof.history = body.history.slice(0, 50);
+      if (Array.isArray(body.history)) prof.history = deduplicateHistory(body.history).slice(0, 50);
       saveDb(db);
     }
 
