@@ -494,8 +494,28 @@ const server = http.createServer(async (req, res) => {
         url: 'https://archive.org/download/JurassicWorldGIOVANNI/Jurassic.World.Reino.Amea%C3%A7ado.2018.720p.BluRay.x264.DUBLADO-WWW.BLUDV.TV.mp4'
       },
       {
-        match: /era do gelo|shrek|toy story|rei le[aã]o|procurando nemo|divertida mente|monstros s|incr[ií]veis|carros|up |coco|viva |moana|frozen|encanto|zootopia|kung fu panda|como treinar|meu malvado|minions| gato de botas|rio |vaca tussa|asterix/i,
+        match: /shrek/i,
+        url: 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4'
+      },
+      {
+        match: /era do gelo|ice age/i,
+        url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4'
+      },
+      {
+        match: /toy story/i,
+        url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4'
+      },
+      {
+        match: /vaca tussa/i,
+        url: 'https://archive.org/download/NQAVTDDL/Nem%20que%20a%20vaca%20tussa%20%282004%29%201080p.mp4'
+      },
+      {
+        match: /^rio\b|rio 2/i,
         url: 'https://archive.org/download/rio-2-2014-brrip-720p-dublado-andre-tpf/Rio%202%20(2014)%20BRrip%20720p%20Dublado%20-%20AndreTPF.mp4'
+      },
+      {
+        match: /rei le[aã]o|procurando nemo|divertida mente|monstros s|incr[ií]veis|carros|up |coco|viva |moana|frozen|encanto|zootopia|kung fu panda|como treinar|meu malvado|minions| gato de botas|asterix/i,
+        url: 'https://archive.org/download/NQAVTDDL/Nem%20que%20a%20vaca%20tussa%20%282004%29%201080p.mp4'
       },
       {
         match: /chaves|chapolin|todo mundo odeia o chris|maluco no peda[cç]o|patroa e as crian[cç]as|friends|office|how i met|big bang|brooklyn|two and a half|seinfeld|modern family/i,

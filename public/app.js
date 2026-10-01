@@ -2350,27 +2350,27 @@ function App() {
       ]),
 
       buildFranchiseRow('seq-shrek', '🧅 Saga Shrek & Gato de Botas (Ordem 1 ao 6)', [
-        { name: 'Shrek 1 (2001)', pattern: /^shrek \(dublado\)|^shrek\b/i, exclude: /2|terceiro|3|sempre|4/i, url: 'cloud://movie/Shrek', logo: 'https://image.tmdb.org/t/p/w500/wxeqfC221YMptRRdzxlijAh7q8l.jpg' },
-        { name: 'Shrek 2 (2004)', pattern: /^shrek 2/i, url: 'cloud://movie/Shrek%202', logo: 'https://image.tmdb.org/t/p/w500/2yYP0PQjG8zVqturh1BAqu2Tixl.jpg' },
-        { name: 'Shrek 3: O Terceiro (2007)', pattern: /shrek terceiro|shrek the third/i, logo: 'https://image.tmdb.org/t/p/w500/abw1mIJIjG9X3xSEffE9siLcOkN.jpg' },
-        { name: 'Shrek 4: Para Sempre (2010)', pattern: /shrek para sempre|forever after/i, url: 'cloud://movie/Shrek%20Para%20Sempre', logo: 'https://image.tmdb.org/t/p/w500/iFXVU0ni6YWgQNSPkoGO1Tk5L3g.jpg' },
+        { name: 'Shrek 1 (2001)', pattern: /^shrek \(dublado\)|^shrek\b/i, exclude: /2|terceiro|3|sempre|4/i, url: 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/wxeqfC221YMptRRdzxlijAh7q8l.jpg' },
+        { name: 'Shrek 2 (2004)', pattern: /^shrek 2/i, url: 'https://archive.org/download/shrek-2-full-movie_202510/Shrek.2.2004.720p.BluRay.x264.YIFY.mp4', logo: 'https://image.tmdb.org/t/p/w500/2yYP0PQjG8zVqturh1BAqu2Tixl.jpg' },
+        { name: 'Shrek 3: O Terceiro (2007)', pattern: /shrek terceiro|shrek the third/i, url: 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/abw1mIJIjG9X3xSEffE9siLcOkN.jpg' },
+        { name: 'Shrek 4: Para Sempre (2010)', pattern: /shrek para sempre|forever after/i, url: 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/iFXVU0ni6YWgQNSPkoGO1Tk5L3g.jpg' },
         { name: 'Gato de Botas 1 (2011)', pattern: /^gato de botas\b|puss in boots/i, exclude: /2|[uú]ltimo pedido/i, url: 'cloud://movie/Gato%20de%20Botas', logo: 'https://image.tmdb.org/t/p/w500/kc7TJHzlLOsN0M6srM67BXdGmhn.jpg' },
         { name: 'Gato de Botas 2: O Último Pedido (2022)', pattern: /[uú]ltimo pedido|last wish/i, url: 'cloud://movie/Gato%20de%20Botas%202%3A%20O%20%C3%9Altimo%20Pedido', logo: 'https://image.tmdb.org/t/p/w500/atJxZfCaQ7kXRFSfbm8cqAKkns7.jpg' }
       ]),
 
       buildFranchiseRow('seq-ice-age', '❄️ Saga A Era do Gelo (Ordem 1 ao 5)', [
-        { name: 'A Era do Gelo 1 (2002)', pattern: /a era do gelo 1|^a era do gelo \(dublado\)|^a era do gelo\b/i, exclude: /2|3|4|5|big bang|pascoa|natal/i, logo: 'https://image.tmdb.org/t/p/w500/dlqC2gJs02gc23XvyOjoz52ToRI.jpg' },
-        { name: 'A Era do Gelo 2: O Degelo (2006)', pattern: /a era do gelo 2|meltdown/i, url: 'cloud://movie/A%20Era%20do%20Gelo%202', logo: 'https://image.tmdb.org/t/p/w500/uWeiAd2X4vrXHDMAUoTDz8R5vxI.jpg' },
-        { name: 'A Era do Gelo 3: Despertar dos Dinossauros (2009)', pattern: /a era do gelo 3|dawn of the dinosaurs/i, logo: 'https://image.tmdb.org/t/p/w500/kaXQMlurbJ6n5u33TRePTXWxPHY.jpg' },
-        { name: 'A Era do Gelo 4: Deriva Continental (2012)', pattern: /a era do gelo 4|continental drift/i, logo: 'https://image.tmdb.org/t/p/w500/dWiHLqARtyAAOy0nLvXIxRYkfNA.jpg' },
-        { name: 'A Era do Gelo 5: O Big Bang (2016)', pattern: /a era do gelo.*(5|big bang)|ice age.*collision/i, url: 'cloud://movie/A%20Era%20do%20Gelo%3A%20O%20Big%20Bang', logo: 'https://image.tmdb.org/t/p/w500/e7R8ULZLdiKO2uYtXqifwf2pJfy.jpg' }
+        { name: 'A Era do Gelo 1 (2002)', pattern: /a era do gelo 1|^a era do gelo \(dublado\)|^a era do gelo\b/i, exclude: /2|3|4|5|big bang|pascoa|natal/i, url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/dlqC2gJs02gc23XvyOjoz52ToRI.jpg' },
+        { name: 'A Era do Gelo 2: O Degelo (2006)', pattern: /a era do gelo 2|meltdown/i, url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/uWeiAd2X4vrXHDMAUoTDz8R5vxI.jpg' },
+        { name: 'A Era do Gelo 3: Despertar dos Dinossauros (2009)', pattern: /a era do gelo 3|dawn of the dinosaurs/i, url: 'https://archive.org/download/aeradogelo32009-kids-paixaoflix/A%20Era%20do%20Gelo%203%20-%202009_ready.mp4', logo: 'https://image.tmdb.org/t/p/w500/kaXQMlurbJ6n5u33TRePTXWxPHY.jpg' },
+        { name: 'A Era do Gelo 4: Deriva Continental (2012)', pattern: /a era do gelo 4|continental drift/i, url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/dWiHLqARtyAAOy0nLvXIxRYkfNA.jpg' },
+        { name: 'A Era do Gelo 5: O Big Bang (2016)', pattern: /a era do gelo.*(5|big bang)|ice age.*collision/i, url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/e7R8ULZLdiKO2uYtXqifwf2pJfy.jpg' }
       ]),
 
       buildFranchiseRow('seq-toy-story', '🧸 Saga Toy Story (Ordem 1 ao 4)', [
-        { name: 'Toy Story 1 (1995)', pattern: /^toy story \(dublado\)|^toy story\b/i, exclude: /2|3|4|terror|tempo/i, logo: 'https://image.tmdb.org/t/p/w500/686F0CEPmI4ZXjFbWtIHQOBwnfI.jpg' },
-        { name: 'Toy Story 2 (1999)', pattern: /toy story 2/i, logo: 'https://image.tmdb.org/t/p/w500/xVhEI1WCgNCCa5I86AqiwuZoog3.jpg' },
-        { name: 'Toy Story 3 (2010)', pattern: /toy story 3/i, logo: 'https://image.tmdb.org/t/p/w500/rf67AeS9nP8DD7dZYbvhjEVoIBf.jpg' },
-        { name: 'Toy Story 4 (2019)', pattern: /toy story 4/i, url: 'cloud://movie/Toy%20Story%204', logo: 'https://image.tmdb.org/t/p/w500/csiyO6q8rR74pfgJDjwINzhoick.jpg' }
+        { name: 'Toy Story 1 (1995)', pattern: /^toy story \(dublado\)|^toy story\b/i, exclude: /2|3|4|terror|tempo/i, url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/686F0CEPmI4ZXjFbWtIHQOBwnfI.jpg' },
+        { name: 'Toy Story 2 (1999)', pattern: /toy story 2/i, url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/xVhEI1WCgNCCa5I86AqiwuZoog3.jpg' },
+        { name: 'Toy Story 3 (2010)', pattern: /toy story 3/i, url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/rf67AeS9nP8DD7dZYbvhjEVoIBf.jpg' },
+        { name: 'Toy Story 4 (2019)', pattern: /toy story 4/i, url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/csiyO6q8rR74pfgJDjwINzhoick.jpg' }
       ])
 
     ];
