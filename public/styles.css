@@ -1,0 +1,2051 @@
+:root {
+  --nf-bg: #141414;
+  --nf-bg-dark: #0b0b0b;
+  --nf-surface: #181818;
+  --nf-card: #202020;
+  --nf-card-hover: #2a2a2a;
+  --nf-red: #e50914;
+  --nf-red-hover: #f40612;
+  --nf-red-glow: rgba(229, 9, 20, 0.45);
+  --nf-text: #ffffff;
+  --nf-text-dim: #b3b3b3;
+  --nf-text-muted: #777777;
+  --nf-green: #46d369;
+  --nf-gold: #f5c518;
+  --border-subtle: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--nf-bg);
+  color: var(--nf-text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.channel-logo-img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0e0e0e;
+}
+::-webkit-scrollbar-thumb {
+  background: #383838;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--nf-red);
+}
+
+/* Header Estilo Netflix */
+.nf-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  min-height: 68px;
+  padding: 0 36px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, rgba(20, 20, 20, 0.88) 100%);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.nf-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.pobreflix-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pobreflix-wordmark {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 38px;
+  letter-spacing: 2px;
+  color: var(--nf-red);
+  text-shadow: 0 2px 18px var(--nf-red-glow);
+  line-height: 1;
+}
+
+.pobreflix-badge {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: rgba(229, 9, 20, 0.18);
+  color: #ff6b72;
+  border: 1px solid rgba(229, 9, 20, 0.4);
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+.nf-menu {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  list-style: none;
+}
+
+.nf-menu-item {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--nf-text-dim);
+  cursor: pointer;
+  transition: color 0.18s ease;
+  background: none;
+  border: none;
+  padding: 6px 2px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nf-menu-item:hover {
+  color: #fff;
+}
+
+.nf-menu-item.active {
+  color: #fff;
+  font-weight: 700;
+}
+
+.nf-menu-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--nf-red);
+  border-radius: 99px;
+}
+
+.nf-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Search Box */
+.nf-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nf-search-icon {
+  position: absolute;
+  left: 11px;
+  font-size: 14px;
+  color: var(--nf-text-dim);
+  pointer-events: none;
+}
+
+.nf-search-input {
+  width: 240px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  padding: 8px 30px 8px 34px;
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+  transition: width 0.25s ease, border-color 0.2s;
+}
+
+.nf-search-input:focus {
+  width: 300px;
+  border-color: #fff;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.nf-search-clear {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--nf-text-dim);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* Playlist Select in Header */
+.nf-select {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  max-width: 270px;
+  cursor: pointer;
+  outline: none;
+}
+
+.nf-select:hover,
+.nf-select:focus {
+  border-color: #fff;
+}
+
+/* Buttons */
+.nf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 13.5px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.nf-btn-red {
+  background: var(--nf-red);
+  color: #fff;
+}
+
+.nf-btn-red:hover {
+  background: var(--nf-red-hover);
+  transform: scale(1.02);
+}
+
+.nf-btn-white {
+  background: #ffffff;
+  color: #000000;
+  padding: 11px 24px;
+  font-size: 15px;
+}
+
+.nf-btn-white:hover {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.nf-btn-glass {
+  background: rgba(109, 109, 110, 0.7);
+  color: #ffffff;
+  padding: 11px 22px;
+  font-size: 15px;
+  backdrop-filter: blur(6px);
+}
+
+.nf-btn-glass:hover {
+  background: rgba(109, 109, 110, 0.45);
+}
+
+.nf-btn-dark {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 7px 13px;
+  font-size: 12.5px;
+}
+
+.nf-btn-dark:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.nf-btn-active {
+  background: rgba(229, 9, 20, 0.22);
+  border-color: var(--nf-red);
+  color: #ff8086;
+}
+
+.nf-profile-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #e50914 0%, #b81d24 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================
+   CINEMA PLAYER DOCK (Quando assistindo)
+   ========================================== */
+.cinema-theater {
+  background: #000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.cinema-stage {
+  display: flex;
+  max-width: 1600px;
+  margin: 0 auto;
+  height: 64vh;
+  min-height: 400px;
+  max-height: 680px;
+}
+
+.cinema-video-box {
+  flex: 1;
+  position: relative;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cinema-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+/* Quick Channel Drawer next to Cinema Player */
+.cinema-side-list {
+  width: 340px;
+  background: #111111;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.cinema-side-header {
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--nf-text-dim);
+}
+
+.cinema-side-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 8px;
+}
+
+.cinema-side-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cinema-side-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cinema-side-item.active {
+  background: rgba(229, 9, 20, 0.2);
+  border-left: 3px solid var(--nf-red);
+}
+
+.cinema-bar {
+  background: #141414;
+  padding: 12px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.cinema-now-playing {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cinema-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Overlays inside player */
+.player-overlay-top {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--nf-red);
+  box-shadow: 0 0 8px var(--nf-red);
+  animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.player-state-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  z-index: 8;
+}
+
+.spinner {
+  width: 46px;
+  height: 46px;
+  border: 4px solid rgba(229, 9, 20, 0.22);
+  border-top-color: var(--nf-red);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-card {
+  max-width: 480px;
+  background: #181818;
+  border: 1px solid rgba(229, 9, 20, 0.45);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+/* ==========================================
+   HERO BILLBOARD (Destaque Estilo Netflix)
+   ========================================== */
+.nf-hero {
+  position: relative;
+  min-height: 440px;
+  padding: 60px 44px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  background:
+    radial-gradient(circle at 78% 35%, rgba(229, 9, 20, 0.25) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(20, 20, 20, 0.3) 0%, #141414 100%),
+    linear-gradient(90deg, #0b0b0b 25%, rgba(20, 20, 20, 0.65) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.nf-hero-content {
+  max-width: 650px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.nf-hero-n-series {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--nf-text-dim);
+}
+
+.nf-p-letter {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 28px;
+  color: var(--nf-red);
+  line-height: 1;
+}
+
+.nf-hero-title {
+  font-size: 46px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9);
+}
+
+.nf-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  flex-wrap: wrap;
+}
+
+.nf-match-score {
+  color: var(--nf-green);
+}
+
+.nf-age-box {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 1px 6px;
+  font-size: 11px;
+  border-radius: 3px;
+}
+
+.nf-hd-box {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 1px 5px;
+  font-size: 10px;
+  border-radius: 3px;
+  color: var(--nf-text-dim);
+}
+
+.nf-hero-desc {
+  font-size: 15px;
+  color: #d4d4d4;
+  line-height: 1.5;
+  max-width: 560px;
+}
+
+.nf-hero-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.nf-hero-poster-showcase {
+  width: 260px;
+  height: 170px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  z-index: 2;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nf-hero-poster-showcase:hover {
+  transform: scale(1.03);
+  box-shadow: 0 24px 60px rgba(229, 9, 20, 0.35);
+}
+
+.nf-hero-poster-showcase img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.6));
+}
+
+.nf-hero-poster-showcase.is-poster {
+  width: 215px;
+  height: 320px;
+  padding: 0;
+  background: #0d0f14;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.nf-hero-poster-showcase.is-poster img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: none;
+}
+
+/* ==========================================
+   BARRA DE CATEGORIAS RÁPIDAS & STATUS
+   ========================================== */
+.nf-filter-strip {
+  padding: 16px 40px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.nf-category-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  max-width: 100%;
+}
+
+.nf-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--nf-text-dim);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.nf-pill:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.nf-pill.active {
+  background: var(--nf-red);
+  color: #fff;
+  border-color: var(--nf-red);
+}
+
+/* ==========================================
+   TRILHOS HORIZONTAIS (CARROSSÉIS NETFLIX)
+   ========================================== */
+.nf-catalog-container {
+  padding: 10px 0 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.nf-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.nf-row-header {
+  padding: 0 40px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.nf-row-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #e5e5e5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.nf-row-title:hover {
+  color: #fff;
+}
+
+.nf-row-explore {
+  font-size: 12px;
+  font-weight: 700;
+  color: #54b9c5;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.nf-row-wrapper {
+  position: relative;
+}
+
+.nf-row-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 40px 18px;
+}
+
+.nf-row-track::-webkit-scrollbar {
+  height: 5px;
+}
+
+/* Card Estilo Netflix */
+.nf-card {
+  width: 215px;
+  min-width: 215px;
+  border-radius: 8px;
+  background: var(--nf-card);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.nf-card:hover {
+  transform: scale(1.06) translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.75);
+  z-index: 10;
+}
+
+.nf-card.active-playing {
+  border: 2px solid var(--nf-red);
+  box-shadow: 0 0 20px var(--nf-red-glow);
+}
+
+.nf-card-thumb {
+  height: 122px;
+  background: radial-gradient(circle at center, #262936 0%, #101218 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nf-card-thumb .channel-logo-img {
+  max-width: 82%;
+  max-height: 82%;
+  object-fit: contain;
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+}
+
+.nf-card:hover .nf-card-thumb .channel-logo-img {
+  transform: scale(1.07);
+}
+
+/* Capas de Cinema Verticais Full-Bleed para Filmes e Séries VOD */
+.nf-card.is-poster-card {
+  width: 200px;
+  min-width: 200px;
+  border-radius: 10px;
+}
+
+.nf-card.is-poster-card .nf-card-thumb {
+  height: 285px;
+  padding: 0;
+  background: linear-gradient(160deg, #1b1e2b 0%, #0b0c10 100%);
+}
+
+.nf-card.is-poster-card .nf-card-thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.45) 0%,
+    transparent 24%,
+    transparent 68%,
+    rgba(16, 18, 24, 0.88) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.nf-card.is-poster-card .nf-card-thumb .channel-logo-img,
+.modal-poster-cover {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: none;
+}
+
+.nf-card-thumb .channel-logo-fallback {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 34px;
+  color: var(--nf-red);
+  letter-spacing: 2px;
+}
+
+.poster-fallback-art {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 14px;
+  text-align: center;
+  background: radial-gradient(circle at 50% 25%, rgba(229, 9, 20, 0.28) 0%, #141722 65%, #090a0f 100%);
+  gap: 10px;
+}
+
+.poster-fallback-art .poster-fallback-initials {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  line-height: 1;
+  color: var(--nf-red);
+  letter-spacing: 3px;
+  text-shadow: 0 4px 18px rgba(229, 9, 20, 0.5);
+}
+
+.poster-fallback-art .poster-fallback-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #f1f5f9;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Play overlay on card hover */
+.nf-card-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  z-index: 2;
+}
+
+.nf-card:hover .nf-card-play-overlay {
+  opacity: 1;
+}
+
+.nf-play-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(229, 9, 20, 0.92);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* Card Top Badges */
+.nf-card-badges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.nf-card-badges > * {
+  pointer-events: auto;
+}
+
+.nf-tag-live {
+  background: var(--nf-red);
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.nf-tag-vod {
+  background: rgba(37, 99, 235, 0.95);
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+
+.nf-tag-series {
+  background: rgba(147, 51, 234, 0.95);
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+
+.nf-fav-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(20, 20, 20, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.nf-fav-circle:hover,
+.nf-fav-circle.active {
+  background: rgba(20, 20, 20, 0.95);
+  border-color: var(--nf-gold);
+  color: var(--nf-gold);
+  transform: scale(1.1);
+}
+
+.nf-card-body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nf-card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nf-card-sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--nf-text-dim);
+}
+
+.nf-quality-pill {
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(70, 211, 105, 0.45);
+  color: var(--nf-green);
+}
+
+/* Top 10 Card Special Style */
+.nf-top10-card {
+  display: flex;
+  align-items: center;
+  min-width: 255px;
+  position: relative;
+  cursor: pointer;
+}
+
+.nf-top10-number {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 155px;
+  line-height: 0.8;
+  color: #141414;
+  -webkit-text-stroke: 4px #595959;
+  margin-right: -18px;
+  z-index: 1;
+  user-select: none;
+  transition: -webkit-text-stroke-color 0.2s;
+}
+
+.nf-top10-card:hover .nf-top10-number {
+  -webkit-text-stroke-color: var(--nf-red);
+}
+
+.nf-top10-card .nf-card {
+  width: 185px;
+  min-width: 185px;
+  z-index: 2;
+}
+
+.nf-top10-card .nf-card.is-poster-card .nf-card-thumb {
+  height: 255px;
+}
+
+/* Sequence Card (Franquias e Sagas em Sequência Cronológica 1, 2, 3, 4, 5...) */
+.nf-sequence-card {
+  display: flex;
+  align-items: center;
+  min-width: 255px;
+  position: relative;
+  cursor: pointer;
+}
+
+.nf-sequence-number {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 155px;
+  line-height: 0.8;
+  color: #111116;
+  -webkit-text-stroke: 4px #e50914;
+  margin-right: -18px;
+  z-index: 1;
+  user-select: none;
+  transition: -webkit-text-stroke-color 0.2s, transform 0.2s, color 0.2s;
+  text-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
+}
+
+.nf-sequence-card:hover .nf-sequence-number {
+  -webkit-text-stroke-color: #ff3838;
+  color: rgba(229, 9, 20, 0.2);
+  transform: scale(1.04);
+}
+
+.nf-sequence-card .nf-card {
+  width: 185px;
+  min-width: 185px;
+  z-index: 2;
+}
+
+.nf-sequence-card .nf-card.is-poster-card .nf-card-thumb {
+  height: 255px;
+}
+
+/* ==========================================
+   GRADE COMPLETA DE CATÁLOGO (QUANDO FILTRADO)
+   ========================================== */
+.nf-grid-section {
+  padding: 10px 40px 60px;
+}
+
+.nf-grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.nf-grid-title {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.nf-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+  gap: 18px;
+}
+
+.nf-catalog-grid .nf-card {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Status Dots */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.status-online {
+  background: var(--nf-green);
+  box-shadow: 0 0 8px var(--nf-green);
+}
+.status-offline {
+  background: var(--nf-red);
+}
+.status-checking {
+  background: var(--nf-gold);
+  animation: pulse 1s infinite;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 200;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 580px;
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--nf-text-dim);
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  background: #262626;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 13.5px;
+  font-family: inherit;
+  outline: none;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: var(--nf-red);
+}
+
+.file-dropzone {
+  border: 2px dashed rgba(229, 9, 20, 0.5);
+  background: rgba(229, 9, 20, 0.06);
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.saved-playlist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #232323;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .nf-navbar {
+    padding: 12px 18px;
+  }
+  .nf-hero {
+    padding: 32px 20px;
+    flex-direction: column;
+    text-align: left;
+  }
+  .nf-hero-poster-showcase {
+    display: none;
+  }
+  .nf-hero-title {
+    font-size: 32px;
+  }
+  .cinema-stage {
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+  }
+  .cinema-video-box {
+    height: 44vh;
+  }
+  .cinema-side-list {
+    width: 100%;
+    height: 220px;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .nf-row-header,
+  .nf-row-track,
+  .nf-grid-section,
+  .nf-filter-strip,
+  .cinema-bar {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+/* ==========================================
+   POBREFLIX SAAS — LOGIN, PERFIS, ASSINATURAS, TELAS & PAINEL ADMIN
+   ========================================== */
+.saas-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  background: radial-gradient(circle at 50% 18%, rgba(229, 9, 20, 0.24) 0%, rgba(10, 10, 12, 0.96) 55%, #08080a 100%);
+  backdrop-filter: blur(18px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 28px 20px 60px;
+  animation: fadeInSaas 0.25s ease;
+}
+
+@keyframes fadeInSaas {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.saas-top-header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.saas-auth-card {
+  width: 100%;
+  max-width: 940px;
+  background: rgba(18, 18, 22, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+}
+
+@media (max-width: 860px) {
+  .saas-auth-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.saas-auth-promo {
+  padding: 36px 32px;
+  background: linear-gradient(155deg, rgba(229, 9, 20, 0.28) 0%, rgba(20, 20, 26, 0.95) 65%, #101014 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.saas-auth-form-pane {
+  padding: 34px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.saas-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.saas-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #e5e5e5;
+  line-height: 1.4;
+}
+
+.saas-quick-demo-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.saas-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+
+@media (max-width: 560px) {
+  .saas-plan-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.saas-plan-card {
+  background: #1a1a20;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.saas-plan-card:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.saas-plan-card.selected {
+  background: rgba(229, 9, 20, 0.16);
+  border-color: #e50914;
+  box-shadow: 0 8px 24px rgba(229, 9, 20, 0.25);
+}
+
+.saas-plan-badge {
+  position: absolute;
+  top: -9px;
+  right: 10px;
+  background: #e50914;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ==========================================
+   QUEM ESTÁ ASSISTINDO? (SELETOR DE PERFIS NETFLIX)
+   ========================================== */
+.saas-profiles-container {
+  max-width: 980px;
+  width: 100%;
+  text-align: center;
+  margin: auto 0;
+  padding: 20px 10px;
+}
+
+.saas-profiles-title {
+  font-size: clamp(28px, 4.2vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.saas-profiles-subtitle {
+  font-size: 14px;
+  color: #a3a3a3;
+  margin-bottom: 36px;
+}
+
+.saas-profiles-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 28px;
+  margin-bottom: 42px;
+}
+
+.saas-profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  width: 148px;
+  group: true;
+  transition: transform 0.2s ease;
+}
+
+.saas-profile-card:hover {
+  transform: translateY(-6px) scale(1.04);
+}
+
+.saas-profile-avatar-box {
+  width: 136px;
+  height: 136px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 62px;
+  position: relative;
+  border: 3px solid transparent;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  overflow: hidden;
+}
+
+.saas-profile-card:hover .saas-profile-avatar-box {
+  border-color: #ffffff;
+  box-shadow: 0 18px 40px rgba(229, 9, 20, 0.35);
+}
+
+.saas-profile-kids-ribbon {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: linear-gradient(90deg, #ff007f, #00d4ff);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.saas-profile-pin-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fbbf24;
+  font-size: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.saas-profile-edit-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.62);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #fff;
+}
+
+.saas-profile-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #b3b3b3;
+  transition: color 0.18s;
+  max-width: 144px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saas-profile-card:hover .saas-profile-name {
+  color: #ffffff;
+}
+
+.saas-avatar-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 520px) {
+  .saas-avatar-picker-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.saas-avatar-option {
+  height: 58px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.saas-avatar-option:hover {
+  transform: scale(1.06);
+}
+
+.saas-avatar-option.selected {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px #e50914;
+}
+
+/* ==========================================
+   GERENCIADOR DE TELAS ATIVAS & PLANOS
+   ========================================== */
+.saas-screen-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #1b1b22;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+
+.saas-screen-item.is-current-device {
+  border-color: rgba(70, 211, 105, 0.5);
+  background: linear-gradient(90deg, rgba(70, 211, 105, 0.1) 0%, #1b1b22 100%);
+}
+
+.saas-pix-box {
+  background: #121318;
+  border: 1px dashed rgba(70, 211, 105, 0.5);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.saas-qr-placeholder {
+  width: 118px;
+  height: 118px;
+  background: #fff;
+  color: #000;
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 11px;
+  text-align: center;
+  flex-shrink: 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================
+   PAINEL ADMIN SAAS (MÉTRICAS E TABELA)
+   ========================================== */
+.saas-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.saas-metric-card {
+  background: linear-gradient(145deg, #1e1e26 0%, #15151b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.saas-metric-value {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  margin-top: 4px;
+}
+
+.saas-admin-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  background: #141418;
+}
+
+.saas-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.saas-admin-table th,
+.saas-admin-table td {
+  padding: 11px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.saas-admin-table th {
+  background: #1c1c22;
+  color: #aaa;
+  font-weight: 800;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.saas-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.saas-status-pill.active {
+  background: rgba(70, 211, 105, 0.16);
+  color: #46d369;
+  border: 1px solid rgba(70, 211, 105, 0.35);
+}
+
+.saas-status-pill.expired {
+  background: rgba(251, 191, 36, 0.16);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.saas-status-pill.blocked {
+  background: rgba(229, 9, 20, 0.2);
+  color: #ff6b72;
+  border: 1px solid rgba(229, 9, 20, 0.45);
+}
+
+.nf-nav-saas-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nf-profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 11px 4px 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.nf-profile-chip:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ==========================================
+   NETFLIX "PRÓXIMO EPISÓDIO" NOS CRÉDITOS & "PULAR ABERTURA"
+   ========================================== */
+.nf-upnext-credits-card {
+  position: absolute;
+  bottom: 64px;
+  right: 22px;
+  z-index: 45;
+  width: 390px;
+  max-width: calc(100% - 36px);
+  background: rgba(15, 15, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 12px;
+  padding: 15px 16px;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(229, 9, 20, 0.3);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: auto;
+  animation: slideInUpNext 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInUpNext {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.nf-upnext-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: #e50914;
+}
+
+.nf-upnext-countdown-badge {
+  background: rgba(229, 9, 20, 0.22);
+  border: 1px solid rgba(229, 9, 20, 0.55);
+  color: #fff;
+  padding: 2px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.nf-upnext-body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nf-upnext-thumb {
+  width: 86px;
+  height: 54px;
+  border-radius: 7px;
+  background: #1c1c24;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nf-upnext-thumb-badge {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 900;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.nf-upnext-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nf-btn-upnext-play {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.22);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+  transition: transform 0.15s ease;
+}
+
+.nf-btn-upnext-play:hover {
+  transform: scale(1.02);
+}
+
+.nf-btn-upnext-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: #ffffff;
+  z-index: 0;
+  transition: width 1s linear;
+}
+
+.nf-btn-upnext-label {
+  position: relative;
+  z-index: 1;
+  mix-blend-mode: normal;
+  color: #000;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+}
+
+.nf-btn-upnext-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e5e5e5;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.nf-btn-upnext-cancel:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.nf-skip-intro-btn {
+  position: absolute;
+  bottom: 72px;
+  right: 24px;
+  z-index: 44;
+  background: rgba(20, 20, 24, 0.88);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  transition: all 0.18s ease;
+  animation: slideInUpNext 0.25s ease;
+}
+
+.nf-skip-intro-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: scale(1.04);
+}
+
+/* ==========================================
+   CARROSSEL DE BANNERS DE ANÚNCIO DE FUNDO (HERO BILLBOARD)
+   ========================================== */
+.nf-hero-ad-carousel-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.nf-hero-ad-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  transform: scale(1.03);
+  transition: opacity 0.9s ease-in-out, transform 6.5s ease-out;
+}
+
+.nf-hero-ad-slide.active {
+  transform: scale(1);
+}
+
+.nf-hero-ad-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(10, 10, 12, 0.92) 0%, rgba(10, 10, 12, 0.65) 45%, rgba(10, 10, 12, 0.25) 100%),
+    linear-gradient(180deg, rgba(10, 10, 12, 0.45) 0%, transparent 35%, rgba(20, 20, 20, 0.96) 100%);
+}
+
+.nf-hero-ad-banner-bar {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: rgba(14, 14, 18, 0.82);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+}
+
+.nf-hero-ad-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+}
+
+.nf-hero-ad-badge {
+  background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+  color: #000;
+  font-weight: 900;
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.nf-hero-ad-title {
+  font-weight: 900;
+  color: #fff;
+  font-size: 13px;
+}
+
+.nf-hero-ad-subtitle {
+  color: #d4d4d8;
+  font-size: 12px;
+}
+
+.nf-hero-ad-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nf-hero-ad-cta {
+  background: #e50914;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s;
+}
+
+.nf-hero-ad-cta:hover {
+  background: #f6121d;
+  transform: scale(1.04);
+}
+
+.nf-hero-ad-dots-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nf-hero-ad-nav-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.nf-hero-ad-nav-btn:hover {
+  background: rgba(229, 9, 20, 0.85);
+}
+
+.nf-hero-ad-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nf-hero-ad-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.32);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.nf-hero-ad-dot.active {
+  width: 22px;
+  background: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+}

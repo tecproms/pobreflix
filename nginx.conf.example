@@ -1,0 +1,38 @@
+# ====================================================================
+# POBREFLIX — CONFIGURAÇÃO NGINX REVERSE PROXY + STREAMING + SSL
+# Copie para /etc/nginx/sites-available/pobreflix e ative com symlink
+# ====================================================================
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name seu-dominio.com.br www.seu-dominio.com.br;
+
+    # Limite de tamanho de upload para Banners de Anúncio enviados pelo Painel Master
+    client_max_body_size 50M;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+
+        # Suporte a WebSocket e Heartbeat de telas simultâneas
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        # Cabeçalhos de repasse de IP real do cliente
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Otimizações para Streaming contínuo (vídeo sem buffering artificial do Nginx)
+        proxy_buffering off;
+        proxy_read_timeout 86400s;
+        proxy_send_timeout 86400s;
+    }
+}
+
+# ====================================================================
+# APÓS APONTAR O DOMÍNIO, INSTALE SSL (HTTPS) GRÁTIS COM 1 COMANDO:
+# sudo certbot --nginx -d seu-dominio.com.br -d www.seu-dominio.com.br
+# ====================================================================

@@ -1,0 +1,19 @@
+[Unit]
+Description=PobreFlix Streaming & IPTV Platform
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/pobreflix
+ExecStart=/usr/bin/node /var/www/pobreflix/server.js
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=pobreflix
+Environment=NODE_ENV=production
+Environment=PORT=3000
+
+[Install]
+WantedBy=multi-user.target

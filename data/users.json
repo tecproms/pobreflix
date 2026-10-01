@@ -1,0 +1,220 @@
+{
+  "pixSettings": {
+    "pixKey": "pix@pobreflix.com.br",
+    "pixReceiver": "POBREFLIX STREAMING VIP",
+    "whatsappSupport": "5511999999999"
+  },
+  "vouchers": [
+    {
+      "code": "POBREFLIX-VIP",
+      "planId": "familia_4k",
+      "durationDays": 30,
+      "maxUses": 999,
+      "usedCount": 0,
+      "createdAt": "2026-09-30T12:45:44.272Z"
+    },
+    {
+      "code": "PF-4TELAS-30D",
+      "planId": "familia_4k",
+      "durationDays": 30,
+      "maxUses": 10,
+      "usedCount": 0,
+      "createdAt": "2026-09-30T12:45:44.272Z"
+    },
+    {
+      "code": "PF-2TELAS-30D",
+      "planId": "padrao_2",
+      "durationDays": 30,
+      "maxUses": 10,
+      "usedCount": 0,
+      "createdAt": "2026-09-30T12:45:44.272Z"
+    },
+    {
+      "code": "PF-1TELA-30D",
+      "planId": "basico_1",
+      "durationDays": 30,
+      "maxUses": 10,
+      "usedCount": 0,
+      "createdAt": "2026-09-30T12:45:44.272Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "usr_admin_master",
+      "name": "Master Admin (TecPro)",
+      "email": "tecpro@gmail.com",
+      "password": "53915030",
+      "role": "admin",
+      "isMaster": true,
+      "planId": "familia_4k",
+      "maxScreens": 4,
+      "status": "active",
+      "createdAt": "2026-08-31T13:35:02.175Z",
+      "expiresAt": "2036-09-27T13:35:02.175Z",
+      "profiles": [
+        {
+          "id": "prof_admin_1",
+          "name": "TecPro Master",
+          "avatar": "red_boss",
+          "avatarId": "red_boss",
+          "isKids": false,
+          "pin": "",
+          "favorites": [],
+          "history": [
+            {
+              "id": "seq_seq-fast-furious_1",
+              "name": "Velozes e Furiosos 1 (2001)",
+              "rawTitle": "Velozes e Furiosos 1 (2001)",
+              "seriesTitle": "",
+              "seasonNumber": 1,
+              "episodeNumber": 1,
+              "episodeTitle": "Episódio 1",
+              "logo": "https://m.media-amazon.com/images/M/MV5BZGRiMDE1NTMtMThmZS00YjE4LWI1ODQtNjRkZGZlOTg2MGE1XkEyXkFqcGc@._V1_UX600_.jpg",
+              "group": "VOD Filmes: Franquias & Sequências (Dublado)",
+              "url": "http://localhost:3000/api/ia-stream?id=paixaoflix-series-velozes-e-furiosos-1&type=movie&v=.mp4",
+              "quality": "HD",
+              "isVod": true,
+              "isSeriesGroup": false,
+              "isSeriesEpisode": false,
+              "isAnime": false,
+              "episodes": []
+            },
+            {
+              "id": "Pica Pau A Fabulosa Caixa de Comida (Dublado)_http://localhost:3000/api/ia-stream?id=pica-pau-a-fabulosa-caixa-de-comida-infantil-paixaoflix&type=movie&v=.mp4_452",
+              "name": "Pica Pau A Fabulosa Caixa de Comida (Dublado)",
+              "rawTitle": "Pica Pau A Fabulosa Caixa de Comida (Dublado)",
+              "seriesTitle": "",
+              "seasonNumber": 1,
+              "episodeNumber": 1,
+              "episodeTitle": "Episódio 1",
+              "logo": "https://archive.org/services/img/pica-pau-a-fabulosa-caixa-de-comida-infantil-paixaoflix",
+              "group": "VOD Filmes: Animação, Disney & Família (Dublado)",
+              "url": "http://localhost:3000/api/ia-stream?id=pica-pau-a-fabulosa-caixa-de-comida-infantil-paixaoflix&type=movie&v=.mp4",
+              "quality": "HD",
+              "isVod": true,
+              "isSeriesGroup": false,
+              "isSeriesEpisode": false,
+              "isAnime": false,
+              "episodes": []
+            },
+            {
+              "id": "Cangaco Novo (Dublado) - S01E08_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=8&v=.mp4_1117",
+              "name": "Cangaco Novo (Dublado) - S01E08",
+              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
+              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
+              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=8&v=.mp4",
+              "quality": "HD",
+              "isVod": true
+            },
+            {
+              "id": "Cangaco Novo (Dublado) - S01E07_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=7&v=.mp4_1116",
+              "name": "Cangaco Novo (Dublado) - S01E07",
+              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
+              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
+              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=7&v=.mp4",
+              "quality": "HD",
+              "isVod": true
+            },
+            {
+              "id": "Cangaco Novo (Dublado) - S01E06_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=6&v=.mp4_1115",
+              "name": "Cangaco Novo (Dublado) - S01E06",
+              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
+              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
+              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=6&v=.mp4",
+              "quality": "HD",
+              "isVod": true
+            },
+            {
+              "id": "Cangaco Novo (Dublado) - S01E05_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=5&v=.mp4_1114",
+              "name": "Cangaco Novo (Dublado) - S01E05",
+              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
+              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
+              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=5&v=.mp4",
+              "quality": "HD",
+              "isVod": true
+            },
+            {
+              "id": "Cangaco Novo (Dublado) - S01E04_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=4&v=.mp4_1113",
+              "name": "Cangaco Novo (Dublado) - S01E04",
+              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
+              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
+              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=4&v=.mp4",
+              "quality": "HD",
+              "isVod": true
+            },
+            {
+              "id": "Cangaco Novo (Dublado) - S01E03_http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=3&v=.mp4_1112",
+              "name": "Cangaco Novo (Dublado) - S01E03",
+              "logo": "https://m.media-amazon.com/images/M/MV5BMzI1YTk0MzEtN2M0Yy00N2RjLWE1OTctMTIwM2NkOTdlOTA4XkEyXkFqcGc@._V1_UX600_.jpg",
+              "group": "VOD Séries: Séries de TV & Comédias (Dublado)",
+              "url": "http://localhost:3000/api/ia-stream?id=cangaco-novo-s01-paixaoflix&ep=3&v=.mp4",
+              "quality": "HD",
+              "isVod": true
+            }
+          ]
+        },
+        {
+          "id": "prof_admin_2",
+          "name": "Sala TV 4K",
+          "avatar": "blue_cinema",
+          "avatarId": "blue_cinema",
+          "isKids": false,
+          "pin": "",
+          "favorites": [],
+          "history": []
+        },
+        {
+          "id": "prof_admin_3",
+          "name": "PobreFlix Kids",
+          "avatar": "kids_bear",
+          "avatarId": "kids_bear",
+          "isKids": true,
+          "pin": "",
+          "favorites": [],
+          "history": []
+        }
+      ]
+    }
+  ],
+  "adBanners": [
+    {
+      "id": "bnr_default_1",
+      "title": "🔥 PLANO FAMÍLIA 4K — 4 TELAS SIMULTÂNEAS POR R$ 29,90",
+      "subtitle": "Assista na TV da Sala, Quarto e Celular ao mesmo tempo sem travar! Ativação imediata via PIX.",
+      "ctaText": "🚀 Fazer Upgrade p/ 4 Telas",
+      "linkUrl": "#open_plans",
+      "badge": "OFERTA VIP POBREFLIX",
+      "imageUrl": "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=1600&q=85",
+      "active": true,
+      "createdAt": "2026-09-30T12:00:00.000Z"
+    },
+    {
+      "id": "bnr_default_2",
+      "title": "🍿 +2.000 FILMES E SÉRIES DUBLADOS EM 4K ULTRA HD",
+      "subtitle": "Lançamentos do cinema, séries completas com todas as temporadas e canais ao vivo 24h.",
+      "ctaText": "🎬 Explorar Lançamentos",
+      "linkUrl": "",
+      "badge": "DESTAQUE DO MÊS",
+      "imageUrl": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1600&q=85",
+      "active": true,
+      "createdAt": "2026-09-30T12:01:00.000Z"
+    },
+    {
+      "id": "bnr_default_3",
+      "title": "📢 ANUNCIE SUA MARCA OU PARCERIA AQUI NA POBREFLIX",
+      "subtitle": "Espaço publicitário gerenciado direto pelo Painel Master em carrossel de fundo.",
+      "ctaText": "👑 Configurar no Painel Master",
+      "linkUrl": "#open_plans",
+      "badge": "ESPAÇO PUBLICITÁRIO",
+      "imageUrl": "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1600&q=85",
+      "active": true,
+      "createdAt": "2026-09-30T12:02:00.000Z"
+    }
+  ],
+  "adBannerSettings": {
+    "enabled": true,
+    "intervalSeconds": 6,
+    "backgroundOpacity": 0.62,
+    "showAdOverlayCard": true
+  }
+}

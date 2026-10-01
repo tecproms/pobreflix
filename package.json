@@ -1,0 +1,12 @@
+{
+  "name": "canais-iptv-player",
+  "version": "1.0.0",
+  "description": "Reprodutor Web de Listas M3U/M3U8 com React e Servidor Proxy CORS em Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

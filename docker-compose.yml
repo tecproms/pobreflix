@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  pobreflix:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pobreflix_app
+    restart: unless-stopped
+    ports:
+      # Mapeia a porta 3000 do container para a porta 3000 da VPS
+      # (ou altere para "80:3000" se não for usar Nginx reverso)
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      # Volumes persistentes: contas de usuários, perfis, assinaturas e banners salvos
+      - ./data:/app/data
+      - ./public/uploads:/app/public/uploads
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
