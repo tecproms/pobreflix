@@ -722,9 +722,9 @@ const server = http.createServer(async (req, res) => {
             .sort((a, b) => (parseInt(b.size, 10) || 0) - (parseInt(a.size, 10) || 0))[0];
         } else {
           const requestedEpNum = epIdx + 1;
-          const epRegex = new RegExp(`(?:E|EP|EPIS[OÓ]DIO)\\s*0*${requestedEpNum}\\b`, 'i');
+          const epRegex = new RegExp(`(?:S\\d+)?(?:E|EP|EPIS[OÓ]DIO|\\bx)\\s*0*${requestedEpNum}\\b`, 'i');
           const matchedByNum = chosenFiles.find((f) => epRegex.test(f.name));
-          targetFile = matchedByNum || chosenFiles[Math.min(epIdx, chosenFiles.length - 1)];
+          targetFile = matchedByNum || chosenFiles[epIdx] || chosenFiles[0];
         }
         const directUrl = (serverHost && serverDir && serverHost !== 'archive.org')
           ? `https://${serverHost}${serverDir}/${encodeURIComponent(targetFile.name).replace(/%2F/g, '/')}`
