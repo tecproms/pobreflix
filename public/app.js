@@ -4034,53 +4034,6 @@ function App() {
         <section className="cinema-theater">
           <div className="cinema-stage">
             <div className="cinema-video-box">
-              <div className="player-overlay-top">
-                <div className="live-pill">
-                  <span className="live-dot" />
-                  <span>
-                    {activeSeriesGroup
-                      ? `📺 ${activeSeriesGroup.name} • T${
-                          currentChannel.seasonNumber || 1
-                        }:E${currentChannel.episodeNumber || 1}`
-                      : currentChannel.isVod
-                      ? '🍿 FILME SOB DEMANDA'
-                      : '📡 CANAL AO VIVO'}
-                  </span>
-                </div>
-
-                <div style={{ display: 'flex', gap: '8px', pointerEvents: 'auto', flexWrap: 'wrap' }}>
-                  {(currentChannel.isVod || activeSeriesGroup) && nextUpChannel && (
-                    <div
-                      className="live-pill"
-                      style={{
-                        cursor: 'pointer',
-                        background: 'rgba(229, 9, 20, 0.85)',
-                        borderColor: '#ff6b72'
-                      }}
-                      onClick={handleJumpToCredits}
-                      title="Pular para os créditos finais e exibir o card de Próximo Episódio"
-                    >
-                      ⏭ Ir p/ Créditos (Próximo Ep)
-                    </div>
-                  )}
-                  <div
-                    className="live-pill"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => setVideoRotation((r) => (r - 90) % 360)}
-                    title="Girar orientação do vídeo em 90°"
-                  >
-                    🔄 Girar Tela {videoRotation !== 0 ? `(${videoRotation}°)` : ''}
-                  </div>
-                  <div
-                    className="live-pill"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => setIsPlayerOpen(false)}
-                  >
-                    ✕ Fechar Player
-                  </div>
-                </div>
-              </div>
-
               {isCloudChannel ? (
                 <iframe
                   key={`${currentChannel.url}_${cloudServer}`}
@@ -4561,10 +4514,19 @@ function App() {
               </button>
 
               <button
+                type="button"
+                className="nf-btn nf-btn-dark"
+                onClick={() => setVideoRotation((r) => (r - 90) % 360)}
+                title="Girar orientação do vídeo em 90°"
+              >
+                🔄 Girar {videoRotation !== 0 ? `(${videoRotation}°)` : ''}
+              </button>
+
+              <button
                 className="nf-btn nf-btn-dark"
                 onClick={() => setIsPlayerOpen(false)}
               >
-                ✕ Fechar
+                ✕ Fechar Player
               </button>
             </div>
           </div>
