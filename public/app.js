@@ -119,6 +119,105 @@ function detectSeriesInfo(name, group, isVod, url = '') {
   };
 }
 
+// ==========================================
+// GERENCIADOR DE PROGRESSO E RETOMADA DE VÍDEO (ONDE PAREI)
+// ==========================================
+function formatTimeDisplay(seconds) {
+  if (!seconds || !isFinite(seconds) || seconds < 0) return '00:00';
+  const totalSecs = Math.floor(seconds);
+  const hrs = Math.floor(totalSecs / 3600);
+  const mins = Math.floor((totalSecs % 3600) / 60);
+  const secs = totalSecs % 60;
+  if (hrs > 0) {
+    return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  }
+  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+function getMediaProgressKey(item) {
+  if (!item) return '';
+  if (item.url) {
+    const cleanUrl = String(item.url)
+      .replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, '')
+      .split('?')[0]
+      .trim();
+    if (cleanUrl) return cleanUrl;
+  }
+  if (item.id) return String(item.id).trim();
+  if (item.name) {
+    return String(item.seriesTitle || item.name)
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '');
+  }
+  return '';
+}
+
+function getSavedPlaybackPosition(ch, positionsMap, historyList) {
+  if (!ch) return null;
+
+  // 1. Posição já existente diretamente no objeto ch
+  if (typeof ch.currentTime === 'number' && ch.currentTime > 10) {
+    return {
+      currentTime: ch.currentTime,
+      duration: ch.duration || 0,
+      progress: ch.progress || 0,
+      completed: Boolean(ch.completed)
+    };
+  }
+
+  // 2. Busca no mapa rápido em memória/localStorage
+  const key = getMediaProgressKey(ch);
+  const nameKey = String(ch.seriesTitle || ch.name || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
+
+  if (positionsMap) {
+    if (key && positionsMap[key] && typeof positionsMap[key].currentTime === 'number') {
+      return positionsMap[key];
+    }
+    if (nameKey && positionsMap[nameKey] && typeof positionsMap[nameKey].currentTime === 'number') {
+      return positionsMap[nameKey];
+    }
+  }
+
+  // Fallback para cache global no window caso o mapa não tenha chegado via prop
+  if (typeof window !== 'undefined' && window.__pobreflixPlaybackPositions) {
+    const winMap = window.__pobreflixPlaybackPositions;
+    if (key && winMap[key] && typeof winMap[key].currentTime === 'number') {
+      return winMap[key];
+    }
+    if (nameKey && winMap[nameKey] && typeof winMap[nameKey].currentTime === 'number') {
+      return winMap[nameKey];
+    }
+  }
+
+  // 3. Busca no array de histórico
+  if (Array.isArray(historyList)) {
+    const cleanTargetName = (ch.seriesTitle || ch.name || '').toLowerCase().trim();
+    const histItem = historyList.find((h) => {
+      if (!h) return false;
+      if (h.url && ch.url && h.url === ch.url) return true;
+      if (h.id && ch.id && h.id === ch.id) return true;
+      if (h.name && cleanTargetName && h.name.toLowerCase().trim() === cleanTargetName) return true;
+      return false;
+    });
+    if (histItem && typeof histItem.currentTime === 'number' && histItem.currentTime > 10) {
+      return {
+        currentTime: histItem.currentTime,
+        duration: histItem.duration || 0,
+        progress: histItem.progress || 0,
+        completed: Boolean(histItem.completed)
+      };
+    }
+  }
+
+  return null;
+}
+
 /**
  * Normaliza e consolida o histórico (Continuar Assistindo).
  * Garante que NUNCA haja mais de um card para a mesma série.
@@ -815,7 +914,8 @@ function PobreFlixCard({
   statusInfo,
   onSelect,
   onOpenEpisodes,
-  onToggleFav
+  onToggleFav,
+  playbackPositions = null
 }) {
   const isAnime = Boolean(channel.isAnime || /anime|tokusatsu/i.test(channel.group || ''));
   const isSeries = Boolean(
@@ -830,6 +930,25 @@ function PobreFlixCard({
   );
   const isPoster = Boolean(channel.isVod || channel.isSeriesGroup || isSeries);
   const epCount = channel.episodes?.length || 0;
+
+  // Detecção de progresso (Onde Parei)
+  const savedPos = getSavedPlaybackPosition(channel, playbackPositions);
+  const hasProgress = Boolean(
+    channel.isVod &&
+    savedPos &&
+    typeof savedPos.currentTime === 'number' &&
+    savedPos.currentTime >= 15 &&
+    (!savedPos.duration || savedPos.currentTime < savedPos.duration - 35) &&
+    !savedPos.completed
+  );
+
+  const progressPercent = hasProgress && savedPos.duration > 0
+    ? Math.min(100, Math.max(3, Math.round((savedPos.currentTime / savedPos.duration) * 100)))
+    : (hasProgress && savedPos.progress ? savedPos.progress : 0);
+
+  const remainingMins = hasProgress && savedPos.duration > 0
+    ? Math.max(1, Math.round((savedPos.duration - savedPos.currentTime) / 60))
+    : 0;
 
   return (
     <div
@@ -852,6 +971,16 @@ function PobreFlixCard({
           name={channel.name}
           isPoster={isPoster}
         />
+
+        {/* Barra de Progresso Vermelha Estilo Netflix */}
+        {hasProgress && progressPercent > 0 && (
+          <div className="nf-card-progress-track">
+            <div
+              className="nf-card-progress-bar"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+        )}
 
         <div className="nf-card-badges">
           {isAnime ? (
@@ -904,7 +1033,15 @@ function PobreFlixCard({
         <div className="nf-card-play-overlay">
           <div
             className="nf-play-circle"
-            title={channel.episodeNumber ? `Continuar Ep. ${channel.episodeNumber}` : isSeries ? 'Escolher Temporada e Episódio' : 'Assistir Agora'}
+            title={
+              hasProgress
+                ? `Continuar de ${formatTimeDisplay(savedPos.currentTime)}`
+                : channel.episodeNumber
+                ? `Continuar Ep. ${channel.episodeNumber}`
+                : isSeries
+                ? 'Escolher Temporada e Episódio'
+                : 'Assistir Agora'
+            }
           >
             ▶
           </div>
@@ -944,9 +1081,24 @@ function PobreFlixCard({
                 : 'Ver Episódios ▾'
               : channel.group}
           </span>
-          <span className="nf-quality-pill">
-            {channel.isVod ? '00:00 VOD' : channel.quality || 'HD'}
-          </span>
+          {hasProgress && remainingMins > 0 ? (
+            <span
+              className="nf-quality-pill"
+              style={{
+                background: '#e50914',
+                color: '#fff',
+                fontWeight: 700,
+                boxShadow: '0 0 8px rgba(229, 9, 20, 0.45)'
+              }}
+              title={`Parou em ${formatTimeDisplay(savedPos.currentTime)} de ${formatTimeDisplay(savedPos.duration)}`}
+            >
+              ⏱ {remainingMins > 60 ? `${Math.floor(remainingMins / 60)}h ${remainingMins % 60}m` : `${remainingMins} min`}
+            </span>
+          ) : (
+            <span className="nf-quality-pill">
+              {channel.isVod ? '00:00 VOD' : channel.quality || 'HD'}
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -967,7 +1119,8 @@ function CatalogRow({
   onToggleFavorite,
   onExploreCategory,
   isTop10 = false,
-  isSequence = false
+  isSequence = false,
+  playbackPositions = null
 }) {
   const trackRef = useRef(null);
 
@@ -1046,6 +1199,7 @@ function CatalogRow({
                     onSelect={onSelectChannel}
                     onOpenEpisodes={onOpenEpisodes}
                     onToggleFav={onToggleFavorite}
+                    playbackPositions={playbackPositions}
                   />
                 </div>
               );
@@ -1069,6 +1223,7 @@ function CatalogRow({
                     onSelect={onSelectChannel}
                     onOpenEpisodes={onOpenEpisodes}
                     onToggleFav={onToggleFavorite}
+                    playbackPositions={playbackPositions}
                   />
                 </div>
               );
@@ -1084,6 +1239,7 @@ function CatalogRow({
                 onSelect={onSelectChannel}
                 onOpenEpisodes={onOpenEpisodes}
                 onToggleFav={onToggleFavorite}
+                playbackPositions={playbackPositions}
               />
             );
           })}
@@ -1340,6 +1496,82 @@ function App() {
       return [];
     }
   });
+
+  const [playbackPositions, setPlaybackPositions] = useState(() => {
+    try {
+      const saved = localStorage.getItem('iptv_playback_positions_v1');
+      const parsed = saved ? JSON.parse(saved) : {};
+      if (typeof window !== 'undefined') window.__pobreflixPlaybackPositions = parsed;
+      return parsed;
+    } catch {
+      return {};
+    }
+  });
+
+  const playbackPositionsRef = useRef(playbackPositions);
+  useEffect(() => {
+    playbackPositionsRef.current = playbackPositions;
+    if (typeof window !== 'undefined') window.__pobreflixPlaybackPositions = playbackPositions;
+  }, [playbackPositions]);
+
+  const historyRef = useRef(history);
+  useEffect(() => {
+    historyRef.current = history;
+  }, [history]);
+
+  const currentChannelRef = useRef(currentChannel);
+  useEffect(() => {
+    currentChannelRef.current = currentChannel;
+  }, [currentChannel]);
+
+  const [resumeToast, setResumeToast] = useState(null);
+  const lastStateSaveRef = useRef(0);
+  const lastSavedTimeRef = useRef(0);
+
+  // Auto-fechar o toast de Retomada de Onde Parou após 7 segundos
+  useEffect(() => {
+    if (resumeToast && resumeToast.show) {
+      const t = setTimeout(() => {
+        setResumeToast(null);
+      }, 7000);
+      return () => clearTimeout(t);
+    }
+  }, [resumeToast]);
+
+  // Salvar posição imediatamente no unload da janela (fechar navegador/aba)
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const channel = currentChannelRef.current;
+      const video = videoRef.current;
+      if (video && channel && channel.isVod) {
+        const cur = video.currentTime;
+        const dur = video.duration;
+        if (cur > 5 && isFinite(cur) && isFinite(dur)) {
+          const key = getMediaProgressKey(channel);
+          const nameKey = String(channel.seriesTitle || channel.name || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]/g, '');
+          try {
+            const raw = localStorage.getItem('iptv_playback_positions_v1');
+            const map = raw ? JSON.parse(raw) : {};
+            const posData = {
+              currentTime: cur,
+              duration: dur,
+              progress: dur > 0 ? Math.round((cur / dur) * 100) : 0,
+              updatedAt: Date.now()
+            };
+            if (key) map[key] = posData;
+            if (nameKey) map[nameKey] = posData;
+            localStorage.setItem('iptv_playback_positions_v1', JSON.stringify(map));
+          } catch {}
+        }
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   // Configurações de Reprodução
   const [useProxyMode, setUseProxyMode] = useState('proxy');
@@ -1806,7 +2038,86 @@ function App() {
     loadPlaylistFromUrl(defaultPresets[0].url, defaultPresets[0].name, defaultPresets[0].id, false);
   }, [loadPlaylistFromUrl]);
 
+  const savePlaybackPosition = useCallback(
+    (curTime, durTime, markCompleted = false, forceStateUpdate = false) => {
+      const channel = currentChannelRef.current;
+      if (!channel || !channel.isVod) return;
+      const dur = durTime || videoRef.current?.duration || 0;
+      const cur = markCompleted ? 0 : Math.max(0, curTime || 0);
+      const progress = dur > 0 ? Math.min(100, Math.round((cur / dur) * 100)) : 0;
+      const key = getMediaProgressKey(channel);
+      const nameKey = String(channel.seriesTitle || channel.name || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, '');
+
+      const posData = {
+        currentTime: cur,
+        duration: dur,
+        progress: markCompleted ? 100 : progress,
+        completed: markCompleted,
+        updatedAt: Date.now()
+      };
+
+      // 1. Gravar imediatamente no localStorage (instantâneo)
+      try {
+        const raw = localStorage.getItem('iptv_playback_positions_v1');
+        const map = raw ? JSON.parse(raw) : {};
+        if (key) map[key] = posData;
+        if (nameKey) map[nameKey] = posData;
+        localStorage.setItem('iptv_playback_positions_v1', JSON.stringify(map));
+        if (typeof window !== 'undefined') window.__pobreflixPlaybackPositions = map;
+      } catch (e) {}
+
+      // 2. Atualizar estado React de posições e histórico (com throttle para manter vídeo a 60fps)
+      const now = Date.now();
+      if (forceStateUpdate || now - lastStateSaveRef.current >= 3500) {
+        lastStateSaveRef.current = now;
+        setPlaybackPositions((prevMap) => {
+          const nextMap = { ...prevMap };
+          if (key) nextMap[key] = posData;
+          if (nameKey) nextMap[nameKey] = posData;
+          return nextMap;
+        });
+
+        setHistory((prevList) => {
+          const targetUrl = channel.url;
+          const targetId = channel.id;
+          const cleanTargetName = (channel.seriesTitle || channel.name || '').toLowerCase().trim();
+
+          return prevList.map((item) => {
+            if (!item) return item;
+            const match =
+              (item.url && targetUrl && item.url === targetUrl) ||
+              (item.id && targetId && item.id === targetId) ||
+              (item.name && cleanTargetName && item.name.toLowerCase().trim() === cleanTargetName);
+            if (match) {
+              return {
+                ...item,
+                currentTime: cur,
+                duration: dur,
+                progress: markCompleted ? 100 : progress,
+                completed: markCompleted,
+                savedAt: now
+              };
+            }
+            return item;
+          });
+        });
+      }
+    },
+    []
+  );
+
   const destroyPlayers = useCallback(() => {
+    if (videoRef.current && currentChannelRef.current && currentChannelRef.current.isVod) {
+      const cur = videoRef.current.currentTime;
+      const dur = videoRef.current.duration;
+      if (cur > 5 && isFinite(cur) && isFinite(dur)) {
+        savePlaybackPosition(cur, dur, false, true);
+      }
+    }
     if (hlsRef.current) {
       try {
         hlsRef.current.destroy();
@@ -1821,7 +2132,7 @@ function App() {
       } catch {}
       mpegtsRef.current = null;
     }
-  }, []);
+  }, [savePlaybackPosition]);
 
   // 100% Player Nativo HTML5 sem iframes de terceiros e ZERO anúncios!
   const isCloudChannel = false;
@@ -1857,12 +2168,25 @@ function App() {
       }
 
       destroyPlayers();
+      setResumeToast(null);
       setPlayerState('loading');
       setPlayerErrorDetails('');
       setQualityLevels([]);
       setCurrentQuality(-1);
       setStreamInfo({ resolution: '', engine: '' });
       setVideoRotation(0);
+
+      // Calcular tempo de retomada salvo (apenas para títulos VOD)
+      const savedPlayback = channel.isVod
+        ? getSavedPlaybackPosition(channel, playbackPositionsRef.current, historyRef.current)
+        : null;
+      const targetResumeTime = (
+        savedPlayback &&
+        typeof savedPlayback.currentTime === 'number' &&
+        savedPlayback.currentTime >= 15 &&
+        (!savedPlayback.duration || savedPlayback.currentTime < savedPlayback.duration - 35) &&
+        !savedPlayback.completed
+      ) ? savedPlayback.currentTime : 0;
 
       // Resolver títulos do catálogo global para stream .MP4 direto (Internet Archive) 100% sem anúncios
       if (rawUrl && rawUrl.startsWith('cloud://')) {
@@ -1913,11 +2237,30 @@ function App() {
           engine: mode === 'direct' ? 'MP4 Direto (Seek Ativo)' : 'MP4 Proxy'
         });
         video.src = effectiveUrl;
+
+        let resumeApplied = false;
+        const applyResumeSeek = () => {
+          if (resumeApplied || !targetResumeTime || !videoRef.current) return;
+          const dur = videoRef.current.duration;
+          if (dur && isFinite(dur) && dur > 30 && targetResumeTime < dur - 30) {
+            resumeApplied = true;
+            try {
+              videoRef.current.currentTime = targetResumeTime;
+              setResumeToast({
+                show: true,
+                time: targetResumeTime,
+                formattedTime: formatTimeDisplay(targetResumeTime)
+              });
+            } catch (err) {}
+          }
+        };
+
         video.onloadedmetadata = () => {
           setPlayerState('playing');
           if (video.videoHeight > video.videoWidth && video.videoWidth > 0) {
             setVideoRotation(-90);
           }
+          applyResumeSeek();
           video.play().catch(() => {});
           // Proteção anti-tela-preta: se o MP4 abrir só áudio (videoWidth === 0 por codec antigo), tenta o derivado .ia.mp4 (H.264)
           setTimeout(() => {
@@ -1938,6 +2281,10 @@ function App() {
             }
           }, 900);
         };
+        video.oncanplay = () => {
+          applyResumeSeek();
+        };
+
         video.onerror = async () => {
           if (mode === 'direct') {
             startPlayback(channel, 'proxy');
@@ -2002,7 +2349,8 @@ function App() {
           backBufferLength: 60,
           manifestLoadingTimeOut: 15000,
           manifestLoadingMaxRetry: 2,
-          levelLoadingTimeOut: 15000
+          levelLoadingTimeOut: 15000,
+          startPosition: targetResumeTime > 0 ? targetResumeTime : -1
         });
         hlsRef.current = hls;
 
@@ -2022,6 +2370,13 @@ function App() {
             resolution: levels.length ? levels[levels.length - 1].label : 'Auto',
             engine: mode === 'proxy' ? 'HLS Proxy' : 'HLS Direto'
           });
+          if (targetResumeTime > 0) {
+            setResumeToast({
+              show: true,
+              time: targetResumeTime,
+              formattedTime: formatTimeDisplay(targetResumeTime)
+            });
+          }
           video.play().catch(() => {});
         });
 
@@ -2061,6 +2416,16 @@ function App() {
           'loadedmetadata',
           () => {
             setPlayerState('playing');
+            if (targetResumeTime > 0 && isFinite(video.duration) && targetResumeTime < video.duration - 30) {
+              try {
+                video.currentTime = targetResumeTime;
+                setResumeToast({
+                  show: true,
+                  time: targetResumeTime,
+                  formattedTime: formatTimeDisplay(targetResumeTime)
+                });
+              } catch (e) {}
+            }
             video.play().catch(() => {});
           },
           { once: true }
@@ -2136,6 +2501,8 @@ function App() {
           /anime|tokusatsu/i.test(currentChannel.group || '')
         );
 
+        const existingSaved = getSavedPlaybackPosition(currentChannel, playbackPositionsRef.current, prev);
+
         const historyItem = {
           id: activeSeriesGroup ? activeSeriesGroup.id : currentChannel.id,
           imdbId: currentChannel.imdbId || activeSeriesGroup?.imdbId,
@@ -2156,7 +2523,11 @@ function App() {
           isSeriesGroup: isSeries,
           isSeriesEpisode: isSeries,
           isAnime: isAnime,
-          episodes: episodesList
+          episodes: episodesList,
+          currentTime: currentChannel.currentTime || existingSaved?.currentTime || 0,
+          duration: currentChannel.duration || existingSaved?.duration || 0,
+          progress: currentChannel.progress || existingSaved?.progress || 0,
+          completed: Boolean(currentChannel.completed || existingSaved?.completed)
         };
 
         return deduplicateHistory([historyItem, ...filtered], channels).slice(0, 30);
@@ -2307,13 +2678,17 @@ function App() {
         if (!targetEp) targetEp = eps[0];
 
         setActiveSeriesGroup(ch);
+        const epSaved = getSavedPlaybackPosition(targetEp, playbackPositionsRef.current, historyRef.current);
         setCurrentChannel({
           ...targetEp,
           seriesTitle: ch.seriesTitle || ch.name,
           seasonNumber: targetEp.seasonNumber || ch.seasonNumber || 1,
           episodeNumber: targetEp.episodeNumber || ch.episodeNumber || 1,
           isSeriesEpisode: true,
-          isVod: true
+          isVod: true,
+          currentTime: ch.currentTime || targetEp.currentTime || epSaved?.currentTime || 0,
+          duration: ch.duration || targetEp.duration || epSaved?.duration || 0,
+          progress: ch.progress || targetEp.progress || epSaved?.progress || 0
         });
         setHeroChannel(ch);
       } else {
@@ -2364,8 +2739,12 @@ function App() {
         } else if (!ch.isSeriesEpisode && !/ep=\d+/i.test(ch.url || '')) {
           setActiveSeriesGroup(null);
         }
-        setCurrentChannel(ch);
-        setHeroChannel(parentSeries || ch);
+        const movieSaved = ch.isVod ? getSavedPlaybackPosition(ch, playbackPositionsRef.current, historyRef.current) : null;
+        const finalChannel = movieSaved
+          ? { ...ch, currentTime: movieSaved.currentTime, duration: movieSaved.duration, progress: movieSaved.progress }
+          : ch;
+        setCurrentChannel(finalChannel);
+        setHeroChannel(parentSeries || finalChannel);
       }
       setSeriesModalItem(null);
       setIsPlayerOpen(true);
@@ -3071,13 +3450,22 @@ function App() {
     ]
   );
 
-  // Detector automático de Abertura (Intro) e Créditos Finais ("Próximo Episódio") estilo Netflix
+  // Detector automático de Posição (Onde Parei), Abertura (Intro) e Créditos Finais estilo Netflix
   const handleVideoTimeUpdate = useCallback(() => {
     const video = videoRef.current;
     if (!video || !currentChannel || !currentChannel.isVod) return;
     const dur = video.duration;
     const cur = video.currentTime;
-    if (!dur || !isFinite(dur) || dur < 45) return;
+    if (!dur || !isFinite(dur) || dur < 30) return;
+
+    // 0. Gravar posição de onde parou no filme/série com throttle de 3 segundos
+    if (cur >= 5) {
+      if (Math.abs(cur - (lastSavedTimeRef.current || 0)) >= 3) {
+        lastSavedTimeRef.current = cur;
+        const isNearEnd = cur >= dur - 35;
+        savePlaybackPosition(cur, dur, isNearEnd, false);
+      }
+    }
 
     // 1. Detectar janela de Abertura ("Pular Abertura" entre 15s e 85s em séries)
     if (
@@ -3111,7 +3499,8 @@ function App() {
     skipIntroDismissed,
     showSkipIntro,
     upNextDismissed,
-    showUpNextOverlay
+    showUpNextOverlay,
+    savePlaybackPosition
   ]);
 
   // Pular direto para o início dos créditos finais (ou exibir o card de Próximo Episódio na hora)
@@ -3724,13 +4113,66 @@ function App() {
                     playsInline
                     autoPlay
                     onTimeUpdate={handleVideoTimeUpdate}
+                    onPause={() => {
+                      if (videoRef.current) {
+                        savePlaybackPosition(
+                          videoRef.current.currentTime,
+                          videoRef.current.duration,
+                          false,
+                          true
+                        );
+                      }
+                    }}
+                    onSeeked={() => {
+                      if (videoRef.current) {
+                        savePlaybackPosition(
+                          videoRef.current.currentTime,
+                          videoRef.current.duration,
+                          false,
+                          true
+                        );
+                      }
+                    }}
                     onEnded={() => {
+                      if (videoRef.current) {
+                        savePlaybackPosition(0, videoRef.current.duration, true, true);
+                      }
                       if (activeSeriesGroup || currentChannel.isVod) {
                         setShowUpNextOverlay(false);
                         handleStepChannel(1);
                       }
                     }}
                   />
+
+                  {/* AVISO ELEGANTE: RETOMANDO DE ONDE PAROU (ESTILO NETFLIX / PRIME VIDEO) */}
+                  {resumeToast && resumeToast.show && (
+                    <div className="nf-resume-toast">
+                      <div className="nf-resume-toast-text">
+                        <span>▶ Retomando de <strong>{resumeToast.formattedTime}</strong></span>
+                      </div>
+                      <button
+                        type="button"
+                        className="nf-resume-restart-btn"
+                        onClick={() => {
+                          if (videoRef.current) {
+                            videoRef.current.currentTime = 0;
+                            savePlaybackPosition(0, videoRef.current.duration || 0, false, true);
+                          }
+                          setResumeToast(null);
+                        }}
+                      >
+                        ↺ Recomeçar do Início
+                      </button>
+                      <button
+                        type="button"
+                        className="nf-resume-close-btn"
+                        onClick={() => setResumeToast(null)}
+                        title="Fechar aviso"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
 
                   {/* BOTÃO ESTILO NETFLIX: PULAR ABERTURA */}
                   {showSkipIntro && !showUpNextOverlay && (
@@ -4384,6 +4826,7 @@ function App() {
               onOpenEpisodes={handleOpenEpisodesModal}
               onToggleFavorite={toggleFavorite}
               onExploreCategory={() => setNavSection('mylist')}
+              playbackPositions={playbackPositions}
             />
           )}
 
@@ -4398,6 +4841,7 @@ function App() {
               onOpenEpisodes={handleOpenEpisodesModal}
               onToggleFavorite={toggleFavorite}
               onExploreCategory={() => setNavSection('history')}
+              playbackPositions={playbackPositions}
             />
           )}
 
@@ -4417,6 +4861,7 @@ function App() {
               onExploreCategory={
                 row.navTarget ? () => setNavSection(row.navTarget) : undefined
               }
+              playbackPositions={playbackPositions}
             />
           ))}
         </div>
@@ -4506,6 +4951,7 @@ function App() {
                     onSelect={handleSelectChannel}
                     onOpenEpisodes={handleOpenEpisodesModal}
                     onToggleFav={toggleFavorite}
+                    playbackPositions={playbackPositions}
                   />
                 ))}
               </div>

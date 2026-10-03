@@ -2303,3 +2303,108 @@ body {
   margin-bottom: 10px;
 }
 
+/* ==========================================
+   RESUME PLAYBACK TOAST & CARD PROGRESS BAR
+   ========================================== */
+.nf-resume-toast {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 17, 23, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(229, 9, 20, 0.55);
+  border-radius: 8px;
+  padding: 10px 16px;
+  z-index: 60;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 16px rgba(229, 9, 20, 0.25);
+  animation: nfFadeInDown 0.3s ease;
+  font-family: inherit;
+}
+
+@keyframes nfFadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nf-resume-toast-text {
+  color: #f1f1f1;
+  font-size: 13.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nf-resume-toast-text strong {
+  color: #e50914;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.nf-resume-restart-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.nf-resume-restart-btn:hover {
+  background: #e50914;
+  border-color: #e50914;
+  transform: scale(1.04);
+}
+
+.nf-resume-close-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 4px 6px;
+  line-height: 1;
+  border-radius: 4px;
+}
+
+.nf-resume-close-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Barra de Progresso Vermelha nos Cards de Vídeo (Estilo Netflix) */
+.nf-card-progress-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.28);
+  z-index: 6;
+  overflow: hidden;
+}
+
+.nf-card-progress-bar {
+  height: 100%;
+  background: #e50914;
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px rgba(229, 9, 20, 0.9);
+  transition: width 0.3s ease;
+}
+
