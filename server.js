@@ -879,7 +879,9 @@ const server = http.createServer(async (req, res) => {
         }
         const responseHeaders = {
           'Content-Type': resolvedContentType || 'video/mp4',
-          'Cache-Control': 'no-cache',
+          'Accept-Ranges': 'bytes',
+          'Connection': 'keep-alive',
+          'Cache-Control': 'public, max-age=3600',
         };
         if (upstreamRes.headers['content-length']) {
           responseHeaders['Content-Length'] = upstreamRes.headers['content-length'];

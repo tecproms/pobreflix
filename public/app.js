@@ -1527,6 +1527,7 @@ function App() {
   const [resumeToast, setResumeToast] = useState(null);
   const lastStateSaveRef = useRef(0);
   const lastSavedTimeRef = useRef(0);
+  const lastLocalStorageSaveRef = useRef(0);
 
   // Auto-fechar o toast de Retomada de Onde Parou após 7 segundos
   useEffect(() => {
@@ -1538,7 +1539,7 @@ function App() {
     }
   }, [resumeToast]);
 
-  // Salvar posição imediatamente no unload da janela (fechar navegador/aba)
+  // Salvar posição imediatamente no unload da janela (fechar navegador/aba ou alternar app no celular)
   useEffect(() => {
     const handleBeforeUnload = () => {
       const channel = currentChannelRef.current;
@@ -1554,8 +1555,9 @@ function App() {
             .replace(/[\u0300-\u036f]/g, '')
             .replace(/[^a-z0-9]/g, '');
           try {
-            const raw = localStorage.getItem('iptv_playback_positions_v1');
-            const map = raw ? JSON.parse(raw) : {};
+            const map = (typeof window !== 'undefined' && window.__pobreflixPlaybackPositions)
+              ? window.__pobreflixPlaybackPositions
+              : {};
             const posData = {
               currentTime: cur,
               duration: dur,
@@ -1570,7 +1572,11 @@ function App() {
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('pagehide', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('pagehide', handleBeforeUnload);
+    };
   }, []);
 
   // Configurações de Reprodução
@@ -1616,8 +1622,8 @@ function App() {
   }, [saasConfig]);
 
   useEffect(() => {
-    if (activeAdBanners.length <= 1) {
-      setAdSlideIndex(0);
+    if (isPlayerOpen || activeAdBanners.length <= 1) {
+      if (!isPlayerOpen && activeAdBanners.length <= 1) setAdSlideIndex(0);
       return;
     }
     const intervalSec = Math.max(2, Number(saasConfig?.adBannerSettings?.intervalSeconds) || 6);
@@ -1625,7 +1631,7 @@ function App() {
       setAdSlideIndex((prev) => (prev + 1) % activeAdBanners.length);
     }, intervalSec * 1000);
     return () => clearInterval(timer);
-  }, [activeAdBanners.length, saasConfig?.adBannerSettings?.intervalSeconds]);
+  }, [isPlayerOpen, activeAdBanners.length, saasConfig?.adBannerSettings?.intervalSeconds]);
 
   useEffect(() => {
     if (!authToken) {
@@ -1792,19 +1798,20 @@ function App() {
       }
 
       setScreenBlockState(null);
-      setCurrentUser((prev) =>
-        prev
-          ? {
-              ...prev,
-              activeScreens: data.activeScreens || prev.activeScreens,
-              activeScreensCount:
-                typeof data.activeScreensCount === 'number'
-                  ? data.activeScreensCount
-                  : prev.activeScreensCount,
-              maxScreens: data.maxScreens || prev.maxScreens
-            }
-          : prev
-      );
+      setCurrentUser((prev) => {
+        if (!prev) return prev;
+        const newCount = typeof data.activeScreensCount === 'number' ? data.activeScreensCount : prev.activeScreensCount;
+        const newMax = data.maxScreens || prev.maxScreens;
+        if (prev.activeScreensCount === newCount && prev.maxScreens === newMax && (!data.activeScreens || prev.activeScreens === data.activeScreens)) {
+          return prev;
+        }
+        return {
+          ...prev,
+          activeScreens: data.activeScreens || prev.activeScreens,
+          activeScreensCount: newCount,
+          maxScreens: newMax
+        };
+      });
     } catch {}
   }, [
     authToken,
@@ -1856,23 +1863,26 @@ function App() {
     [authToken, sendScreenHeartbeat]
   );
 
-  // Sincronizar Minha Lista (favorites) e Continuar Assistindo (history) com o Perfil Ativo na Conta!
+  // Sincronizar Minha Lista (favorites) e Continuar Assistindo (history) com o Perfil Ativo na Conta (com Debounce para não travar a rede)
   useEffect(() => {
     try {
       localStorage.setItem('iptv_favorites_v1', JSON.stringify(favorites));
     } catch {}
     if (authToken && activeProfile) {
-      fetch('/api/saas/profiles/sync-data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': authToken
-        },
-        body: JSON.stringify({
-          profileId: activeProfile.id,
-          favorites
-        })
-      }).catch(() => {});
+      const timer = setTimeout(() => {
+        fetch('/api/saas/profiles/sync-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': authToken
+          },
+          body: JSON.stringify({
+            profileId: activeProfile.id,
+            favorites
+          })
+        }).catch(() => {});
+      }, 1500);
+      return () => clearTimeout(timer);
     }
   }, [favorites, authToken, activeProfile?.id]);
 
@@ -1881,17 +1891,20 @@ function App() {
       localStorage.setItem('iptv_history_v1', JSON.stringify(history));
     } catch {}
     if (authToken && activeProfile) {
-      fetch('/api/saas/profiles/sync-data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': authToken
-        },
-        body: JSON.stringify({
-          profileId: activeProfile.id,
-          history
-        })
-      }).catch(() => {});
+      const timer = setTimeout(() => {
+        fetch('/api/saas/profiles/sync-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': authToken
+          },
+          body: JSON.stringify({
+            profileId: activeProfile.id,
+            history
+          })
+        }).catch(() => {});
+      }, 1800);
+      return () => clearTimeout(timer);
     }
   }, [history, authToken, activeProfile?.id]);
 
@@ -2060,20 +2073,32 @@ function App() {
         updatedAt: Date.now()
       };
 
-      // 1. Gravar imediatamente no localStorage (instantâneo)
-      try {
-        const raw = localStorage.getItem('iptv_playback_positions_v1');
-        const map = raw ? JSON.parse(raw) : {};
-        if (key) map[key] = posData;
-        if (nameKey) map[nameKey] = posData;
-        localStorage.setItem('iptv_playback_positions_v1', JSON.stringify(map));
-        if (typeof window !== 'undefined') window.__pobreflixPlaybackPositions = map;
-      } catch (e) {}
+      // 1. Atualizar cache em memória imediatamente (instantâneo, 0ms overhead, sem re-render)
+      if (typeof window !== 'undefined') {
+        if (!window.__pobreflixPlaybackPositions) window.__pobreflixPlaybackPositions = {};
+        if (key) window.__pobreflixPlaybackPositions[key] = posData;
+        if (nameKey) window.__pobreflixPlaybackPositions[nameKey] = posData;
+      }
+      if (playbackPositionsRef.current) {
+        if (key) playbackPositionsRef.current[key] = posData;
+        if (nameKey) playbackPositionsRef.current[nameKey] = posData;
+      }
 
-      // 2. Atualizar estado React de posições e histórico (com throttle para manter vídeo a 60fps)
+      // 2. Gravar no localStorage com throttle leve (ou imediatamente se for ação do usuário)
       const now = Date.now();
-      if (forceStateUpdate || now - lastStateSaveRef.current >= 3500) {
-        lastStateSaveRef.current = now;
+      if (forceStateUpdate || now - lastLocalStorageSaveRef.current >= 15000) {
+        lastLocalStorageSaveRef.current = now;
+        try {
+          const map = (typeof window !== 'undefined' && window.__pobreflixPlaybackPositions)
+            ? window.__pobreflixPlaybackPositions
+            : {};
+          localStorage.setItem('iptv_playback_positions_v1', JSON.stringify(map));
+        } catch (e) {}
+      }
+
+      // 3. Atualizar estado React de posições e histórico APENAS em ações explícitas (pause, seek, end, fechar player)
+      // NUNCA disparar re-render durante a reprodução contínua (garante 60fps constantes e áudio cristalino sem engasgos)
+      if (forceStateUpdate) {
         setPlaybackPositions((prevMap) => {
           const nextMap = { ...prevMap };
           if (key) nextMap[key] = posData;
@@ -2220,10 +2245,7 @@ function App() {
         /\/api\/ia-stream/i.test(rawUrl) ||
         /archive\.org\/download\//i.test(rawUrl);
 
-      const defaultModeForUrl =
-        /\/api\/ia-stream|archive\.org\/download\//i.test(rawUrl)
-          ? 'direct'
-          : useProxyMode;
+      const defaultModeForUrl = useProxyMode;
       const mode = modeOverride || defaultModeForUrl;
 
       const effectiveUrl =
@@ -2234,7 +2256,7 @@ function App() {
       if (isDirectMp4) {
         setStreamInfo({
           resolution: 'VOD H.264 HD',
-          engine: mode === 'direct' ? 'MP4 Direto (Seek Ativo)' : 'MP4 Proxy'
+          engine: mode === 'direct' ? 'MP4 Direto (Seek Ativo)' : 'MP4 Proxy Turbo'
         });
         video.src = effectiveUrl;
 
@@ -2288,6 +2310,10 @@ function App() {
         video.onerror = async () => {
           if (mode === 'direct') {
             startPlayback(channel, 'proxy');
+            return;
+          }
+          if (mode === 'proxy') {
+            startPlayback(channel, 'direct');
             return;
           }
           try {
@@ -4065,7 +4091,11 @@ function App() {
                     controls
                     playsInline
                     autoPlay
+                    preload="auto"
                     onTimeUpdate={handleVideoTimeUpdate}
+                    onWaiting={() => setPlayerState((s) => (s === 'playing' ? 'buffering' : s))}
+                    onPlaying={() => setPlayerState('playing')}
+                    onCanPlay={() => setPlayerState('playing')}
                     onPause={() => {
                       if (videoRef.current) {
                         savePlaybackPosition(
@@ -4258,16 +4288,27 @@ function App() {
                     </div>
                   )}
 
-                  {playerState === 'loading' && (
-                    <div className="player-state-overlay">
+                  {(playerState === 'loading' || playerState === 'buffering') && (
+                    <div
+                      className="player-state-overlay"
+                      style={
+                        playerState === 'buffering'
+                          ? { background: 'rgba(0, 0, 0, 0.45)', pointerEvents: 'none' }
+                          : undefined
+                      }
+                    >
                       <div className="spinner" />
                       <div style={{ fontWeight: 800, fontSize: '17px' }}>
-                        Carregando {currentChannel.name}...
+                        {playerState === 'buffering'
+                          ? 'Carregando buffer de áudio & vídeo...'
+                          : `Carregando ${currentChannel.name}...`}
                       </div>
                       <div style={{ fontSize: '12.5px', color: '#b3b3b3' }}>
-                        {currentChannel.isVod
-                          ? 'Iniciando vídeo sob demanda a partir do minuto 00:00...'
-                          : 'Conectando transmissão ao vivo...'}
+                        {playerState === 'buffering'
+                          ? 'Sincronizando fluxo para reprodução contínua sem travamentos...'
+                          : (currentChannel.isVod
+                            ? 'Iniciando vídeo sob demanda a partir do minuto 00:00...'
+                            : 'Conectando transmissão ao vivo...')}
                       </div>
                     </div>
                   )}
@@ -4516,6 +4557,22 @@ function App() {
               <button
                 type="button"
                 className="nf-btn nf-btn-dark"
+                onClick={() => {
+                  const nextMode = (streamInfo.engine && streamInfo.engine.includes('Proxy')) ? 'direct' : 'proxy';
+                  setUseProxyMode(nextMode);
+                  startPlayback(currentChannel, nextMode);
+                }}
+                title="Alternar entre Proxy (servidor VPS) e Direto caso o áudio ou vídeo apresente instabilidade"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                {streamInfo.engine && streamInfo.engine.includes('Proxy')
+                  ? '🛡️ Proxy Turbo (Ativo)'
+                  : '⚡ Modo Direto (Ativo)'}
+              </button>
+
+              <button
+                type="button"
+                className="nf-btn nf-btn-dark"
                 onClick={() => setVideoRotation((r) => (r - 90) % 360)}
                 title="Girar orientação do vídeo em 90°"
               >
@@ -4524,7 +4581,10 @@ function App() {
 
               <button
                 className="nf-btn nf-btn-dark"
-                onClick={() => setIsPlayerOpen(false)}
+                onClick={() => {
+                  destroyPlayers();
+                  setIsPlayerOpen(false);
+                }}
               >
                 ✕ Fechar Player
               </button>
