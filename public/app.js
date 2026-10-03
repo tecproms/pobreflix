@@ -2245,7 +2245,10 @@ function App() {
         /\/api\/ia-stream/i.test(rawUrl) ||
         /archive\.org\/download\//i.test(rawUrl);
 
-      const defaultModeForUrl = useProxyMode;
+      const defaultModeForUrl =
+        /\/api\/ia-stream|archive\.org\/download\//i.test(rawUrl)
+          ? 'direct'
+          : useProxyMode;
       const mode = modeOverride || defaultModeForUrl;
 
       const effectiveUrl =
@@ -2304,7 +2307,11 @@ function App() {
           }, 900);
         };
         video.oncanplay = () => {
+          setPlayerState('playing');
           applyResumeSeek();
+        };
+        video.onplaying = () => {
+          setPlayerState('playing');
         };
 
         video.onerror = async () => {
@@ -4093,7 +4100,6 @@ function App() {
                     autoPlay
                     preload="auto"
                     onTimeUpdate={handleVideoTimeUpdate}
-                    onWaiting={() => setPlayerState((s) => (s === 'playing' ? 'buffering' : s))}
                     onPlaying={() => setPlayerState('playing')}
                     onCanPlay={() => setPlayerState('playing')}
                     onPause={() => {
@@ -4288,27 +4294,16 @@ function App() {
                     </div>
                   )}
 
-                  {(playerState === 'loading' || playerState === 'buffering') && (
-                    <div
-                      className="player-state-overlay"
-                      style={
-                        playerState === 'buffering'
-                          ? { background: 'rgba(0, 0, 0, 0.45)', pointerEvents: 'none' }
-                          : undefined
-                      }
-                    >
+                  {playerState === 'loading' && (
+                    <div className="player-state-overlay">
                       <div className="spinner" />
                       <div style={{ fontWeight: 800, fontSize: '17px' }}>
-                        {playerState === 'buffering'
-                          ? 'Carregando buffer de áudio & vídeo...'
-                          : `Carregando ${currentChannel.name}...`}
+                        Carregando {currentChannel.name}...
                       </div>
                       <div style={{ fontSize: '12.5px', color: '#b3b3b3' }}>
-                        {playerState === 'buffering'
-                          ? 'Sincronizando fluxo para reprodução contínua sem travamentos...'
-                          : (currentChannel.isVod
-                            ? 'Iniciando vídeo sob demanda a partir do minuto 00:00...'
-                            : 'Conectando transmissão ao vivo...')}
+                        {currentChannel.isVod
+                          ? 'Iniciando vídeo sob demanda a partir do minuto 00:00...'
+                          : 'Conectando transmissão ao vivo...'}
                       </div>
                     </div>
                   )}
