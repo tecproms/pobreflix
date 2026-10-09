@@ -59,6 +59,10 @@ http://181.78.197.59:8000/play/a081/index.m3u8
 http://45.162.64.114/ESPN_4/index.m3u8
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/ESPN_4_logo.svg/960px-ESPN_4_logo.svg.png" group-title="Canais: Esportes",ESPN 4 (Sinal 2 HD)
 http://181.78.197.59:8000/play/a07n/index.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/ESPN_wordmark.svg/960px-ESPN_wordmark.svg.png" group-title="Canais: Esportes",ESPN 5 HD
+http://45.177.114.115/ESPN_5/index.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/ESPN_wordmark.svg/960px-ESPN_wordmark.svg.png" group-title="Canais: Esportes",ESPN Extra HD
+http://45.162.64.114/ESPN_EXTRA/index.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/EuPvzJe.png" group-title="Canais: Esportes",BandSports HD
 http://170.83.16.50/BAND_SPORTS/index.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/EuPvzJe.png" group-title="Canais: Esportes",BandSports (Sinal 2 HD)

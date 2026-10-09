@@ -261,15 +261,7 @@ function deduplicateHistory(historyItems, allCatalogChannels = []) {
       }
     }
 
-    if (item.name && /shrek/i.test(item.name) && item.url && /rio-2/i.test(item.url)) {
-      item.url = 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4';
-    }
-    if (item.name && /era do gelo/i.test(item.name) && item.url && /rio-2/i.test(item.url)) {
-      item.url = 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4';
-    }
-    if (item.name && /toy story/i.test(item.name) && item.url && /rio-2/i.test(item.url)) {
-      item.url = 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4';
-    }
+
 
     const detected = detectSeriesInfo(item.name, item.group, item.isVod !== false, item.url);
     const isSeries = Boolean(
@@ -2178,19 +2170,6 @@ function App() {
         }
       }
 
-      // Correção de streams cacheados com mapeamento antigo incorreto (ex: Shrek apontando para Rio 2)
-      if (channel && channel.name && /shrek/i.test(channel.name) && /rio-2/i.test(rawUrl)) {
-        rawUrl = 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4';
-        channel.url = rawUrl;
-      }
-      if (channel && channel.name && /era do gelo/i.test(channel.name) && /rio-2/i.test(rawUrl)) {
-        rawUrl = 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4';
-        channel.url = rawUrl;
-      }
-      if (channel && channel.name && /toy story/i.test(channel.name) && /rio-2/i.test(rawUrl)) {
-        rawUrl = 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4';
-        channel.url = rawUrl;
-      }
 
       destroyPlayers();
       setResumeToast(null);
@@ -2946,11 +2925,39 @@ function App() {
         )
     );
 
-    const sportsRow = channels.filter((c) =>
-      /esporte|sport|futebol|ufc|fight|luta|combate|motor|auto|radical|fifa/i.test(
-        `${c.name} ${c.group}`
-      )
+    const livePremiereSportsRow = channels.filter(
+      (c) =>
+        !c.isVod &&
+        /premiere|sportv|espn|band\s*sports|n\s*sports|eurosport|red bull|futebol|esportes/i.test(
+          `${c.name} ${c.group}`
+        )
     );
+
+    const liveHboCinemaRow = channels.filter(
+      (c) =>
+        !c.isVod &&
+        /hbo|cinemax|telecine|megapix|warner|tnt|space|universal|studio universal|star channel|fx\b|sony|axn|amc|tcm|hollywood|cinemundo/i.test(
+          `${c.name} ${c.group}`
+        )
+    );
+
+    const liveKidsRow = channels.filter(
+      (c) =>
+        !c.isVod &&
+        /disney|cartoon|discovery kids|nickelodeon|nicktoons|gloob|rá-tim-bum|ra-tim-bum|box kids|dumdum/i.test(
+          `${c.name} ${c.group}`
+        )
+    );
+
+    const liveDocsRow = channels.filter(
+      (c) =>
+        !c.isVod &&
+        /history|discovery|animal planet|national geographic|natgeo|tlc|lifetime|a&e|food network|arte 1|travel box|fish tv|woohoo/i.test(
+          `${c.name} ${c.group}`
+        )
+    );
+
+    const sportsRow = livePremiereSportsRow;
 
     const liveTvRow = channels.filter(
       (c) =>
@@ -3101,27 +3108,27 @@ function App() {
       ]),
 
       buildFranchiseRow('seq-shrek', '🧅 Saga Shrek & Gato de Botas (Ordem 1 ao 6)', [
-        { name: 'Shrek 1 (2001)', pattern: /^shrek \(dublado\)|^shrek\b/i, exclude: /2|terceiro|3|sempre|4/i, url: 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/wxeqfC221YMptRRdzxlijAh7q8l.jpg' },
+        { name: 'Shrek 1 (2001)', pattern: /^shrek \(dublado\)|^shrek\b/i, exclude: /2|terceiro|3|sempre|4/i, logo: 'https://image.tmdb.org/t/p/w500/wxeqfC221YMptRRdzxlijAh7q8l.jpg' },
         { name: 'Shrek 2 (2004)', pattern: /^shrek 2/i, url: 'https://archive.org/download/shrek-2-full-movie_202510/Shrek.2.2004.720p.BluRay.x264.YIFY.mp4', logo: 'https://image.tmdb.org/t/p/w500/2yYP0PQjG8zVqturh1BAqu2Tixl.jpg' },
         { name: 'Shrek 3: O Terceiro (2007)', pattern: /shrek terceiro|shrek the third/i, url: 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/abw1mIJIjG9X3xSEffE9siLcOkN.jpg' },
-        { name: 'Shrek 4: Para Sempre (2010)', pattern: /shrek para sempre|forever after/i, url: 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/iFXVU0ni6YWgQNSPkoGO1Tk5L3g.jpg' },
+        { name: 'Shrek 4: Para Sempre (2010)', pattern: /shrek para sempre|forever after/i, logo: 'https://image.tmdb.org/t/p/w500/iFXVU0ni6YWgQNSPkoGO1Tk5L3g.jpg' },
         { name: 'Gato de Botas 1 (2011)', pattern: /^gato de botas\b|puss in boots/i, exclude: /2|[uú]ltimo pedido/i, url: 'cloud://movie/Gato%20de%20Botas', logo: 'https://image.tmdb.org/t/p/w500/kc7TJHzlLOsN0M6srM67BXdGmhn.jpg' },
         { name: 'Gato de Botas 2: O Último Pedido (2022)', pattern: /[uú]ltimo pedido|last wish/i, url: 'cloud://movie/Gato%20de%20Botas%202%3A%20O%20%C3%9Altimo%20Pedido', logo: 'https://image.tmdb.org/t/p/w500/atJxZfCaQ7kXRFSfbm8cqAKkns7.jpg' }
       ]),
 
       buildFranchiseRow('seq-ice-age', '❄️ Saga A Era do Gelo (Ordem 1 ao 5)', [
         { name: 'A Era do Gelo 1 (2002)', pattern: /a era do gelo 1|^a era do gelo \(dublado\)|^a era do gelo\b/i, exclude: /2|3|4|5|big bang|pascoa|natal/i, url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/dlqC2gJs02gc23XvyOjoz52ToRI.jpg' },
-        { name: 'A Era do Gelo 2: O Degelo (2006)', pattern: /a era do gelo 2|meltdown/i, url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/uWeiAd2X4vrXHDMAUoTDz8R5vxI.jpg' },
+        { name: 'A Era do Gelo 2: O Degelo (2006)', pattern: /a era do gelo 2|meltdown/i, logo: 'https://image.tmdb.org/t/p/w500/uWeiAd2X4vrXHDMAUoTDz8R5vxI.jpg' },
         { name: 'A Era do Gelo 3: Despertar dos Dinossauros (2009)', pattern: /a era do gelo 3|dawn of the dinosaurs/i, url: 'https://archive.org/download/aeradogelo32009-kids-paixaoflix/A%20Era%20do%20Gelo%203%20-%202009_ready.mp4', logo: 'https://image.tmdb.org/t/p/w500/kaXQMlurbJ6n5u33TRePTXWxPHY.jpg' },
-        { name: 'A Era do Gelo 4: Deriva Continental (2012)', pattern: /a era do gelo 4|continental drift/i, url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/dWiHLqARtyAAOy0nLvXIxRYkfNA.jpg' },
-        { name: 'A Era do Gelo 5: O Big Bang (2016)', pattern: /a era do gelo.*(5|big bang)|ice age.*collision/i, url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/e7R8ULZLdiKO2uYtXqifwf2pJfy.jpg' }
+        { name: 'A Era do Gelo 4: Deriva Continental (2012)', pattern: /a era do gelo 4|continental drift/i, logo: 'https://image.tmdb.org/t/p/w500/dWiHLqARtyAAOy0nLvXIxRYkfNA.jpg' },
+        { name: 'A Era do Gelo 5: O Big Bang (2016)', pattern: /a era do gelo.*(5|big bang)|ice age.*collision/i, logo: 'https://image.tmdb.org/t/p/w500/e7R8ULZLdiKO2uYtXqifwf2pJfy.jpg' }
       ]),
 
       buildFranchiseRow('seq-toy-story', '🧸 Saga Toy Story (Ordem 1 ao 4)', [
-        { name: 'Toy Story 1 (1995)', pattern: /^toy story \(dublado\)|^toy story\b/i, exclude: /2|3|4|terror|tempo/i, url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/686F0CEPmI4ZXjFbWtIHQOBwnfI.jpg' },
+        { name: 'Toy Story 1 (1995)', pattern: /^toy story \(dublado\)|^toy story\b/i, exclude: /2|3|4|terror|tempo/i, logo: 'https://image.tmdb.org/t/p/w500/686F0CEPmI4ZXjFbWtIHQOBwnfI.jpg' },
         { name: 'Toy Story 2 (1999)', pattern: /toy story 2/i, url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/xVhEI1WCgNCCa5I86AqiwuZoog3.jpg' },
-        { name: 'Toy Story 3 (2010)', pattern: /toy story 3/i, url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/rf67AeS9nP8DD7dZYbvhjEVoIBf.jpg' },
-        { name: 'Toy Story 4 (2019)', pattern: /toy story 4/i, url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4', logo: 'https://image.tmdb.org/t/p/w500/csiyO6q8rR74pfgJDjwINzhoick.jpg' }
+        { name: 'Toy Story 3 (2010)', pattern: /toy story 3/i, logo: 'https://image.tmdb.org/t/p/w500/rf67AeS9nP8DD7dZYbvhjEVoIBf.jpg' },
+        { name: 'Toy Story 4 (2019)', pattern: /toy story 4/i, logo: 'https://image.tmdb.org/t/p/w500/csiyO6q8rR74pfgJDjwINzhoick.jpg' }
       ])
 
     ];
@@ -3219,6 +3226,36 @@ function App() {
         navTarget: 'vod-series'
       },
       {
+        id: 'live-premiere',
+        title: '⚽ Premiere, SporTV & Esportes Ao Vivo',
+        items: livePremiereSportsRow.slice(0, 35),
+        navTarget: 'live'
+      },
+      {
+        id: 'live-hbo',
+        title: '🎬 HBO, Telecine & Cinema Ao Vivo',
+        items: liveHboCinemaRow.slice(0, 35),
+        navTarget: 'live'
+      },
+      {
+        id: 'live-disney',
+        title: '🎈 Disney Channel & Desenhos Ao Vivo',
+        items: liveKidsRow.slice(0, 35),
+        navTarget: 'live'
+      },
+      {
+        id: 'live-docs',
+        title: '🌍 History (H2), Discovery & Variedades Ao Vivo',
+        items: liveDocsRow.slice(0, 35),
+        navTarget: 'live'
+      },
+      {
+        id: 'livetv',
+        title: '📡 TV Aberta, Notícias & Jornalismo',
+        items: liveTvRow.slice(0, 40),
+        navTarget: 'live'
+      },
+      {
         id: 'live-movies',
         title: '🎬 Canais de Cinema 24h (Pluto TV & TV Ao Vivo)',
         items: liveMoviesRow.slice(0, 35),
@@ -3228,17 +3265,6 @@ function App() {
         id: 'live-series',
         title: '🕵️ Maratonas 24h: CSI, The Walking Dead & Séries Ao Vivo',
         items: liveSeriesRow.slice(0, 35),
-        navTarget: 'live'
-      },
-      {
-        id: 'sports',
-        title: '⚽ Esportes, Futebol & Lutas Ao Vivo',
-        items: sportsRow.slice(0, 30)
-      },
-      {
-        id: 'livetv',
-        title: '📡 TV Aberta, Notícias & Documentários',
-        items: liveTvRow.slice(0, 40),
         navTarget: 'live'
       }
     ].filter((r) => r.items.length > 0);

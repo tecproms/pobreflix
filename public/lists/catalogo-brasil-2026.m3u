@@ -18,7 +18,7 @@ https://archive.org/download/TGDDDL/Top%20Gun%20%281986%29%201080p.ia.mp4
 #EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMTAxNDYxMjg0MjNeQTJeQWpwZ15BbWU3MDcyNTk2OTM@._V1_UX600_.jpg" group-title="VOD Filmes: Animação, Disney & Família (Dublado)",Enrolados - Disney (1080p Dublado)
 https://archive.org/download/DDLDE2010/Enrolados%20%282010%29%201080p.ia.mp4
 #EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BOTMyMjEyNzIzMV5BMl5BanBnXkFtZTgwNzIyNjU0NzE@._V1_UX600_.jpg" group-title="VOD Filmes: Animação, Disney & Família (Dublado)",Zootopia: Essa Cidade é o Bicho - Disney (Dublado HD)
-https://archive.org/download/o-reino-dos-gatos-2002-dublado-720p/Zootopia%20Dublado.mp4
+https://archive.org/download/zootopia-essa-cidade-e-o-bicho-2016-1080p-5.1-ch-dublado-andre-tpf/Zootopia%20-%20Essa%20Cidade%20%C3%A9%20o%20Bicho%20%282016%29%201080p%205.1%20CH%20Dublado%20-%20AndreTPF.mp4
 #EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMTgzMDczMDYzNl5BMl5BanBnXkFtZTgwMzk2MDIwMTE@._V1_UX600_.jpg" group-title="VOD Filmes: Animação, Disney & Família (Dublado)",Rio 2 (2014 Dublado HD)
 https://archive.org/download/rio-2-2014-brrip-720p-dublado-andre-tpf/Rio%202%20(2014)%20BRrip%20720p%20Dublado%20-%20AndreTPF.mp4
 #EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNjY2YmZmMzUtZWY5Mi00MzI3LTljOTgtYTMwMWY1ODI5ZWY5XkEyXkFqcGc@._V1_UX600_.jpg" group-title="VOD Filmes: Ação, Heróis & Aventura (Dublado)",Quarteto Fantástico (2005 Dublado HD)
@@ -1409,8 +1409,6 @@ https://archive.org/download/YuGiOhFilme.PiramideDaLuz.Dublado.Felipewinchester/
 /api/ia-stream?id=o-poder-e-a-lei-filme-completo-dublado-filme-de-acao-net-movies&type=movie&v=.mp4
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/AHistriaDaEletricidade" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",A História da Eletricidade (Dublado)
 /api/ia-stream?id=AHistriaDaEletricidade&type=movie&v=.mp4
-#EXTINF:-1 tvg-logo="https://archive.org/services/img/win-pe-10-8-sergei-strelec-x-86-x-64-2021.10.15-english" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",Vale Proibido (2005) Dublado DVDRip By Zangozo
-/api/ia-stream?id=win-pe-10-8-sergei-strelec-x-86-x-64-2021.10.15-english&type=movie&v=.mp4
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/pfilosofia-o_genoma_humano_1" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",O genoma humano 1 (Decodificando a vida O mapa do corpo humano) (Dublado)
 /api/ia-stream?id=pfilosofia-o_genoma_humano_1&type=movie&v=.mp4
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/2-3-melhor-filme-de-jesus-de-todos-os-tempos-a-vida-de-jesus-cristo-filme-completo-dublado" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",2 3 MELHOR FILME DE JESUS DE TODOS OS TEMPOS A Vida De Jesus Cristo Filme Completo Dublado
@@ -1439,8 +1437,6 @@ https://archive.org/download/YuGiOhFilme.PiramideDaLuz.Dublado.Felipewinchester/
 /api/ia-stream?id=pfilosofia-visionarios&type=movie&v=.mp4
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/super-amigos-dublado" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",Super Amigos (1973 1985) (Dublado)
 /api/ia-stream?id=super-amigos-dublado&type=movie&v=.mp4
-#EXTINF:-1 tvg-logo="https://archive.org/services/img/youtube-BLb-yyAm8YI" group-title="VOD Filmes: Terror & Suspense (Dublado)",PÂNICO NO METRÔ | FILME DE AÇÃO COMPLETO DUBLADO EM PORTUGUÊS
-/api/ia-stream?id=youtube-BLb-yyAm8YI&type=movie&v=.mp4
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/capitaondubladoptbr" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",Capitão N Episódios Dublados Português Brasil
 /api/ia-stream?id=capitaondubladoptbr&type=movie&v=.mp4
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/a-novica-rebelde-1965-1080p-dublado-compactado_202411" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",A Noviça Rebelde (Dublado)
@@ -1565,8 +1561,6 @@ https://archive.org/download/YuGiOhFilme.PiramideDaLuz.Dublado.Felipewinchester/
 /api/ia-stream?id=birdy-the-mighty-dubbr&type=movie&v=.mp4
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/pelouniversodamatematica" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",Pelo Universo da Matemática Dublado
 /api/ia-stream?id=pelouniversodamatematica&type=movie&v=.mp4
-#EXTINF:-1 tvg-logo="https://archive.org/services/img/MITIDS.333F21" group-title="VOD Filmes: Terror & Suspense (Dublado)",MIT IDS.333 Risk and Decision Analysis, Fall 2021 (Dublado)
-/api/ia-stream?id=MITIDS.333F21&type=movie&v=.mp4
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/aqua-teen-hunger-force-dublado" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",AQUA TEEN HUNGER FORCE DUBLADO
 /api/ia-stream?id=aqua-teen-hunger-force-dublado&type=movie&v=.mp4
 #EXTINF:-1 tvg-logo="https://archive.org/services/img/a-profecia-1976-hd-filme-completo-dublado" group-title="VOD Filmes: Drama, Clássicos & Cinema (Dublado)",A Profecia 1976 Hd Filme Completo Dublado
@@ -7059,6 +7053,10 @@ http://181.78.197.59:8000/play/a081/index.m3u8
 http://45.162.64.114/ESPN_4/index.m3u8
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/ESPN_4_logo.svg/960px-ESPN_4_logo.svg.png" group-title="Canais: Esportes",ESPN 4 (Sinal 2 HD)
 http://181.78.197.59:8000/play/a07n/index.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/ESPN_wordmark.svg/960px-ESPN_wordmark.svg.png" group-title="Canais: Esportes",ESPN 5 HD
+http://45.177.114.115/ESPN_5/index.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/ESPN_wordmark.svg/960px-ESPN_wordmark.svg.png" group-title="Canais: Esportes",ESPN Extra HD
+http://45.162.64.114/ESPN_EXTRA/index.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/EuPvzJe.png" group-title="Canais: Esportes",BandSports HD
 http://170.83.16.50/BAND_SPORTS/index.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/EuPvzJe.png" group-title="Canais: Esportes",BandSports (Sinal 2 HD)

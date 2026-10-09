@@ -467,70 +467,66 @@ const server = http.createServer(async (req, res) => {
 
     const lower = cleanTitle.toLowerCase();
 
-    // Mapa instantâneo de streams .MP4 H.264 (avc1) diretos, horizontais (16:9) e 100% DUBLADOS PT-BR
+    // Mapa instantâneo de streams .MP4 H.264 (avc1) diretos, horizontais (16:9) e 100% DUBLADOS PT-BR (1 para 1 exato)
     const DIRECT_MP4_MAP = [
       {
-        match: /branquelas/i,
+        match: /^as branquelas\b/i,
         url: 'https://archive.org/download/as-branquelas-sem-cortes-paixaoflix/As%20Branquelas%20Sem%20Cortes.mp4'
       },
       {
-        match: /auto da compadecida|tropa de elite|cidade de deus|central do brasil|carandiru/i,
+        match: /^o auto da compadecida\b/i,
         url: 'https://archive.org/download/auto-da-compadecida/auto%20da%20compadecida.ia.mp4'
       },
       {
-        match: /m[aá]skara|todo mundo em p[aâ]nico|superbad|se beber|vov[oó]zona|norbit|click|esposa de mentirinha|gente grande|deb+i|ace ventura|mentiroso/i,
+        match: /^superbad\b/i,
         url: 'https://archive.org/download/superbad-e-hoje-2007-versao-estendida-brrip-720p-dublado-andre-tpf/Superbad%20-%20%C3%89%20Hoje%20%282007%29%20Vers%C3%A3o%20Estendida%20BRrip%20720p%20Dublado%20-%20AndreTPF.mp4'
       },
       {
-        match: /deadpool|wolverine|vingadores|homem-aranha|batman|coringa|logan|guardi[oõ]es|pantera negra|doutor estranho|thor|homem de ferro|capit[aã]o am[eé]rica|liga da justi[cç]a|superman|x-men|quarteto/i,
+        match: /^deadpool\s*(&|e)\s*wolverine/i,
         url: 'https://archive.org/download/deadpool-wolverine_HD_DUBLADO_SINCRONIZADO/Deadpool%20%26%20Wolverine.ia.mp4'
       },
       {
-        match: /velozes e furiosos|john wick|top gun|mad max|miss[aã]o imposs[ií]vel|resgate|busca implac[aá]vel|duro de matar|rambo|exterminador|predador|matrix|gladiador/i,
+        match: /^velozes e furiosos 9\b|^f9\b/i,
         url: 'https://archive.org/download/velozes-e-furiosos-9-2021-dublado/Velozes%20e%20Furiosos%209%202021%20Dublado.mp4'
       },
       {
-        match: /jurassic|planeta dos macacos|avatar|duna|interestelar|origem|oppenheimer|blade runner|chegada|perdido em marte|gravidade/i,
+        match: /^jurassic world.*reino ameaçado/i,
         url: 'https://archive.org/download/JurassicWorldGIOVANNI/Jurassic.World.Reino.Amea%C3%A7ado.2018.720p.BluRay.x264.DUBLADO-WWW.BLUDV.TV.mp4'
       },
       {
-        match: /shrek/i,
+        match: /^shrek (3|terceiro)\b/i,
         url: 'https://archive.org/download/shrek-terceiro-2007-bdrip-720p-dublado_202604/Shrek%20Terceiro%20(2007)%20-%20BDRip%20720p%20-%20Dublado.mp4'
       },
       {
-        match: /era do gelo|ice age/i,
+        match: /^a era do gelo (1|\b)/i,
         url: 'https://archive.org/download/a-era-do-gelo-blu-ray-1080p-dublado/A%20Era%20do%20Gelo%20BluRay%201080p%20Dublado.mp4'
       },
       {
-        match: /toy story/i,
+        match: /^toy story 2\b/i,
         url: 'https://archive.org/download/toy-story-2-1999-vhsrip-dublado/Toy%20Story%202%20(1999)%20VHSRip%20Dublado.mp4'
       },
       {
-        match: /vaca tussa/i,
+        match: /^nem que a vaca tussa\b/i,
         url: 'https://archive.org/download/NQAVTDDL/Nem%20que%20a%20vaca%20tussa%20%282004%29%201080p.mp4'
       },
       {
-        match: /^rio\b|rio 2/i,
+        match: /^rio 2\b/i,
         url: 'https://archive.org/download/rio-2-2014-brrip-720p-dublado-andre-tpf/Rio%202%20(2014)%20BRrip%20720p%20Dublado%20-%20AndreTPF.mp4'
       },
       {
-        match: /rei le[aã]o|procurando nemo|divertida mente|monstros s|incr[ií]veis|carros|up |coco|viva |moana|frozen|encanto|zootopia|kung fu panda|como treinar|meu malvado|minions| gato de botas|asterix/i,
-        url: 'https://archive.org/download/NQAVTDDL/Nem%20que%20a%20vaca%20tussa%20%282004%29%201080p.mp4'
-      },
-      {
-        match: /chaves|chapolin|todo mundo odeia o chris|maluco no peda[cç]o|patroa e as crian[cç]as|friends|office|how i met|big bang|brooklyn|two and a half|seinfeld|modern family/i,
+        match: /^chaves\s*#?1\b/i,
         url: 'https://archive.org/download/seriado-chaves/Chaves%20%231%20-%20Boas%20festas%20-%20Bal%C3%B5es%20(1973)%20%5B1080p%5D.ia.mp4'
       },
       {
-        match: /dragon ball|naruto|one piece|bleach|hunter x hunter|death note|attack on titan|demon slayer|jujutsu|fullmetal|one punch|my hero|tokyo ghoul|chainsaw|spy x family|pokemon|digimon|beyblade|yu-gi-oh/i,
+        match: /^dragon ball z\s*(s01e01|e01|ep 1|1)\b/i,
         url: 'https://archive.org/download/1989-dragon-ball-z-s-01/%5B1989%5D%20Dragon%20Ball%20Z%20S01%20E01.ia.mp4'
       },
       {
-        match: /yu yu hakusho|cavaleiros do zod[ií]aco|inuyasha|samurai x|evangelion|cowboy bebop|berserk/i,
+        match: /^yu yu hakusho\s*(ep\.?0?1|a morte)\b/i,
         url: 'https://archive.org/download/yu-yu-hakusho-720p/Yuyu%20Hakusho%20Completo%20Bluray%20720p%20Dublado/Yuyu%20Hakusho%20Completo%20Bluray%20720p%20Dublado/Yu%20Yu%20Hakusho%20EP.01%20-%20A%20Morte.mp4'
       },
       {
-        match: /terror|invoca[cç][aã]o|it |iluminado|exorcista|p[aâ]nico|jogos mortais|heredit[aá]rio|corra|nós|lugar silencioso|alien|enigma de outro mundo|ataque dos vermes|walking dead|supernatural|stranger things|wednesday|wandinha|from|origem|dark|black mirror/i,
+        match: /^o enigma de outro mundo\b/i,
         url: 'https://archive.org/download/o-enigma-de-outro-mundo-1982-blu-ray-720p-dublado/O%20Enigma%20de%20Outro%20Mundo%20(1982)Blu%20Ray%20720p%20Dublado.ia.mp4'
       }
     ];
@@ -739,11 +735,8 @@ const server = http.createServer(async (req, res) => {
       // Fallback abaixo
     }
 
-    res.writeHead(302, {
-      Location:
-        'https://archive.org/download/as-branquelas-sem-cortes-paixaoflix/As%20Branquelas%20Sem%20Cortes.mp4'
-    });
-    return res.end();
+    res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+    return res.end(JSON.stringify({ error: 'Mídia não encontrada ou indisponível.' }));
   }
 
   // 2. Endpoint para baixar Lista M3U remota (sem reescrever como HLS)
