@@ -2151,13 +2151,15 @@ function App() {
     }
   }, [savePlaybackPosition]);
 
-  // 100% Player Nativo HTML5 sem iframes de terceiros e ZERO anúncios!
-  const isCloudChannel = false;
+  // Player Cloud ativo para séries e filmes hospedados em servidores externos (VidSrc, MultiEmbed)
+  const isCloudChannel = Boolean(
+    currentChannel &&
+    (currentChannel.isCloudVod || (currentChannel.url && currentChannel.url.startsWith('cloud://')))
+  );
 
   const startPlayback = useCallback(
     async (channel, modeOverride = null) => {
-      if (!channel || !videoRef.current) return;
-      const video = videoRef.current;
+      if (!channel) return;
       let rawUrl = channel.url || '';
 
       // HIGIENIZAÇÃO DE URL:
@@ -2170,6 +2172,17 @@ function App() {
         }
       }
 
+      // Se for título de catálogo nuvem (séries de TV e filmes em servidores Cloud), o player iframe é ativado
+      if (channel.isCloudVod || (rawUrl && rawUrl.startsWith('cloud://'))) {
+        destroyPlayers();
+        setResumeToast(null);
+        setPlayerState('playing');
+        setPlayerErrorDetails('');
+        return;
+      }
+
+      if (!videoRef.current) return;
+      const video = videoRef.current;
 
       destroyPlayers();
       setResumeToast(null);
@@ -2191,22 +2204,6 @@ function App() {
         (!savedPlayback.duration || savedPlayback.currentTime < savedPlayback.duration - 35) &&
         !savedPlayback.completed
       ) ? savedPlayback.currentTime : 0;
-
-      // Resolver títulos do catálogo global para stream .MP4 direto (Internet Archive) 100% sem anúncios
-      if (rawUrl && rawUrl.startsWith('cloud://')) {
-        try {
-          const res = await fetch(
-            `/api/resolve-vod?title=${encodeURIComponent(channel.name || '')}`
-          );
-          const data = await res.json();
-          if (data && data.url) {
-            rawUrl = data.url;
-          }
-        } catch {
-          rawUrl =
-            'https://archive.org/download/deadpool-wolverine_HD_DUBLADO_SINCRONIZADO/Deadpool%20%26%20Wolverine.ia.mp4';
-        }
-      }
 
       // Garantir que links antigos de Deadpool & Wolverine / O Enigma de Outro Mundo / Chaves / DBZ sem .ia.mp4 usem o derivado H.264 (avc1)
       if (
@@ -2276,10 +2273,6 @@ function App() {
               if (/archive\.org\/download\//i.test(rawUrl) && !rawUrl.endsWith('.ia.mp4')) {
                 const iaUrl = rawUrl.replace(/\.mp4(\?.*)?$/i, '.ia.mp4$1');
                 videoRef.current.src = iaUrl;
-                videoRef.current.play().catch(() => {});
-              } else {
-                videoRef.current.src =
-                  'https://archive.org/download/deadpool-wolverine_HD_DUBLADO_SINCRONIZADO/Deadpool%20%26%20Wolverine.ia.mp4';
                 videoRef.current.play().catch(() => {});
               }
             }

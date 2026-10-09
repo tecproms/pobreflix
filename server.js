@@ -586,11 +586,11 @@ const server = http.createServer(async (req, res) => {
       // Fallback para o stream padrão abaixo
     }
 
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
     return res.end(
       JSON.stringify({
-        url: 'https://archive.org/download/deadpool-wolverine_HD_DUBLADO_SINCRONIZADO/Deadpool%20%26%20Wolverine.ia.mp4',
-        source: 'default-mp4'
+        error: 'Título não encontrado no acervo MP4 direto.',
+        url: null
       })
     );
   }
@@ -619,10 +619,12 @@ const server = http.createServer(async (req, res) => {
         if (docs.length > 0 && docs[0].identifier) {
           targetUrl = `/api/ia-stream?id=${encodeURIComponent(docs[0].identifier)}&type=movie`;
         } else {
-          targetUrl = 'https://archive.org/download/deadpool-wolverine_HD_DUBLADO_SINCRONIZADO/Deadpool%20%26%20Wolverine.ia.mp4';
+          res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+          return res.end(JSON.stringify({ error: 'Mídia não encontrada para download.' }));
         }
       } catch {
-        targetUrl = 'https://archive.org/download/deadpool-wolverine_HD_DUBLADO_SINCRONIZADO/Deadpool%20%26%20Wolverine.ia.mp4';
+        res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+        return res.end(JSON.stringify({ error: 'Falha ao buscar mídia para download.' }));
       }
     }
 
@@ -651,11 +653,8 @@ const server = http.createServer(async (req, res) => {
     const isMovie = parsedReqUrl.searchParams.get('type') === 'movie';
 
     if (!id) {
-      res.writeHead(302, {
-        Location:
-          'https://archive.org/download/deadpool-wolverine_HD_DUBLADO_SINCRONIZADO/Deadpool%20%26%20Wolverine.ia.mp4'
-      });
-      return res.end();
+      res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+      return res.end(JSON.stringify({ error: 'Parâmetro "id" é obrigatório.' }));
     }
 
     if (!global.iaStreamCache) global.iaStreamCache = new Map();
